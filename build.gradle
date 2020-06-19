@@ -26,8 +26,8 @@ group 'com.bordozer'
 version '1.00'
 archivesBaseName = 'battleship-game-server'
 
-sourceCompatibility = JavaVersion.VERSION_13
-targetCompatibility = JavaVersion.VERSION_13
+sourceCompatibility = JavaVersion.VERSION_11
+targetCompatibility = JavaVersion.VERSION_11
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
 configurations {
@@ -50,7 +50,7 @@ ext {
 
 dependencies {
 	compile group: 'org.springframework.boot', name: 'spring-boot-starter-web'
-	compile group: 'org.springframework', name: 'spring-websocket'
+	implementation 'org.springframework.boot:spring-boot-starter-websocket'
 	compile group: 'org.springframework', name: 'spring-messaging'
 
 	compile group: 'com.github.spotbugs', name: 'spotbugs', version: spotbugsVersion
@@ -60,6 +60,12 @@ dependencies {
 	compile group: 'com.sun.xml.bind', name: 'jaxb-osgi', version: '2.3.3'
 	compile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.11.0'
 	compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.11.0'
+
+	implementation 'org.webjars:webjars-locator-core:0.45'
+	implementation 'org.webjars:sockjs-client:1.1.2'
+	implementation 'org.webjars:stomp-websocket:2.3.3'
+	implementation 'org.webjars:bootstrap:4.5.0'
+	implementation 'org.webjars:jquery:3.5.1'
 
 	compile group: 'org.immutables', name: 'value', version: '2.8.8'
 	annotationProcessor "org.immutables:value:2.8.8"
@@ -71,13 +77,12 @@ dependencies {
 	compile 'ch.qos.logback:logback-classic:1.2.3'
 	compile 'ch.qos.logback:logback-core:1.2.3'
 
-//	compile group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.2'
-//	compileOnly group: 'net.jcip', name: 'jcip-annotations', version: '1.0'
-
 	compile group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'
 	compile group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.2'
 
-	testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test'
+	testImplementation('org.springframework.boot:spring-boot-starter-test') {
+		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+	}
 
 	testImplementation("org.junit.jupiter:junit-jupiter:5.6.0")
 

@@ -1,6 +1,6 @@
 package com.bordozer.battleship.gameserver;
 
-import com.bordozer.battleship.gameserver.config.WebSocketConfig;
+import com.bordozer.battleship.gameserver.config.WebSocketMBConfigurer;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Import;
@@ -8,7 +8,7 @@ import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBr
 
 @SpringBootApplication
 @EnableWebSocketMessageBroker
-@Import(WebSocketConfig.class)
+@Import(WebSocketMBConfigurer.class)
 public class BattleshipApplication {
 
     public static void main(String[] args) {
