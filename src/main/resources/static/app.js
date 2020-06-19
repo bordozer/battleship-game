@@ -5,8 +5,7 @@ function setConnected(connected) {
     $("#disconnect").prop("disabled", !connected);
     if (connected) {
         $("#conversation").show();
-    }
-    else {
+    } else {
         $("#conversation").hide();
     }
     $("#greetings").html("");
@@ -33,7 +32,12 @@ function disconnect() {
 }
 
 function sendName() {
-    stompClient.send("/app/player", {}, JSON.stringify({'name': $("#name").val()}));
+    stompClient.send("/app/player", {}, JSON.stringify({
+            'gameId': $("#name").val(),
+            'line': 'aLine',
+            'column': 'aColumn'
+        }
+    ));
 }
 
 function showGreeting(message) {
@@ -44,7 +48,13 @@ $(function () {
     $("form").on('submit', function (e) {
         e.preventDefault();
     });
-    $( "#connect" ).click(function() { connect(); });
-    $( "#disconnect" ).click(function() { disconnect(); });
-    $( "#send" ).click(function() { sendName(); });
+    $("#connect").click(function () {
+        connect();
+    });
+    $("#disconnect").click(function () {
+        disconnect();
+    });
+    $("#send").click(function () {
+        sendName();
+    });
 });
