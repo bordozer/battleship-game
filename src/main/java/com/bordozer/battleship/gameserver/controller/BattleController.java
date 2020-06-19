@@ -1,6 +1,7 @@
 package com.bordozer.battleship.gameserver.controller;
 
 import com.bordozer.battleship.gameserver.dto.BattleDto;
+import com.bordozer.battleship.gameserver.dto.HelloMessage;
 import com.bordozer.battleship.gameserver.dto.ImmutableBattleDto;
 import com.bordozer.battleship.gameserver.dto.PlayerMoveDto;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -12,9 +13,9 @@ public class BattleController {
 
     @MessageMapping("/battle") // hello
     @SendTo("/player/move")    // /topic/greetings
-    public BattleDto move(final PlayerMoveDto move) {
+    public BattleDto move(final HelloMessage move) {
         return ImmutableBattleDto.builder()
-                .gameId(move.getGameId())
+                .gameId(move.getName())
                 .build();
     }
 }

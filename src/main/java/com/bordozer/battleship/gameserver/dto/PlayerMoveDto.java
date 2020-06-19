@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import lombok.ToString;
 import org.immutables.value.Value;
 
-@SuppressWarnings("checkstyle:magicnumber")
 @JsonDeserialize(
         builder = ImmutablePlayerMoveDto.Builder.class
 )
