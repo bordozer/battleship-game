@@ -1,14 +1,11 @@
 spring:
   application:
-    name: sea-battle
+    name: battleship-game-server
   profiles:
     active: dev
-#  flyway:
-#    locations: classpath:db/migration/h2
-#    schemas: public
 
 server:
-  port: 8082
+  port: 8036
   servlet:
     session:
       timeout: 864000

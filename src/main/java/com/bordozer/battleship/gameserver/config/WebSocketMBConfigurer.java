@@ -12,12 +12,12 @@ public class WebSocketMBConfigurer implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void configureMessageBroker(final MessageBrokerRegistry config) {
-        config.enableSimpleBroker("/player");
+        config.enableSimpleBroker("/player"); // topic
         config.setApplicationDestinationPrefixes("/app");
     }
 
     @Override
     public void registerStompEndpoints(final StompEndpointRegistry registry) {
-        registry.addEndpoint("/battle").withSockJS();
+        registry.addEndpoint("/player-websocket").withSockJS();
     }
 }
