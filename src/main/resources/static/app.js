@@ -48,7 +48,7 @@ function getPlayerId() {
 }
 
 function showGreeting(message) {
-    $("#greetings").append("<tr><td>" + message.playerMove.line + message.playerMove.column + "</td></tr>");
+    $("#greetings").append("<tr><td>" + message.playerMove.playerId + ': ' + message.playerMove.line + message.playerMove.column + "</td></tr>");
 }
 
 $(function () {
