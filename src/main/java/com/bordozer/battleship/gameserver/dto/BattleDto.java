@@ -16,4 +16,6 @@ import org.immutables.value.Value;
 public abstract class BattleDto {
 
     public abstract String getGameId();
+
+    public abstract PlayerMoveDto getAnotherPlayerMove();
 }

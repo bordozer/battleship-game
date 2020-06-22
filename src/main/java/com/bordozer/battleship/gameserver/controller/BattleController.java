@@ -10,11 +10,21 @@ import org.springframework.stereotype.Controller;
 @Controller
 public class BattleController {
 
-    @MessageMapping("/player/move")
-    @SendTo("/enemy/move")
-    public BattleDto greetings(final PlayerMoveDto move) {
+    @MessageMapping("/player1/move")
+    @SendTo("/player2/move")
+    public BattleDto playerMove(final PlayerMoveDto move) {
         return ImmutableBattleDto.builder()
                 .gameId(move.getGameId())
+                .anotherPlayerMove(move)
+                .build();
+    }
+
+    @MessageMapping("/player2/move")
+    @SendTo("/player1/move")
+    public BattleDto enemyMove(final PlayerMoveDto move) {
+        return ImmutableBattleDto.builder()
+                .gameId(move.getGameId())
+                .anotherPlayerMove(move)
                 .build();
     }
 }

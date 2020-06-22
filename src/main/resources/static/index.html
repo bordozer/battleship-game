@@ -22,11 +22,15 @@
                 </div>
             </form>
         </div>
+    </div>
+    <div class="row">
         <div class="col-md-6">
             <form class="form-inline">
                 <div class="form-group">
-                    <label for="playerId">Player ID</label>
-                    <input type="text" id="playerId" class="form-control" placeholder="player1" value="player">
+                    <label for="player1">Player 1</label>
+                    <input type="radio" name="player-role" id="player1" class="form-control" value="player1" checked>
+                    <label for="player2">Player 2</label>
+                    <input type="radio" name="player-role" id="player2" class="form-control" value="player2">
                 </div>
                 <button id="send" class="btn btn-default" type="submit">Send</button>
             </form>
