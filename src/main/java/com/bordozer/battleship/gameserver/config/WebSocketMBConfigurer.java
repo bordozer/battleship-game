@@ -8,11 +8,11 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 
 @Configuration
 @EnableWebSocketMessageBroker
-public class WebSocketPlayer2Configurer implements WebSocketMessageBrokerConfigurer {
+public class WebSocketMBConfigurer implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void configureMessageBroker(final MessageBrokerRegistry config) {
-        config.enableSimpleBroker("/player1");
+        config.enableSimpleBroker("/outbound");
 //        config.setApplicationDestinationPrefixes("/app");
     }
 

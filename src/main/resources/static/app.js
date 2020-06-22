@@ -12,23 +12,14 @@ function setConnected(connected) {
 }
 
 function connect() {
-    const playerId = getPlayerId();
-    const anotherPlayerId = playerId === 'player1' ? 'player2' : 'player1';
-    const subscribe = '/' + playerId + '/' + anotherPlayerId + '-move';
-
-    console.log("playerId", playerId);
-    console.log("anotherPlayerId", anotherPlayerId);
-    console.log("subscribe", subscribe);
-
     const socket = new SockJS('/gs-guide-websocket');
     stompClient = Stomp.over(socket);
     stompClient.connect({}, function (frame) {
         setConnected(true);
         console.log('Connected: ' + frame);
-        stompClient.subscribe(subscribe, function (battle) {
+        stompClient.subscribe('/outbound', function (battle) {
             console.log("battle", battle.body);
-            // showGreeting(JSON.parse(battle.body));
-            showGreeting(battle.body);
+            showGreeting(JSON.parse(battle.body));
         });
     });
 }
@@ -43,7 +34,7 @@ function disconnect() {
 
 function sendMove() {
     const playerId = getPlayerId();
-    const sendTo = "/move/" + playerId;
+    const sendTo = "/inbound";
     console.log("sendTo", sendTo);
     stompClient.send(sendTo, {}, JSON.stringify({
             'gameId': 'game-id',
@@ -59,7 +50,11 @@ function getPlayerId() {
 }
 
 function showGreeting(message) {
-    $("#greetings").append("<tr><td>" + message + "</td></tr>");
+    const playerId = getPlayerId();
+    if (message.playerMove.playerId === playerId) {
+        return;
+    }
+    $("#greetings").append("<tr><td>" + message.playerMove.line + message.playerMove.column + "</td></tr>");
 }
 
 $(function () {

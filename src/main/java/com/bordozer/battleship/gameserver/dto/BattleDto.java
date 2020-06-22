@@ -17,5 +17,5 @@ public abstract class BattleDto {
 
     public abstract String getGameId();
 
-    public abstract PlayerMoveDto getAnotherPlayerMove();
+    public abstract PlayerMoveDto getPlayerMove();
 }
