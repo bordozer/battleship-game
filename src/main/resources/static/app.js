@@ -44,14 +44,10 @@ function sendMove() {
 }
 
 function getPlayerId() {
-    return playerId; //$("input[name='player-role']:checked").val();
+    return playerId;
 }
 
 function showGreeting(message) {
-    const playerId = getPlayerId();
-    if (message.playerMove.playerId === playerId) {
-        return;
-    }
     $("#greetings").append("<tr><td>" + message.playerMove.line + message.playerMove.column + "</td></tr>");
 }
 
@@ -59,12 +55,6 @@ $(function () {
     $("form").on('submit', function (e) {
         e.preventDefault();
     });
-    /*$("#connect").click(function () {
-        connect();
-    });
-    $("#disconnect").click(function () {
-        disconnect();
-    });*/
     $("#send").click(function () {
         sendMove();
     });

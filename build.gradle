@@ -48,9 +48,12 @@ ext {
 }
 
 dependencies {
-//	compile group: 'org.springframework.boot', name: 'spring-boot-starter-web'
-	implementation 'org.springframework.boot:spring-boot-starter-websocket'
+	compile group: 'org.springframework.boot', name: 'spring-boot-starter-web'
+	compile group: 'org.springframework.boot', name: 'spring-boot-starter-thymeleaf'
+	compile 'org.springframework.boot:spring-boot-starter-websocket'
 	compile group: 'org.springframework', name: 'spring-messaging'
+
+//	compile group: 'javax.servlet', name: 'jstl', version: '1.2'
 
 	compile group: 'com.github.spotbugs', name: 'spotbugs', version: spotbugsVersion
 	compileOnly group: 'com.github.spotbugs', name: 'spotbugs-annotations', version: spotbugsVersion
