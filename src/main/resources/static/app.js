@@ -43,7 +43,7 @@ function disconnect() {
 
 function sendMove() {
     const playerId = getPlayerId();
-    const sendTo = "/" + playerId + "/move";
+    const sendTo = "/move/" + playerId;
     console.log("sendTo", sendTo);
     stompClient.send(sendTo, {}, JSON.stringify({
             'gameId': 'game-id',
