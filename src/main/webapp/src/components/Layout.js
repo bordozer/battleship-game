@@ -1,14 +1,10 @@
 import React from "react"
 import $ from "jquery"
 
-const StompJs = require('@stomp/stompjs');
-
 const playerId = String(new Date().getTime());
 let stompClient = null;
 
 function connect() {
-    const ws = 'ws://localhost:8036/gs-guide-websocket'; /* Todo: move URL to config */
-
     const socket = new SockJS('/gs-guide-websocket');
     stompClient = Stomp.over(socket);
     stompClient.connect({}, function (frame) {
