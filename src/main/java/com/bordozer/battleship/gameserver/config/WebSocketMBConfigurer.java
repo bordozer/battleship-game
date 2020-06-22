@@ -12,7 +12,7 @@ public class WebSocketMBConfigurer implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void configureMessageBroker(final MessageBrokerRegistry config) {
-        config.enableSimpleBroker("/enemy-move");
+        config.enableSimpleBroker("/enemy");
 //        config.setApplicationDestinationPrefixes("/app");
     }
 
