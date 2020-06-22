@@ -1,7 +1,7 @@
 import React from "react"
 import $ from "jquery"
 
-const playerId = String(new Date().getTime());
+let playerId = null;
 let stompClient = null;
 
 function connect() {
@@ -45,7 +45,14 @@ function showGreeting(message) {
 export default class Layout extends React.Component {
 
     componentDidMount() {
-        connect();
+        $.ajax({
+            url: "/whoami",
+            success: function (result) {
+                playerId = result.playerId;
+                console.log("playerId", playerId);
+                connect();
+            }
+        });
 
         $(function () {
             $("form").on('submit', function (e) {
