@@ -70,7 +70,7 @@ export default class Layout extends React.Component {
                 <div className="row">
                     <div className="col-md-6">
                         <form className="form-inline">
-                            <button id="send" className="btn btn-default" type="submit">Move</button>
+                            <button id="send" className="btn btn-primary" type="submit">Move</button>
                         </form>
                     </div>
                 </div>
