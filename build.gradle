@@ -65,6 +65,7 @@ dependencies {
 	implementation 'org.webjars:stomp-websocket:2.3.3'
 	implementation 'org.webjars:bootstrap:4.5.0'
 	implementation 'org.webjars:jquery:3.5.1'
+//	implementation 'org.webjars:uuid:1.4.1'
 
 	compile group: 'org.immutables', name: 'value', version: '2.8.8'
 	annotationProcessor "org.immutables:value:2.8.8"

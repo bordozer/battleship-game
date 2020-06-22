@@ -1,4 +1,5 @@
-var stompClient = null;
+const playerId = String(new Date().getTime());
+let stompClient = null;
 
 function setConnected(connected) {
     $("#connect").prop("disabled", connected);
@@ -33,12 +34,9 @@ function disconnect() {
 }
 
 function sendMove() {
-    const playerId = getPlayerId();
-    const sendTo = "/inbound";
-    console.log("sendTo", sendTo);
-    stompClient.send(sendTo, {}, JSON.stringify({
+    stompClient.send("/inbound", {}, JSON.stringify({
             'gameId': 'game-id',
-            'playerId': playerId,
+            'playerId': getPlayerId(),
             'line': 'E',
             'column': '4'
         }
@@ -46,7 +44,7 @@ function sendMove() {
 }
 
 function getPlayerId() {
-    return $("input[name='player-role']:checked").val();
+    return playerId; //$("input[name='player-role']:checked").val();
 }
 
 function showGreeting(message) {
@@ -61,13 +59,16 @@ $(function () {
     $("form").on('submit', function (e) {
         e.preventDefault();
     });
-    $("#connect").click(function () {
+    /*$("#connect").click(function () {
         connect();
     });
     $("#disconnect").click(function () {
         disconnect();
-    });
+    });*/
     $("#send").click(function () {
         sendMove();
     });
+});
+$( document ).ready(function() {
+    connect();
 });
