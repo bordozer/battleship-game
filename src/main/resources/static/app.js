@@ -17,7 +17,7 @@ function connect() {
     stompClient.connect({}, function (frame) {
         setConnected(true);
         console.log('Connected: ' + frame);
-        stompClient.subscribe('/player/move', function (battle) {
+        stompClient.subscribe('/enemy-move', function (battle) {
             showGreeting(JSON.parse(battle.body));
         });
     });
@@ -32,7 +32,7 @@ function disconnect() {
 }
 
 function sendMove() {
-    stompClient.send("/app/player-move", {}, JSON.stringify({
+    stompClient.send("/player-move", {}, JSON.stringify({
             'gameId': 'game-id',
             'playerId': $("#playerId").val(),
             'line': 'line',

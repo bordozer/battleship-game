@@ -12,8 +12,8 @@ public class WebSocketMBConfigurer implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void configureMessageBroker(final MessageBrokerRegistry config) {
-        config.enableSimpleBroker("/player");
-        config.setApplicationDestinationPrefixes("/app");
+        config.enableSimpleBroker("/enemy-move");
+//        config.setApplicationDestinationPrefixes("/app");
     }
 
     @Override
