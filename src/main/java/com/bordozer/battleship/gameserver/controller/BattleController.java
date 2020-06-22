@@ -10,7 +10,7 @@ import org.springframework.stereotype.Controller;
 @Controller
 public class BattleController {
 
-    @MessageMapping("/hello")
+    @MessageMapping("/player-move")
     @SendTo("/player/move")
     public BattleDto greetings(final PlayerMoveDto move) {
         return ImmutableBattleDto.builder()

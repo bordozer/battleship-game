@@ -16,6 +16,8 @@ public abstract class PlayerMoveDto {
 
     public abstract String getGameId();
 
+    public abstract String getPlayerId();
+
     public abstract String getLine();
 
     public abstract String getColumn();

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Hello WebSocket</title>
+    <title>Battleship game</title>
     <link href="/webjars/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link href="/main.css" rel="stylesheet">
     <script src="/webjars/jquery/jquery.min.js"></script>
@@ -10,9 +10,6 @@
     <script src="/app.js"></script>
 </head>
 <body>
-<noscript><h2 style="color: #ff0000">Seems your browser doesn't support Javascript! Websocket relies on Javascript being
-    enabled. Please enable
-    Javascript and reload this page!</h2></noscript>
 <div id="main-content" class="container">
     <div class="row">
         <div class="col-md-6">
@@ -28,8 +25,8 @@
         <div class="col-md-6">
             <form class="form-inline">
                 <div class="form-group">
-                    <label for="name">What is your name?</label>
-                    <input type="text" id="name" class="form-control" placeholder="Your name here..." value="game-id">
+                    <label for="playerId">Player ID</label>
+                    <input type="text" id="playerId" class="form-control" placeholder="player1" value="player">
                 </div>
                 <button id="send" class="btn btn-default" type="submit">Send</button>
             </form>

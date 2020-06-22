@@ -17,8 +17,8 @@ function connect() {
     stompClient.connect({}, function (frame) {
         setConnected(true);
         console.log('Connected: ' + frame);
-        stompClient.subscribe('/player/move', function (greeting) {
-            showGreeting(JSON.parse(greeting.body).gameId);
+        stompClient.subscribe('/player/move', function (battle) {
+            showGreeting(JSON.parse(battle.body));
         });
     });
 }
@@ -31,9 +31,10 @@ function disconnect() {
     console.log("Disconnected");
 }
 
-function sendName() {
-    stompClient.send("/app/hello", {}, JSON.stringify({
-            'gameId': $("#name").val(),
+function sendMove() {
+    stompClient.send("/app/player-move", {}, JSON.stringify({
+            'gameId': 'game-id',
+            'playerId': $("#playerId").val(),
             'line': 'line',
             'column': 'column'
         }
@@ -41,7 +42,7 @@ function sendName() {
 }
 
 function showGreeting(message) {
-    $("#greetings").append("<tr><td>" + message + "</td></tr>");
+    $("#greetings").append("<tr><td>" + message.gameId + "</td></tr>");
 }
 
 $(function () {
@@ -55,6 +56,6 @@ $(function () {
         disconnect();
     });
     $("#send").click(function () {
-        sendName();
+        sendMove();
     });
 });
