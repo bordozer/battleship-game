@@ -31,7 +31,7 @@ public class GameController {
 
     @GetMapping(path = "", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<GameDto>> games() {
-        return new ResponseEntity<>(newArrayList(), HttpStatus.OK);
+        return new ResponseEntity<>(gameService.getGames(), HttpStatus.OK);
     }
 
     @GetMapping(path = "/create", produces = MediaType.APPLICATION_JSON_VALUE)

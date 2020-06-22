@@ -1,44 +1,84 @@
 package com.bordozer.battleship.gameserver.service.impl;
 
 import com.bordozer.battleship.gameserver.dto.GameDto;
-import com.bordozer.battleship.gameserver.dto.ImmutableGameDto;
+import com.bordozer.battleship.gameserver.model.Game;
+import com.bordozer.battleship.gameserver.model.GameState;
 import com.bordozer.battleship.gameserver.service.GameService;
 import com.bordozer.battleship.gameserver.service.PlayerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
+
+import static com.bordozer.battleship.gameserver.model.GameState.CREATED;
 
 @Service
 @RequiredArgsConstructor
 public class GameServiceImpl implements GameService {
 
-    private final Map<String, GameDto> gamesMap = new ConcurrentHashMap<>();
+    private final Map<String, Game> gamesMap = new HashMap<>();
 
     private final PlayerService playerService;
 
     @Override
+    public List<GameDto> getGames() {
+        synchronized (gamesMap) {
+            return gamesMap.keySet().stream()
+                    .filter(gameId -> gamesMap.get(gameId).getState() == CREATED)
+                    .map(gameId -> {
+                        final var game = gamesMap.get(gameId);
+                        return GameDto.builder()
+                                .gameId(gameId)
+                                .player1(playerService.getById(game.getPlayer1()))
+                                .player2(playerService.getById(game.getPlayer2()))
+                                .build();
+                    })
+                    .collect(Collectors.toList());
+        }
+    }
+
+    @Override
     public GameDto create(final String playerId) {
-        final var player = playerService.getById(playerId);
+        synchronized (gamesMap) {
+            final var gameId = UUID.randomUUID().toString();
+            final var game = Game.builder()
+                    .gameId(gameId)
+                    .player1(playerId)
+                    .state(CREATED)
+                    .build();
 
-        final var gameId = UUID.randomUUID().toString();
-        final var game = GameDto.builder()
-                .gameId(gameId)
-                .player1(player)
-                .build();
+            gamesMap.put(gameId, game);
 
-        gamesMap.put(gameId, game);
-
-        return game;
+            final var player = playerService.getById(playerId);
+            return GameDto.builder()
+                    .gameId(gameId)
+                    .player1(player)
+                    .build();
+        }
     }
 
     @Override
     public GameDto joinGame(final String gameId, final String playerId) {
-        final var player = playerService.getById(playerId);
-        final var game = gamesMap.get(gameId);
-        return ImmutableGameDto.copyOf(game)
-                .withPlayer2(player);
+        if (gamesMap.get(gameId).getState() != CREATED) {
+            throw new IllegalStateException("Game is busy");
+        }
+        synchronized (gamesMap.get(gameId)) {
+            final var game = gamesMap.get(gameId);
+            if (game.getState() != CREATED) {
+                throw new IllegalStateException("Game is busy");
+            }
+            game.setPlayer2(playerId);
+            game.setState(GameState.BATTLE);
+
+            return GameDto.builder()
+                    .gameId(gameId)
+                    .player1(playerService.getById(game.getPlayer1()))
+                    .player2(playerService.getById(game.getPlayer2()))
+                    .build();
+        }
     }
 }
