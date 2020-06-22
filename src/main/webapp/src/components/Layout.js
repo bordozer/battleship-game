@@ -1,23 +1,36 @@
 import React from "react"
 import $ from "jquery"
 
-// const SockJS = require('sockjs');
-// const Stomp = require('stomp-websocket');
+const StompJs = require('@stomp/stompjs');
 
 const playerId = String(new Date().getTime());
 let stompClient = null;
 
-/*function connect() {
-    const socket = new SockJS('/gs-guide-websocket');
-    stompClient = Stomp.over(socket);
-    stompClient.connect({}, function (frame) {
+function connect() {
+    const ws = 'ws://localhost:8036/gs-guide-websocket'; /* Todo: move URL to config */
+    stompClient = new StompJs.Client({
+        brokerURL: ws,
+        connectHeaders: {},
+        debug: function (str) {
+            console.log(str);
+        },
+        reconnectDelay: 50000,
+        heartbeatIncoming: 4000,
+        heartbeatOutgoing: 4000
+    });
+    stompClient.onConnect = function (frame) {
         console.log('Connected: ' + frame);
         stompClient.subscribe('/outbound', function (battle) {
             console.log("battle", battle.body);
             showGreeting(JSON.parse(battle.body));
         });
-    });
-}*/
+    };
+    stompClient.onStompError = function (frame) {
+        console.log('Broker reported error: ' + frame.headers['message']);
+        console.log('Additional details: ' + frame.body);
+    };
+    stompClient.activate();
+}
 
 function sendMove() {
     stompClient.send("/inbound", {}, JSON.stringify({
@@ -48,7 +61,7 @@ function showGreeting(message) {
 export default class Layout extends React.Component {
 
     componentDidMount() {
-        // connect();
+        connect();
 
         $(function () {
             $("form").on('submit', function (e) {
