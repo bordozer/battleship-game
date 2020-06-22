@@ -11,7 +11,7 @@ import org.springframework.stereotype.Controller;
 public class BattleController {
 
     @MessageMapping("/player1/move")
-    @SendTo("/player2/move")
+    @SendTo("/player2/player1-move")
     public BattleDto playerMove(final PlayerMoveDto move) {
         return ImmutableBattleDto.builder()
                 .gameId(move.getGameId())
@@ -20,7 +20,7 @@ public class BattleController {
     }
 
     @MessageMapping("/player2/move")
-    @SendTo("/player1/move")
+    @SendTo("/player1/player2-move")
     public BattleDto enemyMove(final PlayerMoveDto move) {
         return ImmutableBattleDto.builder()
                 .gameId(move.getGameId())
