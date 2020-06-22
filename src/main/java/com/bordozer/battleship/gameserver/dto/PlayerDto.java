@@ -17,4 +17,8 @@ public abstract class PlayerDto {
     public abstract String getId();
 
     public abstract String getName();
+
+    public static ImmutablePlayerDto.Builder builder() {
+        return ImmutablePlayerDto.builder();
+    }
 }

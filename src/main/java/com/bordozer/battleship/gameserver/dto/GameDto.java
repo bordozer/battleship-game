@@ -19,4 +19,8 @@ public abstract class GameDto {
     public abstract PlayerDto getPlayer1();
 
     public abstract PlayerDto getPlayer2();
+
+    public static ImmutableGameDto.Builder builder() {
+        return ImmutableGameDto.builder();
+    }
 }

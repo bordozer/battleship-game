@@ -1,8 +1,6 @@
 package com.bordozer.battleship.gameserver.controller;
 
 import com.bordozer.battleship.gameserver.dto.GameDto;
-import com.bordozer.battleship.gameserver.dto.ImmutableGameDto;
-import com.bordozer.battleship.gameserver.dto.ImmutablePlayerDto;
 import com.bordozer.battleship.gameserver.dto.PlayerDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -36,10 +34,10 @@ public class GameController {
     @GetMapping(path = "/create", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<GameDto> createNewGame(final HttpServletRequest request) {
         final var playerId = getPlayerId(request);
-        final var player = ImmutablePlayerDto.builder()
+        final var player = PlayerDto.builder()
                 .id(playerId)
                 .build();
-        final var game = ImmutableGameDto.builder()
+        final var game = GameDto.builder()
                 .gameId(UUID.randomUUID().toString())
                 .player1(player)
                 .build();
@@ -49,10 +47,10 @@ public class GameController {
     @GetMapping(path = "/join/{gameId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<GameDto> joinGame(@PathVariable("gameId") final String gameId, final HttpServletRequest request) {
         final var playerId = getPlayerId(request);
-        final var player = ImmutablePlayerDto.builder()
+        final var player = PlayerDto.builder()
                 .id(playerId)
                 .build();
-        final var game = ImmutableGameDto.builder()
+        final var game = GameDto.builder()
                 .gameId(gameId)
                 .player2(player)
                 .build();
