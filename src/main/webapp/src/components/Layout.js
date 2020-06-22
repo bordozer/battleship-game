@@ -8,28 +8,16 @@ let stompClient = null;
 
 function connect() {
     const ws = 'ws://localhost:8036/gs-guide-websocket'; /* Todo: move URL to config */
-    stompClient = new StompJs.Client({
-        brokerURL: ws,
-        connectHeaders: {},
-        debug: function (str) {
-            console.log(str);
-        },
-        reconnectDelay: 50000,
-        heartbeatIncoming: 4000,
-        heartbeatOutgoing: 4000
-    });
-    stompClient.onConnect = function (frame) {
+
+    const socket = new SockJS('/gs-guide-websocket');
+    stompClient = Stomp.over(socket);
+    stompClient.connect({}, function (frame) {
         console.log('Connected: ' + frame);
         stompClient.subscribe('/outbound', function (battle) {
             console.log("battle", battle.body);
             showGreeting(JSON.parse(battle.body));
         });
-    };
-    stompClient.onStompError = function (frame) {
-        console.log('Broker reported error: ' + frame.headers['message']);
-        console.log('Additional details: ' + frame.body);
-    };
-    stompClient.activate();
+    });
 }
 
 function sendMove() {
@@ -47,7 +35,7 @@ function getPlayerId() {
 }
 
 function showGreeting(message) {
-    $("#greetings").append("<tr><td>" + message.playerMove.line + message.playerMove.column + "</td></tr>");
+    $("#greetings").append("<tr><td>" + message.playerMove.playerId + ': ' + message.playerMove.line + message.playerMove.column + "</td></tr>");
 }
 
 /*function disconnect() {
