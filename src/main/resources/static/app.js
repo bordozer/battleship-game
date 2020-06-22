@@ -1,6 +1,24 @@
 const playerId = String(new Date().getTime());
 let stompClient = null;
 
+function sendMove() {
+    stompClient.send("/inbound", {}, JSON.stringify({
+            'gameId': 'game-id',
+            'playerId': getPlayerId(),
+            'line': 'E',
+            'column': '4'
+        }
+    ));
+}
+
+function showGreeting(message) {
+    $("#greetings").append("<tr><td>" + message.playerMove.playerId + ': ' + message.playerMove.line + message.playerMove.column + "</td></tr>");
+}
+
+function getPlayerId() {
+    return playerId;
+}
+
 function setConnected(connected) {
     $("#connect").prop("disabled", connected);
     $("#disconnect").prop("disabled", !connected);
@@ -31,24 +49,6 @@ function disconnect() {
     }
     setConnected(false);
     console.log("Disconnected");
-}
-
-function sendMove() {
-    stompClient.send("/inbound", {}, JSON.stringify({
-            'gameId': 'game-id',
-            'playerId': getPlayerId(),
-            'line': 'E',
-            'column': '4'
-        }
-    ));
-}
-
-function getPlayerId() {
-    return playerId;
-}
-
-function showGreeting(message) {
-    $("#greetings").append("<tr><td>" + message.playerMove.playerId + ': ' + message.playerMove.line + message.playerMove.column + "</td></tr>");
 }
 
 $(function () {
