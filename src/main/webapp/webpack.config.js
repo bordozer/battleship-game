@@ -119,6 +119,7 @@ module.exports = (env, options) => {
             compress: true,
             useLocalIp: false,
             port: 3100
-        }
+        }/*,
+        target: "node"*/
     }
 };
