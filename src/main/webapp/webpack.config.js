@@ -1,11 +1,43 @@
 const path = require("path");
+const HtmlWebPackPlugin = require("html-webpack-plugin");
+const getFilesFromDir = require("./src/config/files");
+const PAGE_DIR = path.join("./src", "pages", path.sep);
+
+const HTML_WEB_PACK_PLUGIN_MINIFY_OPTIONS = {
+    collapseWhitespace: true,
+    preserveLineBreaks: true,
+    minifyCSS: true,
+    minifyJS: true,
+    removeComments: true
+};
+
+const htmlPlugins = getFilesFromDir(PAGE_DIR, [".html"])
+    .map(filePath => {
+        const fileName = filePath.replace(PAGE_DIR, "");
+        return new HtmlWebPackPlugin({
+            chunks: [fileName.replace(path.extname(fileName), ""), "vendor"],
+            template: filePath,
+            filename: fileName,
+            minify: HTML_WEB_PACK_PLUGIN_MINIFY_OPTIONS
+        })
+    });
+
+const entry = getFilesFromDir(PAGE_DIR, [".js"])
+    .reduce((obj, filePath) => {
+        const entryChunkName = filePath.replace(path.extname(filePath), "").replace(PAGE_DIR, "");
+        obj[entryChunkName] = `./${filePath}`;
+        return obj;
+    }, {});
 
 module.exports = (env, options) => {
     return {
-        entry: './src/app.js',
+        entry: entry,
+        plugins: [
+            ...htmlPlugins
+        ],
         output: {
-            path: __dirname,
-            filename: './build/bundle.js'
+            filename: '[name].bundle.js',
+            path: path.resolve(__dirname, 'build')
         },
         resolve: {
             alias: {

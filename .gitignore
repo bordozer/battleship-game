@@ -34,7 +34,7 @@ out/
 # webapp
 /src/main/webapp/build/
 /src/main/webapp/node_modules/
-/src/main/resources/static/build/
+/src/main/resources/static/
 
 # testing
 /coverage
