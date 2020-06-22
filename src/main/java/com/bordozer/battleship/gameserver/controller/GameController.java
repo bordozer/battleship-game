@@ -1,7 +1,6 @@
 package com.bordozer.battleship.gameserver.controller;
 
 import com.bordozer.battleship.gameserver.dto.GameDto;
-import com.bordozer.battleship.gameserver.dto.PlayerDto;
 import com.bordozer.battleship.gameserver.service.GameService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,7 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
-import java.util.UUID;
 
 import static com.bordozer.battleship.gameserver.utils.RequestUtils.getPlayerId;
 import static com.google.common.collect.Lists.newArrayList;
@@ -31,7 +29,7 @@ public class GameController {
 
     @GetMapping(path = "", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<GameDto>> games() {
-        return new ResponseEntity<>(gameService.getGames(), HttpStatus.OK);
+        return new ResponseEntity<>(gameService.getOpenGames(), HttpStatus.OK);
     }
 
     @GetMapping(path = "/create", produces = MediaType.APPLICATION_JSON_VALUE)

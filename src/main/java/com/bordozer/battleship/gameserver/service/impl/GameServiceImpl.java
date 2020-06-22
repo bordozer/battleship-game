@@ -14,7 +14,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import static com.bordozer.battleship.gameserver.model.GameState.CREATED;
+import static com.bordozer.battleship.gameserver.model.GameState.OPEN;
 
 @Service
 @RequiredArgsConstructor
@@ -25,10 +25,10 @@ public class GameServiceImpl implements GameService {
     private final PlayerService playerService;
 
     @Override
-    public List<GameDto> getGames() {
+    public List<GameDto> getOpenGames() {
         synchronized (gamesMap) {
             return gamesMap.keySet().stream()
-                    .filter(gameId -> gamesMap.get(gameId).getState() == CREATED)
+                    .filter(gameId -> gamesMap.get(gameId).getState() == OPEN)
                     .map(gameId -> {
                         final var game = gamesMap.get(gameId);
                         return GameDto.builder()
@@ -48,7 +48,7 @@ public class GameServiceImpl implements GameService {
             final var game = Game.builder()
                     .gameId(gameId)
                     .player1(playerId)
-                    .state(CREATED)
+                    .state(OPEN)
                     .build();
 
             gamesMap.put(gameId, game);
@@ -63,12 +63,12 @@ public class GameServiceImpl implements GameService {
 
     @Override
     public GameDto joinGame(final String gameId, final String playerId) {
-        if (gamesMap.get(gameId).getState() != CREATED) {
+        if (gamesMap.get(gameId).getState() != OPEN) {
             throw new IllegalStateException("Game is busy");
         }
         synchronized (gamesMap.get(gameId)) {
             final var game = gamesMap.get(gameId);
-            if (game.getState() != CREATED) {
+            if (game.getState() != OPEN) {
                 throw new IllegalStateException("Game is busy");
             }
             game.setPlayer2(playerId);

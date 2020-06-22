@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface GameService {
 
-    List<GameDto> getGames();
+    List<GameDto> getOpenGames();
 
     GameDto create(final String player1Id);
 
