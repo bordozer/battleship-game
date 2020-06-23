@@ -18,7 +18,7 @@ function connect() {
 
 function sendMove() {
     stompClient.send("/inbound", {}, JSON.stringify({
-            'gameId': 'game-id',
+            'gameId': '8327de36-5a26-4034-a032-e7bc6b221084',
             'playerId': getPlayerId(),
             'line': 'E',
             'column': '4'

@@ -53,7 +53,7 @@ public class BattleServiceImpl implements BattleService {
                 .build();
 
         final var player2Id = game.getPlayer2Id();
-        Objects.requireNonNull(player2Id, "Player1 cannot be null at this step");
+        Objects.requireNonNull(player2Id, "Player2 cannot be null at this step");
         final var enemy = PlayerDto.builder()
                 .playerId(player2Id)
                 .name("enemy")
@@ -97,9 +97,9 @@ public class BattleServiceImpl implements BattleService {
                 .y(cell.getLine())
                 .xLabel(cell.getXLabel())
                 .yLabel(cell.getYLabel())
-                .isHit(cell.isHit())
-                .isShipNeighbor(cell.isShipNeighbor())
-                .isKilledShipNeighborCell(cell.isKilledShipNeighbor())
+                .isHit(Boolean.TRUE.equals(cell.isHit()))
+                .isShipNeighbor(Boolean.TRUE.equals(cell.isShipNeighbor()))
+                .isKilledShipNeighborCell(Boolean.TRUE.equals(cell.isKilledShipNeighbor()))
                 .build();
     }
 }

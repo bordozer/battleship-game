@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import lombok.ToString;
 import org.immutables.value.Value;
 
+import javax.annotation.CheckForNull;
+
 @JsonDeserialize(
         builder = ImmutableCellDto.Builder.class
 )
@@ -22,13 +24,14 @@ public abstract class CellDto {
 
     public abstract String getYLabel();
 
-    public abstract ShipDto getShip();
-
     public abstract Boolean getIsHit();
 
     public abstract Boolean getIsShipNeighbor();
 
     public abstract Boolean getIsKilledShipNeighborCell();
+
+    @CheckForNull
+    public abstract ShipDto getShip();
 
     public String getId() {
         return String.format("%s%s", getX(), getX());
