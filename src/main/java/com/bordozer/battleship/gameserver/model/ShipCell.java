@@ -10,7 +10,7 @@ import lombok.ToString;
 public class ShipCell extends Cell{
     private boolean damaged;
 
-    public ShipCell(final String line, final String column) {
-        super(line, column);
+    public ShipCell(final int line, final int column, final String xLabel, final String yLabel) {
+        super(line, column, xLabel, yLabel);
     }
 }

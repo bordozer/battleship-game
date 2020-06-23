@@ -1,6 +1,5 @@
 package com.bordozer.battleship.gameserver.dto.battle;
 
-import com.bordozer.battleship.gameserver.dto.ImmutableShipDto;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import lombok.ToString;

@@ -74,6 +74,7 @@ public class GameServiceImpl implements GameService {
     }
 
     @Override
+    @CheckForNull
     public Game getGame(final String gameId) {
         return gamesMap.get(gameId);
     }

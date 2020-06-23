@@ -6,12 +6,14 @@ import com.bordozer.battleship.gameserver.dto.battle.GameConfigDto;
 import com.bordozer.battleship.gameserver.dto.battle.GameStep;
 import com.bordozer.battleship.gameserver.dto.battle.GameplayDto;
 import com.bordozer.battleship.gameserver.dto.battle.PlayerDto;
+import com.bordozer.battleship.gameserver.exception.GameNotFoundException;
 import com.bordozer.battleship.gameserver.model.BattlefieldCell;
 import com.bordozer.battleship.gameserver.service.BattleService;
 import com.bordozer.battleship.gameserver.service.GameService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.CheckForNull;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -27,17 +29,18 @@ public class BattleServiceImpl implements BattleService {
 
     @Override
     public BattleDto getBattle(final String gameId) {
-        final var game = gameService.getGame(gameId);
+        @CheckForNull final var game = gameService.getGame(gameId);
+        if (game == null) {
+            throw new GameNotFoundException(gameId);
+        }
 
         final var battle = game.getBattle();
-
-        final List<List<CellDto>> player1Cells = battle.getBattlefield1().getCells().stream()
+        final var player1Cells = battle.getBattlefield1().getCells().stream()
                 .map(this::convertCellsToDto)
                 .collect(Collectors.toList());
-        final List<List<CellDto>> player2Cells = battle.getBattlefield2().getCells().stream()
+        final var player2Cells = battle.getBattlefield2().getCells().stream()
                 .map(this::convertCellsToDto)
                 .collect(Collectors.toList());
-
 
         final var player = PlayerDto.builder()
                 .playerId(game.getPlayer1Id())
@@ -80,12 +83,14 @@ public class BattleServiceImpl implements BattleService {
                 .build();
     }
 
+    /* TODO: move to converter */
     private List<CellDto> convertCellsToDto(final List<BattlefieldCell> columns) {
         return columns.stream()
                 .map(this::convertCellToDto)
                 .collect(Collectors.toList());
     }
 
+    /* TODO: move to converter */
     private CellDto convertCellToDto(final BattlefieldCell cell) {
         return CellDto.builder()
                 .x(cell.getColumn())

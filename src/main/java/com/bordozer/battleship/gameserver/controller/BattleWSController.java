@@ -17,10 +17,6 @@ public class BattleWSController {
     @MessageMapping("/inbound")
     @SendTo("/outbound")
     public BattleDto player1Move(final PlayerMoveDto move) {
-        return constructResponse(move);
-    }
-
-    private BattleDto constructResponse(final PlayerMoveDto move) {
         return battleService.getBattle(move.getGameId());
     }
 }
