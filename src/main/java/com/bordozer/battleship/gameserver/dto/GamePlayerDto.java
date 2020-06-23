@@ -6,19 +6,19 @@ import lombok.ToString;
 import org.immutables.value.Value;
 
 @JsonDeserialize(
-        builder = ImmutablePlayerDto.Builder.class
+        builder = ImmutableGamePlayerDto.Builder.class
 )
 @JsonIgnoreProperties("initialized")
 @Value.Immutable
 @Value.Modifiable
 @ToString
-public abstract class PlayerDto {
+public abstract class GamePlayerDto {
 
-    public abstract String getId();
+    public abstract String getPlayerId();
 
     public abstract String getName();
 
-    public static ImmutablePlayerDto.Builder builder() {
-        return ImmutablePlayerDto.builder();
+    public static ImmutableGamePlayerDto.Builder builder() {
+        return ImmutableGamePlayerDto.builder();
     }
 }

@@ -1,8 +1,8 @@
 package com.bordozer.battleship.gameserver.service;
 
-import com.bordozer.battleship.gameserver.dto.PlayerDto;
+import com.bordozer.battleship.gameserver.dto.GamePlayerDto;
 
 public interface PlayerService {
 
-    PlayerDto getById(String playerId);
+    GamePlayerDto getById(String playerId);
 }
