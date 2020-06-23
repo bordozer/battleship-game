@@ -6,6 +6,8 @@ import lombok.NonNull;
 import lombok.Setter;
 import lombok.ToString;
 
+import javax.annotation.CheckForNull;
+
 @Getter
 @Setter
 @Builder
@@ -14,8 +16,11 @@ public class Game {
     @NonNull
     private final String gameId;
     @NonNull
-    private final String player1;
-    private String player2;
-    @NonNull
     private GameState state;
+    @NonNull
+    private final String player1;
+    @CheckForNull
+    private String player2;
+    @CheckForNull
+    private String winner;
 }
