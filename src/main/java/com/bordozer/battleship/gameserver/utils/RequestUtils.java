@@ -21,12 +21,17 @@ public final class RequestUtils {
                         .filter(cook -> cook.getName().equals(PLAYER_ID))
                         .map(Cookie::getValue)
                         .findFirst()
-                        .orElse(UUID.randomUUID().toString())
-                ).orElse(UUID.randomUUID().toString());
+                        .orElseGet(RequestUtils::generateNew)
+                ).orElseGet(RequestUtils::generateNew);
     }
 
     public static void addPlayerCookies(final HttpServletResponse response, final String playerId) {
         final var cookie = new Cookie(PLAYER_ID, playerId);
         response.addCookie(cookie);
+    }
+
+    /* TODO: move to Ifentity Service */
+    private static String generateNew() {
+        return UUID.randomUUID().toString();
     }
 }

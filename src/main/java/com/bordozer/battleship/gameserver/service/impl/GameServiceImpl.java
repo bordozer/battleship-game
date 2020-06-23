@@ -5,6 +5,7 @@ import com.bordozer.battleship.gameserver.dto.GamePlayerDto;
 import com.bordozer.battleship.gameserver.model.Game;
 import com.bordozer.battleship.gameserver.model.GameState;
 import com.bordozer.battleship.gameserver.service.GameService;
+import com.bordozer.battleship.gameserver.service.IdentityService;
 import com.bordozer.battleship.gameserver.service.PlayerService;
 import com.bordozer.battleship.gameserver.utils.BattleUtils;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +14,6 @@ import org.springframework.stereotype.Service;
 import javax.annotation.CheckForNull;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
@@ -27,6 +27,7 @@ public class GameServiceImpl implements GameService {
     private final static Map<String, Game> GAME_MAP = new ConcurrentHashMap<>();
 
     private final PlayerService playerService;
+    private final IdentityService identityService;
 
     @Override
     public List<GameDto> getOpenGames() {
@@ -42,7 +43,7 @@ public class GameServiceImpl implements GameService {
 
     @Override
     public GameDto create(final String playerId) {
-        final var gameId = UUID.randomUUID().toString();
+        final var gameId = identityService.generateForGame();
         final var game = Game.builder()
                 .gameId(gameId)
                 .player1Id(playerId)
