@@ -18,9 +18,11 @@ public class Game {
     @NonNull
     private GameState state;
     @NonNull
-    private final String player1;
+    private final String player1Id;
     @CheckForNull
-    private String player2;
+    private String player2Id;
+    @NonNull
+    private final Battle battle;
     @CheckForNull
     private String winner;
 }

@@ -1,16 +1,18 @@
 package com.bordozer.battleship.gameserver.model;
 
+import lombok.Builder;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.NonNull;
 import lombok.Setter;
 import lombok.ToString;
 
 @Getter
 @Setter
-@RequiredArgsConstructor
+@Builder
 @ToString
-public abstract class Battle {
-    private final Game game;
-    private final Battlefield battlefield1 = new Battlefield();
-    private final Battlefield battlefield2 = new Battlefield();
+public class Battle {
+    @NonNull
+    private final Battlefield battlefield1;
+    @NonNull
+    private final Battlefield battlefield2;
 }

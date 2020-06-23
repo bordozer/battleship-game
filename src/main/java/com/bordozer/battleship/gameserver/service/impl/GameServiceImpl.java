@@ -1,13 +1,17 @@
 package com.bordozer.battleship.gameserver.service.impl;
 
 import com.bordozer.battleship.gameserver.dto.GameDto;
+import com.bordozer.battleship.gameserver.dto.GamePlayerDto;
+import com.bordozer.battleship.gameserver.dto.ImmutableGamePlayerDto;
 import com.bordozer.battleship.gameserver.model.Game;
 import com.bordozer.battleship.gameserver.model.GameState;
 import com.bordozer.battleship.gameserver.service.GameService;
 import com.bordozer.battleship.gameserver.service.PlayerService;
+import com.bordozer.battleship.gameserver.utils.BattleUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.CheckForNull;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,8 +37,8 @@ public class GameServiceImpl implements GameService {
                         final var game = gamesMap.get(gameId);
                         return GameDto.builder()
                                 .gameId(gameId)
-                                .player1(playerService.getById(game.getPlayer1()))
-                                .player2(playerService.getById(game.getPlayer2()))
+                                .player1(playerService.getById(game.getPlayer1Id()))
+                                .player2(playerService.getById(game.getPlayer2Id()))
                                 .build();
                     })
                     .collect(Collectors.toList());
@@ -47,8 +51,9 @@ public class GameServiceImpl implements GameService {
             final var gameId = UUID.randomUUID().toString();
             final var game = Game.builder()
                     .gameId(gameId)
-                    .player1(playerId)
+                    .player1Id(playerId)
                     .state(OPEN)
+                    .battle(BattleUtils.initBattle())
                     .build();
 
             gamesMap.put(gameId, game);
@@ -71,14 +76,37 @@ public class GameServiceImpl implements GameService {
             if (game.getState() != OPEN) {
                 throw new IllegalStateException("Game is busy");
             }
-            game.setPlayer2(playerId);
+            game.setPlayer2Id(playerId);
             game.setState(GameState.BATTLE);
 
             return GameDto.builder()
                     .gameId(gameId)
-                    .player1(playerService.getById(game.getPlayer1()))
-                    .player2(playerService.getById(game.getPlayer2()))
+                    .player1(playerService.getById(game.getPlayer1Id()))
+                    .player2(playerService.getById(game.getPlayer2Id()))
                     .build();
         }
+    }
+
+    @Override
+    public GameDto getGame(final String gameId) {
+        final var game = gamesMap.get(gameId);
+
+        final var player1 = playerService.getById(game.getPlayer1Id());
+        final var player2 = playerService.getById(game.getPlayer2Id());
+
+        return GameDto.builder()
+                .gameId(gameId)
+                .player1(convertPlayer(player1))
+                .player2(convertPlayer(player2))
+                .build();
+    }
+
+    /* TODO: move to converter */
+    @CheckForNull
+    private ImmutableGamePlayerDto convertPlayer(@CheckForNull final GamePlayerDto player) {
+        if (player == null) {
+            return null;
+        }
+        return GamePlayerDto.builder().playerId(player.getPlayerId()).name(player.getName()).build();
     }
 }

@@ -8,7 +8,9 @@ public interface GameService {
 
     List<GameDto> getOpenGames();
 
-    GameDto create(final String player1Id);
+    GameDto create(String player1Id);
 
-    GameDto joinGame(final String gameId, final String player2Id);
+    GameDto joinGame(String gameId, String player2Id);
+
+    GameDto getGame(String gameId);
 }

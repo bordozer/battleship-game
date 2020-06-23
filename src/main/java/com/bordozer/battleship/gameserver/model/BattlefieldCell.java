@@ -16,7 +16,7 @@ public class BattlefieldCell extends Cell {
     private boolean shipNeighbor;
     private boolean killedShipNeighbor;
 
-    public BattlefieldCell(final String line, final String column) {
-        super(line, column);
+    public BattlefieldCell(final int line, final int column, final String xLabel, final String yLabel) {
+        super(line, column, xLabel, yLabel);
     }
 }
