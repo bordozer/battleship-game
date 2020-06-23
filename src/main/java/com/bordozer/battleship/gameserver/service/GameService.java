@@ -1,6 +1,7 @@
 package com.bordozer.battleship.gameserver.service;
 
 import com.bordozer.battleship.gameserver.dto.GameDto;
+import com.bordozer.battleship.gameserver.model.Game;
 
 import java.util.List;
 
@@ -12,5 +13,5 @@ public interface GameService {
 
     GameDto joinGame(String gameId, String player2Id);
 
-    GameDto getGame(String gameId);
+    Game getGame(String gameId);
 }
