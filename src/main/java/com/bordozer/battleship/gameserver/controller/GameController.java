@@ -9,6 +9,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -16,7 +18,6 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 import static com.bordozer.battleship.gameserver.utils.RequestUtils.getPlayerId;
-import static com.google.common.collect.Lists.newArrayList;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -32,14 +33,14 @@ public class GameController {
         return new ResponseEntity<>(gameService.getOpenGames(), HttpStatus.OK);
     }
 
-    @GetMapping(path = "/create", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(path = "/create", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<GameDto> createNewGame(final HttpServletRequest request) {
         final var playerId = getPlayerId(request);
         final var game = gameService.create(playerId);
         return new ResponseEntity<>(game, HttpStatus.OK);
     }
 
-    @GetMapping(path = "/join/{gameId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(path = "/join/{gameId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<GameDto> joinGame(@PathVariable("gameId") final String gameId, final HttpServletRequest request) {
         final var playerId = getPlayerId(request);
         final var game = gameService.joinGame(gameId, playerId);

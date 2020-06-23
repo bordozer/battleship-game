@@ -11,6 +11,7 @@ public class PlayerServiceImpl implements PlayerService {
     public GamePlayerDto getById(final String playerId) {
         return GamePlayerDto.builder()
                 .playerId(playerId)
+                .name("Fake User")
                 .build();
     }
 }

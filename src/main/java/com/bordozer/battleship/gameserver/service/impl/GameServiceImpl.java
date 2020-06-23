@@ -24,16 +24,16 @@ import static com.bordozer.battleship.gameserver.model.GameState.OPEN;
 @RequiredArgsConstructor
 public class GameServiceImpl implements GameService {
 
-    private final Map<String, Game> gamesMap = new ConcurrentHashMap<>();
+    private final static Map<String, Game> GAME_MAP = new ConcurrentHashMap<>();
 
     private final PlayerService playerService;
 
     @Override
     public List<GameDto> getOpenGames() {
-        return gamesMap.keySet().stream()
-                .filter(gameId -> gamesMap.get(gameId).getState() == OPEN)
+        return GAME_MAP.keySet().stream()
+                .filter(gameId -> GAME_MAP.get(gameId).getState() == OPEN)
                 .map(gameId -> {
-                    synchronized (gamesMap.get(gameId)) {
+                    synchronized (GAME_MAP.get(gameId)) {
                         return convertToDto(gameId);
                     }
                 })
@@ -50,7 +50,7 @@ public class GameServiceImpl implements GameService {
                 .battle(BattleUtils.initBattle())
                 .build();
 
-        gamesMap.put(gameId, game);
+        GAME_MAP.put(gameId, game);
 
         final var player1 = playerService.getById(playerId);
         return toDto(game, player1, null);
@@ -58,11 +58,11 @@ public class GameServiceImpl implements GameService {
 
     @Override
     public GameDto joinGame(final String gameId, final String playerId) {
-        if (gamesMap.get(gameId).getState() != OPEN) {
+        if (GAME_MAP.get(gameId).getState() != OPEN) {
             throw new IllegalStateException("Game is busy");
         }
-        synchronized (gamesMap.get(gameId)) {
-            final var game = gamesMap.get(gameId);
+        synchronized (GAME_MAP.get(gameId)) {
+            final var game = GAME_MAP.get(gameId);
             if (game.getState() != OPEN) {
                 throw new IllegalStateException("Game is busy");
             }
@@ -76,7 +76,7 @@ public class GameServiceImpl implements GameService {
     @Override
     @CheckForNull
     public Game getGame(final String gameId) {
-        return gamesMap.get(gameId);
+        return GAME_MAP.get(gameId);
     }
 
     /* TODO: move to converter */
@@ -92,9 +92,9 @@ public class GameServiceImpl implements GameService {
     }
 
     private GameDto convertToDto(final String gameId) {
-        final var game = gamesMap.get(gameId);
+        final var game = GAME_MAP.get(gameId);
         final var player1 = playerService.getById(game.getPlayer1Id());
-        final var player2 = playerService.getById(game.getPlayer2Id());
+        final var player2 = game.getPlayer2Id() != null ? playerService.getById(game.getPlayer2Id()) : null;
         return toDto(game, player1, player2);
     }
 }
