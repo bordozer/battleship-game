@@ -1,6 +1,5 @@
 package com.bordozer.battleship.gameserver.dto.battle;
 
-import com.bordozer.battleship.gameserver.dto.ImmutableCellDto;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import lombok.ToString;
@@ -33,5 +32,9 @@ public abstract class CellDto {
 
     public String getId() {
         return String.format("%s%s", getX(), getX());
+    }
+
+    public static ImmutableCellDto.Builder builder() {
+        return ImmutableCellDto.builder();
     }
 }
