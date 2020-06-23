@@ -6,6 +6,8 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import lombok.ToString;
 import org.immutables.value.Value;
 
+import javax.annotation.CheckForNull;
+
 @JsonDeserialize(
         builder = ImmutableGameDto.Builder.class
 )
@@ -19,6 +21,7 @@ public abstract class GameDto {
 
     public abstract GamePlayerDto getPlayer1();
 
+    @CheckForNull
     public abstract GamePlayerDto getPlayer2();
 
     public static ImmutableGameDto.Builder builder() {

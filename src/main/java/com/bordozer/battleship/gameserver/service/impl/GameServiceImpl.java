@@ -17,6 +17,7 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
+import static com.bordozer.battleship.gameserver.converter.GameConverter.toDto;
 import static com.bordozer.battleship.gameserver.model.GameState.OPEN;
 
 @Service
@@ -32,12 +33,9 @@ public class GameServiceImpl implements GameService {
         return gamesMap.keySet().stream()
                 .filter(gameId -> gamesMap.get(gameId).getState() == OPEN)
                 .map(gameId -> {
-                    final var game = gamesMap.get(gameId);
-                    return GameDto.builder()
-                            .gameId(gameId)
-                            .player1(playerService.getById(game.getPlayer1Id()))
-                            .player2(playerService.getById(game.getPlayer2Id()))
-                            .build();
+                    synchronized (gamesMap.get(gameId)) {
+                        return convertToDto(gameId);
+                    }
                 })
                 .collect(Collectors.toList());
     }
@@ -54,11 +52,8 @@ public class GameServiceImpl implements GameService {
 
         gamesMap.put(gameId, game);
 
-        final var player = playerService.getById(playerId);
-        return GameDto.builder()
-                .gameId(gameId)
-                .player1(player)
-                .build();
+        final var player1 = playerService.getById(playerId);
+        return toDto(game, player1, null);
     }
 
     @Override
@@ -75,26 +70,11 @@ public class GameServiceImpl implements GameService {
             game.setState(GameState.BATTLE);
         }
 
-        final var game = gamesMap.get(gameId);
-        return GameDto.builder()
-                .gameId(gameId)
-                .player1(playerService.getById(game.getPlayer1Id()))
-                .player2(playerService.getById(game.getPlayer2Id()))
-                .build();
+        return convertToDto(gameId);
     }
 
     @Override
     public Game getGame(final String gameId) {
-        /*final var game = gamesMap.get(gameId);
-
-        final var player1 = playerService.getById(game.getPlayer1Id());
-        final var player2 = playerService.getById(game.getPlayer2Id());
-
-        return GameDto.builder()
-                .gameId(gameId)
-                .player1(convertPlayer(player1))
-                .player2(convertPlayer(player2))
-                .build();*/
         return gamesMap.get(gameId);
     }
 
@@ -108,5 +88,12 @@ public class GameServiceImpl implements GameService {
                 .playerId(player.getPlayerId())
                 .name(player.getName())
                 .build();
+    }
+
+    private GameDto convertToDto(final String gameId) {
+        final var game = gamesMap.get(gameId);
+        final var player1 = playerService.getById(game.getPlayer1Id());
+        final var player2 = playerService.getById(game.getPlayer2Id());
+        return toDto(game, player1, player2);
     }
 }
