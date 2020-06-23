@@ -1,6 +1,13 @@
 import React from "react"
 import $ from "jquery"
 
+import {initBattleFieldCells} from 'src/utils/battle-field-utils';
+import {generateShips} from 'src/utils/ships-generator';
+import BattleFieldRenderer from 'components/battle-field-renderer';
+import GameConfigRenderer from 'components/game-config-renderer';
+import ShipsStateRenderer from 'components/ships-state';
+import LogsRenderer from 'components/logs-renderer';
+
 let playerId = null;
 let stompClient = null;
 
@@ -44,50 +51,180 @@ function showGreeting(message) {
 
 export default class Layout extends React.Component {
 
+    constructor(props) {
+        super(props);
+        this.state = this.getInitialState(null);
+    }
+
     componentDidMount() {
         $.ajax({
             url: "/whoami",
             success: function (result) {
                 playerId = result.playerId;
-                console.log("playerId", playerId);
                 connect();
             }
         });
 
-        $(function () {
-            $("form").on('submit', function (e) {
-                e.preventDefault();
-            });
-            $("#send").click(function () {
-                sendMove();
-            });
+        /*fetch('/battle/8327de36-5a26-4034-a032-e7bc6b221084')
+            .then(response => response.json())
+            .then(data => this.setState(data));*/
+    }
+
+    onNewGameClick = () => {
+        this.setState((state) => {
+            return this.getInitialState(state);
         });
     }
 
+    getInitialState = (state) => {
+        const playerData = this.randomizeBattleFieldWithShips();
+        const enemyData = this.randomizeBattleFieldWithShips();
+        return {
+            player: {
+                cells: playerData.cells,
+                ships: playerData.ships,
+                lastShot: null,
+                damagedShipCells: [],
+                points: state ? state.player.points : 0
+            },
+            enemy: {
+                cells: enemyData.cells,
+                ships: enemyData.ships,
+                lastShot: null,
+                damagedShipCells: [],
+                points: state ? state.enemy.points : 0
+            },
+            config: {
+                showShotHints: state ? state.config.showShotHints : true,
+                difficulty: state ? state.config.difficulty : 3, /* 1 - easy, 2 - medium, 3 - hard */
+            },
+            gameplay: {
+                step: 'STEP_READY_TO_START',
+                currentMove: null,
+                winner: null
+            },
+            logs: []
+        };
+    }
+
+    randomizeBattleFieldWithShips = () => {
+        const cells = initBattleFieldCells(10);
+        return generateShips(cells);
+    }
+
+    playerCellSetup = (cell) => {
+    }
+
+    playerShot = (cell) => {
+        console.log("Player's shot", cell);
+    }
+
+    startBattle = () => {
+        console.log("Start battle");
+    }
+
     render() {
-        return <div className="row">
-            <div className="col-12">
-                <div className="row">
-                    <div className="col-md-6">
-                        <form className="form-inline">
-                            <button id="send" className="btn btn-primary" type="submit">Move</button>
-                        </form>
+        console.log(" -= = = = state", this.state);
+
+        const step = this.state.gameplay.step;
+        const currentMove = this.state.gameplay.currentMove;
+        const difficulty = this.state.config.difficulty;
+
+        const playerBattleFieldOpts = {
+            isPlayer: true,
+            stage: step,
+            lastShot: this.state.enemy.lastShot,
+            currentMove: currentMove,
+            highlightBattleArea: step === 'STEP_BATTLE' && currentMove === 'enemy',
+            recommendedShots: {
+                shots: [],
+                strategy: null
+            }
+        };
+
+        const enemyBattleFieldOpts = {
+            isPlayer: false,
+            stage: step,
+            lastShot: this.state.player.lastShot,
+            recommendedShots: {
+                shots: [],
+                strategy: null
+            },
+            highlightBattleArea: step === 'STEP_BATTLE' && currentMove === 'player',
+            currentMove: currentMove,
+        };
+
+        return (
+            <div>
+                <div className="row mt-10">
+                    <div className="col-sm-1">
+                        <ShipsStateRenderer
+                            ships={this.state.player.ships}
+                            isPlayer={true}
+                            winner={this.state.gameplay.winner}
+                            points={this.state.player.points}
+                        />
+                    </div>
+                    <div className={'col-sm-5' + (playerBattleFieldOpts.highlightBattleArea ? '' : ' disabledArea')}
+                         disabled={playerBattleFieldOpts.highlightBattleArea}>
+                        <BattleFieldRenderer
+                            cells={this.state.player.cells}
+                            options={playerBattleFieldOpts}
+                            onCellClick={this.playerCellSetup}
+                        />
+                    </div>
+                    <div className={'col-sm-5' + (enemyBattleFieldOpts.highlightBattleArea ? '' : ' disabledArea')}
+                         disabled={enemyBattleFieldOpts.highlightBattleArea}>
+                        <BattleFieldRenderer
+                            cells={this.state.enemy.cells}
+                            options={enemyBattleFieldOpts}
+                            onCellClick={this.playerShot}
+                        />
+                    </div>
+                    <div className="col-sm-1">
+                        <ShipsStateRenderer
+                            ships={this.state.enemy.ships}
+                            isPlayer={false}
+                            winner={this.state.gameplay.winner}
+                            points={this.state.enemy.points}
+                        />
                     </div>
                 </div>
-                <div className="row">
-                    <div className="col-md-12">
-                        <table id="conversation" className="table table-striped">
-                            <thead>
-                            <tr>
-                                <th>Moves</th>
-                            </tr>
-                            </thead>
-                            <tbody id="greetings">
-                            </tbody>
-                        </table>
+
+                <div className="row mt-10">
+                    <div className="col-sm-4">
+
+                        <GameConfigRenderer
+                            difficulty={difficulty}
+                            showShotHints={this.state.config.showShotHints}
+                            onDifficultyChange={this.onDifficultyChange}
+                            onShowShotHintsChange={this.onShowShotHintsChange}
+                        />
+
+                    </div>
+                    <div className="col-sm-4 text-center btn-lg">
+                        <button
+                            className="bg-primary button-rounded"
+                            onClick={this.onNewGameClick}>
+                            New game
+                        </button>
+                        <button
+                            className="bg-primary button-rounded"
+                            onClick={this.startBattle}
+                            disabled={this.state.gameplay.step !== 'STEP_READY_TO_START'}>
+                            Start
+                        </button>
+                    </div>
+                    <div className="col-sm-4"/>
+                </div>
+
+                <div className="row mt-10">
+                    <div className="col-sm-12">
+                        <LogsRenderer logs={this.state.logs}/>
                     </div>
                 </div>
+
             </div>
-        </div>
+        )
     }
 }

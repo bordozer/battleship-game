@@ -65,7 +65,7 @@ public class BattleServiceImpl implements BattleService {
                 .build();
 
         final var gameConfig = GameConfigDto.builder()
-                .difficulty(0)
+                .difficulty(1)
                 .showShotHints(false)
                 .build();
         final var gameplay = GameplayDto.builder()
