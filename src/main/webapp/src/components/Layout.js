@@ -65,7 +65,7 @@ export default class Layout extends React.Component {
             }
         });
 
-        /*fetch('/battle/8327de36-5a26-4034-a032-e7bc6b221084')
+        /*fetch('/battle/state/8327de36-5a26-4034-a032-e7bc6b221084')
             .then(response => response.json())
             .then(data => this.setState(data));*/
     }
@@ -143,8 +143,6 @@ export default class Layout extends React.Component {
     }
 
     render() {
-        console.log(" -= = = = state", this.state);
-
         const step = this.state.gameplay.step;
         const currentMove = this.state.gameplay.currentMove;
         const difficulty = this.state.config.difficulty;

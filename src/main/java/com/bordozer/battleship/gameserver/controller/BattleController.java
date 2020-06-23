@@ -20,8 +20,13 @@ public class BattleController {
 
     private final BattleService battleService;
 
-    @GetMapping(path = "/{gameId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<BattleDto> games(@PathVariable("gameId") final String gameId) {
+    @GetMapping(path = "/state/{gameId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<BattleDto> getBattleState(@PathVariable("gameId") final String gameId) {
+        return new ResponseEntity<>(battleService.getBattle(gameId), HttpStatus.OK);
+    }
+
+    @GetMapping(path = "/start/{gameId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<BattleDto> startGame(@PathVariable("gameId") final String gameId) {
         return new ResponseEntity<>(battleService.getBattle(gameId), HttpStatus.OK);
     }
 }
