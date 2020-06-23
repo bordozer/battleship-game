@@ -1,0 +1,95 @@
+body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.mt-10 {
+    margin-top: 10px !important;
+}
+
+.mb-10 {
+    margin-bottom: 10px !important;
+}
+
+.battle-field-border {
+    font-size: 20px;
+    padding-top: 6px;
+}
+
+.cell-base {
+    color: #e5e0e0;
+    background-color: azure;
+    border: 1px solid silver;
+    border-radius: 4px;
+    height: 40px;
+    padding-top: 6px;
+    /*padding-right: 18px;*/
+    font-size: 18px;
+}
+
+.cell-ship {
+    color: yellow;
+    background-color: cadetblue;
+}
+
+.cell-ship-wounded {
+    color: white;
+    background-color: coral;
+}
+
+.cell-ship-killed {
+    color: white;
+    background-color: crimson;
+}
+
+.cell-missed-hit {
+    color: darkseagreen;
+}
+
+.cell-last-shot {
+    color: #0b0ba7;
+    padding-top: 7px;
+    font-size: 18px;
+}
+
+.cell-disabled {
+    background-color: ghostwhite;
+}
+
+.cell-not-hittable {
+    background-color: #dfefef;
+}
+
+.stat-cell {
+    width: 16px;
+    height: 16px;
+    border-bottom-color: black;
+    float: left;
+    margin: 1px;
+}
+
+.stat-cell-ship {
+    background-color: cadetblue;
+}
+
+.stat-cell-ship-killed {
+    background-color: crimson;
+}
+
+.disabledArea {
+    pointer-events: none;
+    opacity: 0.70;
+}
+
+.button-rounded {
+    border-radius: 7px;
+    width: 150px;
+}
+
+.looser{
+    text-decoration: line-through;
+}

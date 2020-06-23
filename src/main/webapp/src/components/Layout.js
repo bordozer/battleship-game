@@ -123,6 +123,25 @@ export default class Layout extends React.Component {
         console.log("Start battle");
     }
 
+    onDifficultyChange = (difficulty) => {
+        this.setState({
+            config: {
+                showShotHints: this.state.config.showShotHints,
+                difficulty: difficulty
+            }
+        });
+    }
+
+    onShowShotHintsChange = (e) => {
+        const isShowHints = e.target.checked;
+        this.setState({
+            config: {
+                showShotHints: isShowHints,
+                difficulty: this.state.config.difficulty
+            }
+        });
+    }
+
     render() {
         console.log(" -= = = = state", this.state);
 
