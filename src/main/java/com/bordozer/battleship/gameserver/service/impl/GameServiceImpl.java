@@ -4,10 +4,12 @@ import com.bordozer.battleship.gameserver.dto.GameDto;
 import com.bordozer.battleship.gameserver.dto.battle.CellDto;
 import com.bordozer.battleship.gameserver.model.Game;
 import com.bordozer.battleship.gameserver.model.GameState;
+import com.bordozer.battleship.gameserver.model.LogItem;
 import com.bordozer.battleship.gameserver.service.GameService;
 import com.bordozer.battleship.gameserver.service.IdentityService;
 import com.bordozer.battleship.gameserver.service.PlayerService;
 import com.bordozer.battleship.gameserver.utils.BattleUtils;
+import com.bordozer.battleship.gameserver.utils.RandomUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -20,6 +22,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 import static com.bordozer.battleship.gameserver.converter.GameConverter.toDto;
+import static com.bordozer.battleship.gameserver.dto.battle.CurrentMove.PLAYER1;
 import static com.bordozer.battleship.gameserver.model.GameState.BATTLE;
 import static com.bordozer.battleship.gameserver.model.GameState.OPEN;
 import static com.bordozer.battleship.gameserver.utils.BattleUtils.convertCells;
@@ -76,8 +79,15 @@ public class GameServiceImpl implements GameService {
                 game.setPlayer2Id(playerId);
                 game.setState(GameState.BATTLE);
 
+
                 final var battle = game.getBattle();
                 battle.getBattlefield2().setCells(convertCells(cells));
+
+                final var firstMove = RandomUtils.randomizeFirstMove();
+                battle.setCurrentMove(firstMove);
+                battle
+                        .addLog(LogItem.builder().text(String.format("Player %s joined the game", playerService.getById(playerId))).build())
+                        .addLog(LogItem.builder().text(String.format("%s", firstMove == PLAYER1 ? "Player 1" : "Player 2")).build());
             }
         }
     }

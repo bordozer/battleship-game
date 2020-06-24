@@ -7,7 +7,8 @@ import lombok.NonNull;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.util.ArrayList;
+import javax.annotation.CheckForNull;
+import java.util.Collections;
 import java.util.List;
 
 @Getter
@@ -21,6 +22,15 @@ public class Battle {
     private final Battlefield battlefield2;
     @NonNull
     private final List<LogItem> logs;
-    @NonNull
-    private final CurrentMove currentMove;
+    @CheckForNull
+    private CurrentMove currentMove;
+
+    public Battle addLog(final LogItem logItem) {
+        logs.add(logItem);
+        return this;
+    }
+
+    public List<LogItem> getLogs() {
+        return Collections.unmodifiableList(logs);
+    }
 }

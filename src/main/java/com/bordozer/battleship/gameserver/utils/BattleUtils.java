@@ -1,7 +1,6 @@
 package com.bordozer.battleship.gameserver.utils;
 
 import com.bordozer.battleship.gameserver.dto.battle.CellDto;
-import com.bordozer.battleship.gameserver.dto.battle.CurrentMove;
 import com.bordozer.battleship.gameserver.model.Battle;
 import com.bordozer.battleship.gameserver.model.Battlefield;
 import com.bordozer.battleship.gameserver.model.BattlefieldCell;
@@ -13,10 +12,8 @@ import lombok.NoArgsConstructor;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Random;
 
 import static com.bordozer.battleship.gameserver.dto.battle.CurrentMove.PLAYER1;
-import static com.bordozer.battleship.gameserver.dto.battle.CurrentMove.PLAYER2;
 import static com.google.common.collect.Lists.newArrayList;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -25,16 +22,11 @@ public final class BattleUtils {
     private static final String[] X_AXE = new String[]{"A", "B", "C", "D", "E", "F", "G", "H", "I", "K"};
 
     public static Battle initBattle(final ArrayList<ArrayList<CellDto>> cells) {
-        final var log1 = LogItem.builder().text("Game has been created").build();
-        final var firstMove = randomizeFirstMove();
-        final var log2 = LogItem.builder().text(String.format("%s", firstMove == PLAYER1 ? "Player 1" : "Player 2")).build();
-        final var logs = newArrayList(log1, log2);
-
         return Battle.builder()
                 .battlefield1(new Battlefield(convertCells(cells)))
                 .battlefield2(new Battlefield(Collections.emptyList()))
-                .currentMove(firstMove)
-                .logs(logs)
+                .currentMove(null)
+                .logs(newArrayList(LogItem.builder().text("Game has been created").build()))
                 .build();
     }
 
@@ -60,9 +52,5 @@ public final class BattleUtils {
             columns.add(lines);
         }
         return columns;
-    }
-
-    private static CurrentMove randomizeFirstMove() {
-        return new Random().nextBoolean() ? PLAYER1 : PLAYER2;
     }
 }
