@@ -25,6 +25,10 @@ function connect() {
             console.log("battle", battle.body);
             showGreeting(JSON.parse(battle.body));
         });
+        stompClient.subscribe('/join-game', function (battle) {
+            console.log("battle", battle.body);
+            showGreeting(JSON.parse(battle.body));
+        });
     });
 }
 
@@ -93,7 +97,8 @@ export default class Layout extends React.Component {
         $.ajax({
             method: 'POST',
             url: "/games/create",
-            data: this.state.player.cells,
+            contentType: 'application/json',
+            data: JSON.stringify(this.state.player.cells),
             cache: false,
             success: function (result) {
                 self.setState({
@@ -108,6 +113,10 @@ export default class Layout extends React.Component {
                 connect();
             }
         });
+    }
+
+    onJoinGameClick = () => {
+        console.log("Join game");
     }
 
     onCancelGameClick = () => {
@@ -275,10 +284,16 @@ export default class Layout extends React.Component {
                         </button>
                         <button
                             className="bg-primary button-rounded"
+                            onClick={this.onJoinGameClick}
+                            disabled={this.state.gameplay.step === STEP_GAME_INIT}>
+                            Join game
+                        </button>
+                        {/*<button
+                            className="bg-primary button-rounded"
                             onClick={this.onCancelGameClick}
                             disabled={this.state.gameplay.step === STEP_GAME_INIT}>
                             Cancel game
-                        </button>
+                        </button>*/}
                     </div>
                     <div className="col-sm-4"/>
                 </div>
