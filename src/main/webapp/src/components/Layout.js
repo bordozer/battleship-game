@@ -209,9 +209,15 @@ export default class Layout extends React.Component {
         });
     }
 
-    updateGameState = (state) => {
-        console.log("Game state is updated", state);
-        this.setState(state);
+    updateGameState = (newState) => {
+        console.log("Game state is updated", newState);
+        /*const state = this.state;
+        if (state.player.playerId === newState.enemy.playerId) {
+            const gameOwnerEnemy = state.player;
+            state.player = state.enemy;
+            state.enemy = state.gameOwnerEnemy;
+        }*/
+        this.setState(newState);
     }
 
     render() {

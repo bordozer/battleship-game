@@ -18,7 +18,7 @@ public class BattlefieldServiceImpl implements BattlefieldService {
         final var cell = CellUtils.getCell(battlefield.getCells(), move);
         cell.setHit(true);
         if (cell.getShip() != null) {
-            // TODO: populate neighbour cells
+            cell.getShip().damage();
         }
     }
 }
