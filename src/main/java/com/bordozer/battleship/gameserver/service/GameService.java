@@ -13,7 +13,7 @@ public interface GameService {
 
     GameDto create(String player1Id, final ArrayList<ArrayList<CellDto>> cells);
 
-    void joinGame(String gameId, String player2Id);
+    void joinGame(String gameId, String player2Id, final ArrayList<ArrayList<CellDto>> cells);
 
     Game getGame(String gameId);
 }

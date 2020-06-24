@@ -3,12 +3,14 @@ package com.bordozer.battleship.gameserver.service.impl;
 import com.bordozer.battleship.gameserver.dto.GameDto;
 import com.bordozer.battleship.gameserver.dto.GamePlayerDto;
 import com.bordozer.battleship.gameserver.dto.battle.CellDto;
+import com.bordozer.battleship.gameserver.model.Battle;
 import com.bordozer.battleship.gameserver.model.Game;
 import com.bordozer.battleship.gameserver.model.GameState;
 import com.bordozer.battleship.gameserver.service.GameService;
 import com.bordozer.battleship.gameserver.service.IdentityService;
 import com.bordozer.battleship.gameserver.service.PlayerService;
 import com.bordozer.battleship.gameserver.utils.BattleUtils;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -23,6 +25,7 @@ import java.util.stream.Collectors;
 import static com.bordozer.battleship.gameserver.converter.GameConverter.toDto;
 import static com.bordozer.battleship.gameserver.model.GameState.BATTLE;
 import static com.bordozer.battleship.gameserver.model.GameState.OPEN;
+import static com.bordozer.battleship.gameserver.utils.BattleUtils.convertCells;
 
 @Slf4j
 @Service
@@ -63,7 +66,7 @@ public class GameServiceImpl implements GameService {
     }
 
     @Override
-    public void joinGame(final String gameId, final String playerId) {
+    public void joinGame(final String gameId, final String playerId, final ArrayList<ArrayList<CellDto>> cells) {
         if (!canJoin(gameId, playerId)) {
             throw new IllegalStateException("Wrong game state");
         }
@@ -74,6 +77,9 @@ public class GameServiceImpl implements GameService {
             }
             game.setPlayer2Id(playerId);
             game.setState(GameState.BATTLE);
+
+            final var battle = game.getBattle();
+            battle.getBattlefield2().setCells(convertCells(cells));
         }
     }
 

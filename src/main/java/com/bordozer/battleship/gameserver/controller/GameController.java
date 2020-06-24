@@ -53,7 +53,7 @@ public class GameController {
                                               final HttpServletRequest request) {
         final var playerId = getPlayerId(request);
 
-        gameService.joinGame(gameId, playerId);
+        gameService.joinGame(gameId, playerId, cells);
 
         return new ResponseEntity<>("{\"status\":\"OK\"}", HttpStatus.OK);
     }

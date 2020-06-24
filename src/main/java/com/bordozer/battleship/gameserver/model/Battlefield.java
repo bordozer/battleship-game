@@ -1,16 +1,20 @@
 package com.bordozer.battleship.gameserver.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import javax.annotation.CheckForNull;
 import java.util.List;
 
 @Getter
 @Setter
-@RequiredArgsConstructor
+@AllArgsConstructor
+@NoArgsConstructor
 @ToString
 public class Battlefield {
-    private final List<List<BattlefieldCell>> cells;
+    @CheckForNull
+    private List<List<BattlefieldCell>> cells;
 }

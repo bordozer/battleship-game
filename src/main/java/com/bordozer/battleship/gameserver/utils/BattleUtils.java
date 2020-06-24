@@ -25,14 +25,15 @@ public final class BattleUtils {
 
     public static Battle initBattle(final ArrayList<ArrayList<CellDto>> cells) {
         return Battle.builder()
-                .battlefield1(new Battlefield(initCells(cells)))
-                .battlefield2(new Battlefield(initCells(cells)))
+                .battlefield1(new Battlefield(convertCells(cells)))
+                .battlefield2(new Battlefield())
                 .logs(newArrayList(LogItem.builder().text("Game has been created").build()))
                 .currentMove(randomizeFirstMove())
                 .build();
     }
 
-    private static List<List<BattlefieldCell>> initCells(final ArrayList<ArrayList<CellDto>> cells) {
+    /* TODO: move to converter */
+    public static List<List<BattlefieldCell>> convertCells(final ArrayList<ArrayList<CellDto>> cells) {
         final List<List<BattlefieldCell>> columns = new ArrayList<>();
         for (int column = 0; column < 9; column++) {
             final var lines = new ArrayList<BattlefieldCell>();
