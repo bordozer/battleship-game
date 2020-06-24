@@ -4,14 +4,16 @@ import com.bordozer.battleship.gameserver.dto.GamePlayerDto;
 import com.bordozer.battleship.gameserver.service.PlayerService;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+
 @Service
 public class PlayerServiceImpl implements PlayerService {
 
     @Override
     public GamePlayerDto getById(final String playerId) {
         return GamePlayerDto.builder()
-                .playerId(playerId)
-                .name("Fake User")
+                .id(playerId)
+                .name(String.format("Fake User %s", LocalDateTime.now().getSecond()))
                 .build();
     }
 }

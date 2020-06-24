@@ -87,7 +87,7 @@ public class GameServiceImpl implements GameService {
             return null;
         }
         return GamePlayerDto.builder()
-                .playerId(player.getPlayerId())
+                .id(player.getId())
                 .name(player.getName())
                 .build();
     }

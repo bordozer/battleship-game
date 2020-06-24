@@ -8,6 +8,11 @@ import GameConfigRenderer from 'components/game-config-renderer';
 import ShipsStateRenderer from 'components/ships-state';
 import LogsRenderer from 'components/logs-renderer';
 
+const STEP_GAME_INIT = 'GAME_INIT';
+const STEP_WAITING_FOR_OPPONENT = 'WAITING_FOR_OPPONENT';
+const STEP_BATTLE = 'BATTLE';
+const STEP_FINAL = 'FINAL';
+
 let playerId = null;
 let stompClient = null;
 
@@ -57,23 +62,56 @@ export default class Layout extends React.Component {
     }
 
     componentDidMount() {
-        $.ajax({
-            url: "/whoami",
-            success: function (result) {
-                playerId = result.playerId;
-                connect();
-            }
-        });
-
-        /*fetch('/battle/state/8327de36-5a26-4034-a032-e7bc6b221084')
+        fetch('/whoami')
             .then(response => response.json())
-            .then(data => this.setState(data));*/
+            .then(data => {
+                playerId = data.player.id // TODO: duplicates the state
+                this.setState({
+                    player: {
+                        playerId: data.player.id,
+                        playerName: data.player.name,
+                        cells: this.state.player.cells,
+                        ships: this.state.player.ships,
+                        lastShot: null,
+                        damagedShipCells: [],
+                        points: this.state.player.points
+                    }
+                });
+                console.log("PlayerId: ", data.player.id, 'Player name: ', data.player.name);
+            });
     }
 
-    onNewGameClick = () => {
+    onGenerateShipsClick = () => {
         this.setState((state) => {
             return this.getInitialState(state);
         });
+    }
+
+    onCreateGameClick = () => {
+        console.log("cells", this.state.player.cells);
+        const self = this;
+        $.ajax({
+            method: 'POST',
+            url: "/games/create",
+            data: this.state.player.cells,
+            cache: false,
+            success: function (result) {
+                self.setState({
+                    gameplay: {
+                        gameId: result.gameId,
+                        step: STEP_WAITING_FOR_OPPONENT,
+                        currentMove: null,
+                        winner: null
+                    }
+                });
+                console.log("Game is created");
+                connect();
+            }
+        });
+    }
+
+    onCancelGameClick = () => {
+        console.log("Cancel game");
     }
 
     getInitialState = (state) => {
@@ -81,6 +119,8 @@ export default class Layout extends React.Component {
         const enemyData = this.randomizeBattleFieldWithShips();
         return {
             player: {
+                playerId: null,
+                playerName: 'Player',
                 cells: playerData.cells,
                 ships: playerData.ships,
                 lastShot: null,
@@ -88,6 +128,8 @@ export default class Layout extends React.Component {
                 points: state ? state.player.points : 0
             },
             enemy: {
+                playerId: null,
+                playerName: 'Enemy',
                 cells: enemyData.cells,
                 ships: enemyData.ships,
                 lastShot: null,
@@ -99,7 +141,8 @@ export default class Layout extends React.Component {
                 difficulty: state ? state.config.difficulty : 3, /* 1 - easy, 2 - medium, 3 - hard */
             },
             gameplay: {
-                step: 'STEP_READY_TO_START',
+                gameId: null,
+                step: STEP_GAME_INIT,
                 currentMove: null,
                 winner: null
             },
@@ -117,10 +160,6 @@ export default class Layout extends React.Component {
 
     playerShot = (cell) => {
         console.log("Player's shot", cell);
-    }
-
-    startBattle = () => {
-        console.log("Start battle");
     }
 
     onDifficultyChange = (difficulty) => {
@@ -152,7 +191,7 @@ export default class Layout extends React.Component {
             stage: step,
             lastShot: this.state.enemy.lastShot,
             currentMove: currentMove,
-            highlightBattleArea: step === 'STEP_BATTLE' && currentMove === 'enemy',
+            highlightBattleArea: step === STEP_BATTLE && currentMove === 'enemy',
             recommendedShots: {
                 shots: [],
                 strategy: null
@@ -167,7 +206,7 @@ export default class Layout extends React.Component {
                 shots: [],
                 strategy: null
             },
-            highlightBattleArea: step === 'STEP_BATTLE' && currentMove === 'player',
+            highlightBattleArea: step === STEP_BATTLE && currentMove === 'player',
             currentMove: currentMove,
         };
 
@@ -222,14 +261,21 @@ export default class Layout extends React.Component {
                     <div className="col-sm-4 text-center btn-lg">
                         <button
                             className="bg-primary button-rounded"
-                            onClick={this.onNewGameClick}>
-                            New game
+                            onClick={this.onGenerateShipsClick}
+                            disabled={this.state.gameplay.step !== STEP_GAME_INIT}>
+                            Ships
                         </button>
                         <button
                             className="bg-primary button-rounded"
-                            onClick={this.startBattle}
-                            disabled={this.state.gameplay.step !== 'STEP_READY_TO_START'}>
-                            Start
+                            onClick={this.onCreateGameClick}
+                            disabled={this.state.gameplay.step !== STEP_GAME_INIT}>
+                            Create game
+                        </button>
+                        <button
+                            className="bg-primary button-rounded"
+                            onClick={this.onCancelGameClick}
+                            disabled={this.state.gameplay.step === STEP_GAME_INIT}>
+                            Cancel game
                         </button>
                     </div>
                     <div className="col-sm-4"/>

@@ -14,5 +14,5 @@ import org.immutables.value.Value;
 @ToString
 public abstract class WhoAmIDto {
 
-    public abstract String getPlayerId();
+    public abstract GamePlayerDto getPlayer();
 }
