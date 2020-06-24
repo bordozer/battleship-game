@@ -54,7 +54,6 @@ public class GameController {
         final var playerId = getPlayerId(request);
 
         gameService.joinGame(gameId, playerId);
-        battleService.initBattle(gameId);
 
         return new ResponseEntity<>("OK", HttpStatus.OK);
     }

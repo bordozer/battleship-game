@@ -30,62 +30,6 @@ public class BattleServiceImpl implements BattleService {
     private final PlayerService playerService;
 
     @Override
-    public void initBattle(final String gameId) {
-        @CheckForNull final var game = gameService.getGame(gameId);
-        if (game == null) {
-            throw new GameNotFoundException(gameId);
-        }
-
-        final var battle = game.getBattle();
-        final var player1Cells = battle.getBattlefield1().getCells().stream()
-                .map(this::convertCellsToDto)
-                .collect(Collectors.toList());
-        final var player2Cells = battle.getBattlefield2().getCells().stream()
-                .map(this::convertCellsToDto)
-                .collect(Collectors.toList());
-
-        final var player1 = PlayerDto.builder()
-                .playerId(game.getPlayer1Id())
-                .name(playerService.getById(game.getPlayer1Id()).getName())
-                .cells(player1Cells)
-                .ships(Collections.emptyList())
-                .lastShot(null)
-                .damagedShipCells(Collections.emptyList())
-                .points(0)
-                .build();
-
-        final var player2Id = game.getPlayer2Id();
-        Objects.requireNonNull(player2Id, "Player2 cannot be null at this step");
-        final var player2 = PlayerDto.builder()
-                .playerId(player2Id)
-                .name(playerService.getById(game.getPlayer2Id()).getName())
-                .cells(player2Cells)
-                .ships(Collections.emptyList())
-                .lastShot(null)
-                .damagedShipCells(Collections.emptyList())
-                .points(0)
-                .build();
-
-        final var gameConfig = GameConfigDto.builder()
-                .difficulty(1)
-                .showShotHints(false)
-                .build();
-        final var gameplay = GameplayDto.builder()
-                .step(GameStep.BATTLE)
-                .currentMove(PLAYER1) /* TODO: randomize Player1/Player2 */
-                .build();
-
-        return BattleDto.builder()
-                .gameId(gameId)
-                .player(player1)
-                .enemy(player2)
-                .config(gameConfig)
-                .gameplay(gameplay)
-                .logs(Collections.emptyList())
-                .build();
-    }
-
-    @Override
     public BattleDto getBattle(final String gameId) {
         @CheckForNull final var game = gameService.getGame(gameId);
         if (game == null) {
