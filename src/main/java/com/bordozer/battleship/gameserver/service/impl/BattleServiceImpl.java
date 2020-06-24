@@ -76,12 +76,12 @@ public class BattleServiceImpl implements BattleService {
                 .showShotHints(false)
                 .build();
         final var gameplay = GameplayDto.builder()
+                .gameId(gameId)
                 .step(GameStep.GAME_INIT)
                 .currentMove(battle.getCurrentMove())
                 .build();
 
         return BattleDto.builder()
-                .gameId(gameId)
                 .player(player1)
                 .enemy(enemy)
                 .config(gameConfig)

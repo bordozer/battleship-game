@@ -32,7 +32,7 @@ function connect(onConnectCallback, setStateCallback) {
 function sendGameEvent(gameId, event) {
     stompClient.send("/game-event-in", {}, JSON.stringify({
             'gameId': gameId,
-            'event': event
+            'eventType': event
         }
     ));
 }

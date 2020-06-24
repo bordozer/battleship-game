@@ -16,8 +16,6 @@ import java.util.List;
 @ToString
 public abstract class BattleDto {
 
-    public abstract String getGameId();
-
     public abstract PlayerDto getPlayer();
 
     public abstract PlayerDto getEnemy();

@@ -16,6 +16,8 @@ import javax.annotation.CheckForNull;
 @ToString
 public abstract class GameplayDto {
 
+    public abstract String getGameId();
+
     public abstract GameStep getStep();
 
     public abstract CurrentMove getCurrentMove();
