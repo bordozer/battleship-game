@@ -86,10 +86,14 @@ public class GameServiceImpl implements GameService {
                 final var firstMove = RandomUtils.randomizeFirstMove();
                 battle.setCurrentMove(firstMove);
                 battle
-                        .addLog(LogItem.builder().text(String.format("Player %s joined the game", playerService.getById(playerId))).build())
-                        .addLog(LogItem.builder().text(String.format("%s", firstMove == PLAYER1 ? "Player 1" : "Player 2")).build());
+                        .addLog(LogItem.builder().text(String.format("Player %s joined the game", getPlayerName(playerId))).build())
+                        .addLog(LogItem.builder().text(String.format("First move: %s", firstMove == PLAYER1 ? "Player 1" : "Player 2")).build());
             }
         }
+    }
+
+    private String getPlayerName(final String playerId) {
+        return playerService.getById(playerId).getName();
     }
 
     private boolean canJoin(final String gameId, final String playerId) {
