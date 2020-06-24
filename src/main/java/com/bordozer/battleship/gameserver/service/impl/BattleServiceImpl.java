@@ -10,6 +10,7 @@ import com.bordozer.battleship.gameserver.dto.battle.PlayerDto;
 import com.bordozer.battleship.gameserver.dto.battle.ShipDto;
 import com.bordozer.battleship.gameserver.exception.GameNotFoundException;
 import com.bordozer.battleship.gameserver.model.BattlefieldCell;
+import com.bordozer.battleship.gameserver.model.GameState;
 import com.bordozer.battleship.gameserver.model.LogItem;
 import com.bordozer.battleship.gameserver.service.BattleService;
 import com.bordozer.battleship.gameserver.service.GameService;
@@ -67,7 +68,7 @@ public class BattleServiceImpl implements BattleService {
                 .playerId(player2)
                 .name(playerService.getById(game.getPlayer2Id()).getName())
                 .cells(player2Cells)
-                .ships(Collections.emptyList())
+                .ships(convertShips(game.getBattle().getBattlefield2().getCells()))
                 .lastShot(null)
                 .damagedShipCells(Collections.emptyList())
                 .points(0)
@@ -79,7 +80,7 @@ public class BattleServiceImpl implements BattleService {
                 .build();
         final var gameplay = GameplayDto.builder()
                 .gameId(gameId)
-                .step(GameStep.GAME_INIT)
+                .step(convertGameStep(game.getState()))
                 .currentMove(battle.getCurrentMove())
                 .build();
 
@@ -92,6 +93,20 @@ public class BattleServiceImpl implements BattleService {
                 .build();
     }
 
+    private GameStep convertGameStep(final GameState state) {
+        switch (state) {
+            case OPEN:
+                return GameStep.WAITING_FOR_OPPONENT;
+            case BATTLE:
+                return GameStep.BATTLE;
+            case FINISHED:
+                return GameStep.FINAL;
+            default:
+                throw new IllegalArgumentException(String.format("Unsupported game state: '%s'", state));
+        }
+    }
+
+    /* TODO: move to converter */
     private List<? extends ShipDto> convertShips(final List<List<BattlefieldCell>> cells) {
         return cells.stream()
                 .flatMap(Collection::stream)
@@ -109,6 +124,7 @@ public class BattleServiceImpl implements BattleService {
                 .collect(Collectors.toList());
     }
 
+    /* TODO: move to converter */
     private List<LogDto> convertLogs(final List<LogItem> logs) {
         return logs.stream()
                 .map(log -> LogDto.builder().time(log.getTime()).text(log.getText()).build())

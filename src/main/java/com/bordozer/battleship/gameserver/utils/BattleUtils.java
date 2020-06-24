@@ -11,6 +11,7 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
@@ -26,7 +27,7 @@ public final class BattleUtils {
     public static Battle initBattle(final ArrayList<ArrayList<CellDto>> cells) {
         return Battle.builder()
                 .battlefield1(new Battlefield(convertCells(cells)))
-                .battlefield2(new Battlefield())
+                .battlefield2(new Battlefield(Collections.emptyList()))
                 .logs(newArrayList(LogItem.builder().text("Game has been created").build()))
                 .currentMove(randomizeFirstMove())
                 .build();
