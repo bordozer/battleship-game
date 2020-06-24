@@ -26,7 +26,7 @@ public class BattleWSController {
     @MessageMapping("/game-event-in")
     @SendTo("/game-state-changed")
     public BattleDto gameEvent(final GameEventDto gameEvent) {
-        gameEventService.process(gameEvent);
+//        gameEventService.process(gameEvent); // TODO: not sure I need this service at all
         return battleService.getBattle(gameEvent.getGameId());
     }
 }

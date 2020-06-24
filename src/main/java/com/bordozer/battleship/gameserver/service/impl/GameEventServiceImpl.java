@@ -17,6 +17,8 @@ public class GameEventServiceImpl implements GameEventService {
     @Override
     public void process(final GameEventDto event) {
         switch (event.getEventType()) {
+            case GAME_CREATED:
+                break;
             case JOIN_GAME:
                 break;
             default:

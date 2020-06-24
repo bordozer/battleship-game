@@ -14,7 +14,6 @@ const STEP_BATTLE = 'BATTLE';
 const STEP_FINAL = 'FINAL';
 
 let stompClient = null;
-const doNothing = function () {}
 
 function connect(onConnectCallback, setStateCallback) {
     const socket = new SockJS('/gs-guide-websocket');
@@ -109,7 +108,9 @@ export default class Layout extends React.Component {
                     }
                 });
                 console.log("Game is created");
-                connect(doNothing, self.updateGameState.bind(self));
+                connect(function () {
+                    sendGameEvent(self.state.gameplay.gameId, 'GAME_CREATED');
+                }, self.updateGameState.bind(self));
             }
         });
     }
