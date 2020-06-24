@@ -125,6 +125,9 @@ export default class Layout extends React.Component {
                 console.log("Joined to game:", result);
                 connect(self.updateGameState.bind(self));
                 sendGameEvent(self.state.gameplay.gameId, 'JOIN_GAME');
+            },
+            error: function (request, status, error) {
+                console.error("Cannot join game", request.responseText, error);
             }
         });
     }

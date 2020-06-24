@@ -55,6 +55,6 @@ public class GameController {
 
         gameService.joinGame(gameId, playerId);
 
-        return new ResponseEntity<>("OK", HttpStatus.OK);
+        return new ResponseEntity<>("{\"status\":\"OK\"}", HttpStatus.OK);
     }
 }
