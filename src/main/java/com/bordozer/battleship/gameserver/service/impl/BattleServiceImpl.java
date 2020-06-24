@@ -5,12 +5,15 @@ import com.bordozer.battleship.gameserver.dto.battle.CellDto;
 import com.bordozer.battleship.gameserver.dto.battle.GameConfigDto;
 import com.bordozer.battleship.gameserver.dto.battle.GameStep;
 import com.bordozer.battleship.gameserver.dto.battle.GameplayDto;
+import com.bordozer.battleship.gameserver.dto.battle.LogDto;
 import com.bordozer.battleship.gameserver.dto.battle.PlayerDto;
 import com.bordozer.battleship.gameserver.exception.GameNotFoundException;
 import com.bordozer.battleship.gameserver.model.BattlefieldCell;
+import com.bordozer.battleship.gameserver.model.LogItem;
 import com.bordozer.battleship.gameserver.service.BattleService;
 import com.bordozer.battleship.gameserver.service.GameService;
 import com.bordozer.battleship.gameserver.service.PlayerService;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -81,8 +84,14 @@ public class BattleServiceImpl implements BattleService {
                 .enemy(enemy)
                 .config(gameConfig)
                 .gameplay(gameplay)
-                .logs(Collections.emptyList())
+                .logs(convertLogs(battle.getLogs()))
                 .build();
+    }
+
+    private List<LogDto> convertLogs(final List<LogItem> logs) {
+        return logs.stream()
+                .map(log -> LogDto.builder().time(log.getTime()).text(log.getText()).build())
+                .collect(Collectors.toList());
     }
 
     /* TODO: move to converter */

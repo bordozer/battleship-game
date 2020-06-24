@@ -16,7 +16,7 @@ import java.util.List;
 @ToString
 public abstract class ShipDto {
 
-    public abstract int getId();
+    public abstract String getId();
 
     public abstract String getName();
 

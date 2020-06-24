@@ -14,14 +14,16 @@ const STEP_BATTLE = 'BATTLE';
 const STEP_FINAL = 'FINAL';
 
 let stompClient = null;
+const doNothing = function () {}
 
-function connect(setStateCallback) {
+function connect(onConnectCallback, setStateCallback) {
     const socket = new SockJS('/gs-guide-websocket');
     stompClient = Stomp.over(socket);
     stompClient.connect({}, function (frame) {
         console.log('Connected: ' + frame);
+        onConnectCallback();
         stompClient.subscribe('/game-state-changed', function (battle) {
-            console.log("battle", battle.body);
+            // console.log("battle", battle.body);
             setStateCallback(JSON.parse(battle.body));
         });
     });
@@ -107,7 +109,7 @@ export default class Layout extends React.Component {
                     }
                 });
                 console.log("Game is created");
-                connect(self.updateGameState.bind(self));
+                connect(doNothing, self.updateGameState.bind(self));
             }
         });
     }
@@ -117,14 +119,15 @@ export default class Layout extends React.Component {
         const self = this;
         $.ajax({
             method: 'PUT',
-            url: "/games/join/8327de36-5a26-4034-a032-e7bc6b221084",
+            url: "/games/join/" + this.state.gameplay.gameId,
             contentType: 'application/json',
             data: JSON.stringify(this.state.player.cells),
             cache: false,
             success: function (result) {
                 console.log("Joined to game:", result);
-                connect(self.updateGameState.bind(self));
-                sendGameEvent(self.state.gameplay.gameId, 'JOIN_GAME');
+                connect(function () {
+                    sendGameEvent(self.state.gameplay.gameId, 'JOIN_GAME');
+                }, self.updateGameState.bind(self));
             },
             error: function (request, status, error) {
                 console.error("Cannot join game", request.responseText, error);
@@ -133,7 +136,7 @@ export default class Layout extends React.Component {
     }
 
     onCancelGameClick = () => {
-        console.log("Cancel game");
+        console.log("About to cancel game");
         // TODO: implement
     }
 
@@ -164,7 +167,7 @@ export default class Layout extends React.Component {
                 difficulty: state ? state.config.difficulty : 3, /* 1 - easy, 2 - medium, 3 - hard */
             },
             gameplay: {
-                gameId: null,
+                gameId: "8327de36-5a26-4034-a032-e7bc6b221084", // TODO: hardcoded game ID
                 step: STEP_GAME_INIT,
                 currentMove: null,
                 winner: null
@@ -206,6 +209,7 @@ export default class Layout extends React.Component {
     }
 
     updateGameState = (state) => {
+        console.log("Game state is updated", state);
         this.setState(state);
     }
 

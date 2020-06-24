@@ -6,18 +6,15 @@ import lombok.NonNull;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
 @Builder
 @ToString
-public class Battle {
+public class LogItem {
     @NonNull
-    private final Battlefield battlefield1;
+    private final LocalDateTime time = LocalDateTime.now();
     @NonNull
-    private final Battlefield battlefield2;
-    @NonNull
-    private final List<LogItem> logs;
+    private final String text;
 }

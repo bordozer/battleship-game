@@ -2,6 +2,7 @@ package com.bordozer.battleship.gameserver.service.impl;
 
 import com.bordozer.battleship.gameserver.dto.GameDto;
 import com.bordozer.battleship.gameserver.dto.GamePlayerDto;
+import com.bordozer.battleship.gameserver.dto.battle.CellDto;
 import com.bordozer.battleship.gameserver.model.Game;
 import com.bordozer.battleship.gameserver.model.GameState;
 import com.bordozer.battleship.gameserver.service.GameService;
@@ -12,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.CheckForNull;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -43,13 +45,13 @@ public class GameServiceImpl implements GameService {
     }
 
     @Override
-    public GameDto create(final String playerId) {
+    public GameDto create(final String playerId, final ArrayList<ArrayList<CellDto>> cells) {
         final var gameId = identityService.generateForGame();
         final var game = Game.builder()
                 .gameId(gameId)
                 .player1Id(playerId)
                 .state(OPEN)
-                .battle(BattleUtils.initBattle())
+                .battle(BattleUtils.initBattle(cells))
                 .build();
 
         GAME_MAP.put(gameId, game);
@@ -75,8 +77,8 @@ public class GameServiceImpl implements GameService {
 
     private boolean canJoin(final String gameId, final String playerId) {
         final var aGame = GAME_MAP.get(gameId);
-        final boolean joinNewOpenGame = aGame.getState() == OPEN && aGame.getPlayer2Id() == null;
-        final boolean rejoinPlayer2 = aGame.getState() == BATTLE && playerId.equals(aGame.getPlayer2Id());
+        final var joinNewOpenGame = aGame.getState() == OPEN && aGame.getPlayer2Id() == null;
+        final var rejoinPlayer2 = aGame.getState() == BATTLE && playerId.equals(aGame.getPlayer2Id());
         return joinNewOpenGame || rejoinPlayer2;
     }
 

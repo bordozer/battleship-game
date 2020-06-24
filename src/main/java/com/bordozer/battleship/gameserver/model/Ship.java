@@ -13,5 +13,5 @@ import java.util.List;
 @ToString
 public class Ship {
     private final String shipId;
-    private final List<ShipCell> shipCells;
+//    private final List<ShipCell> shipCells;
 }

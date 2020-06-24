@@ -19,4 +19,8 @@ public abstract class LogDto {
     public abstract LocalDateTime getTime();
 
     public abstract String getText();
+
+    public static ImmutableLogDto.Builder builder() {
+        return ImmutableLogDto.builder();
+    }
 }

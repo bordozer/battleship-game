@@ -43,7 +43,7 @@ public class GameController {
     public ResponseEntity<GameDto> createNewGame(@RequestBody final ArrayList<ArrayList<CellDto>> cells,
                                                  final HttpServletRequest request) {
         final var playerId = getPlayerId(request);
-        final var game = gameService.create(playerId);
+        final var game = gameService.create(playerId, cells);
         return new ResponseEntity<>(game, HttpStatus.OK);
     }
 
