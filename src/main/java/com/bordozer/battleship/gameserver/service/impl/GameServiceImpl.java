@@ -1,16 +1,13 @@
 package com.bordozer.battleship.gameserver.service.impl;
 
 import com.bordozer.battleship.gameserver.dto.GameDto;
-import com.bordozer.battleship.gameserver.dto.GamePlayerDto;
 import com.bordozer.battleship.gameserver.dto.battle.CellDto;
-import com.bordozer.battleship.gameserver.model.Battle;
 import com.bordozer.battleship.gameserver.model.Game;
 import com.bordozer.battleship.gameserver.model.GameState;
 import com.bordozer.battleship.gameserver.service.GameService;
 import com.bordozer.battleship.gameserver.service.IdentityService;
 import com.bordozer.battleship.gameserver.service.PlayerService;
 import com.bordozer.battleship.gameserver.utils.BattleUtils;
-import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -75,37 +72,33 @@ public class GameServiceImpl implements GameService {
             if (!canJoin(gameId, playerId)) {
                 throw new IllegalStateException("Wrong game state");
             }
-            game.setPlayer2Id(playerId);
-            game.setState(GameState.BATTLE);
+            if (!isRejoinPlayer2(playerId, game)) {
+                game.setPlayer2Id(playerId);
+                game.setState(GameState.BATTLE);
 
-            final var battle = game.getBattle();
-            battle.getBattlefield2().setCells(convertCells(cells));
+                final var battle = game.getBattle();
+                battle.getBattlefield2().setCells(convertCells(cells));
+            }
         }
     }
 
     private boolean canJoin(final String gameId, final String playerId) {
         final var aGame = GAME_MAP.get(gameId);
-        final var joinNewOpenGame = aGame.getState() == OPEN && aGame.getPlayer2Id() == null;
-        final var rejoinPlayer2 = aGame.getState() == BATTLE && playerId.equals(aGame.getPlayer2Id());
-        return joinNewOpenGame || rejoinPlayer2;
+        return isJoinNewOpenGame(aGame) || isRejoinPlayer2(playerId, aGame);
+    }
+
+    private boolean isJoinNewOpenGame(final Game aGame) {
+        return aGame.getState() == OPEN && aGame.getPlayer2Id() == null;
+    }
+
+    private boolean isRejoinPlayer2(final String playerId, final Game aGame) {
+        return aGame.getState() == BATTLE && playerId.equals(aGame.getPlayer2Id());
     }
 
     @Override
     @CheckForNull
     public Game getGame(final String gameId) {
         return GAME_MAP.get(gameId);
-    }
-
-    /* TODO: move to converter */
-    @CheckForNull
-    private GamePlayerDto convertPlayer(@CheckForNull final GamePlayerDto player) {
-        if (player == null) {
-            return null;
-        }
-        return GamePlayerDto.builder()
-                .id(player.getId())
-                .name(player.getName())
-                .build();
     }
 
     private GameDto convertToDto(final String gameId) {
