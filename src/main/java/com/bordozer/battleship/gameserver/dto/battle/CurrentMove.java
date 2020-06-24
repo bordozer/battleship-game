@@ -6,8 +6,8 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum CurrentMove {
-    PLAYER("player"),
-    ENEMY("enemy");
+    PLAYER1("player"),
+    PLAYER2("enemy");
 
     private final String value;
 }

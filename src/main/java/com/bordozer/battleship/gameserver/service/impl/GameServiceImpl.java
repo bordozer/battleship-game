@@ -58,7 +58,7 @@ public class GameServiceImpl implements GameService {
     }
 
     @Override
-    public GameDto joinGame(final String gameId, final String playerId) {
+    public void joinGame(final String gameId, final String playerId) {
         if (GAME_MAP.get(gameId).getState() != OPEN) {
             throw new IllegalStateException("Game is busy");
         }
@@ -70,8 +70,6 @@ public class GameServiceImpl implements GameService {
             game.setPlayer2Id(playerId);
             game.setState(GameState.BATTLE);
         }
-
-        return convertToDto(gameId);
     }
 
     @Override

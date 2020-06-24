@@ -11,7 +11,7 @@ public interface GameService {
 
     GameDto create(String player1Id);
 
-    GameDto joinGame(String gameId, String player2Id);
+    void joinGame(String gameId, String player2Id);
 
     Game getGame(String gameId);
 }

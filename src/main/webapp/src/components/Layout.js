@@ -13,7 +13,6 @@ const STEP_WAITING_FOR_OPPONENT = 'WAITING_FOR_OPPONENT';
 const STEP_BATTLE = 'BATTLE';
 const STEP_FINAL = 'FINAL';
 
-let playerId = null;
 let stompClient = null;
 
 function connect() {
@@ -32,18 +31,24 @@ function connect() {
     });
 }
 
-function sendMove() {
+function sendGameEvent() {
     stompClient.send("/inbound", {}, JSON.stringify({
-            'gameId': '8327de36-5a26-4034-a032-e7bc6b221084',
-            'playerId': getPlayerId(),
-            'line': 'E',
-            'column': '4'
+            'gameId': gameId,
+            'playerId': playerId,
+            'line': line,
+            'column': columv
         }
     ));
 }
 
-function getPlayerId() {
-    return playerId;
+function sendMove(gameId, playerId, line, columv) {
+    stompClient.send("/inbound", {}, JSON.stringify({
+            'gameId': gameId,
+            'playerId': playerId,
+            'line': line,
+            'column': columv
+        }
+    ));
 }
 
 function showGreeting(message) {
@@ -69,7 +74,6 @@ export default class Layout extends React.Component {
         fetch('/whoami')
             .then(response => response.json())
             .then(data => {
-                playerId = data.player.id // TODO: duplicates the state
                 this.setState({
                     player: {
                         playerId: data.player.id,
@@ -92,7 +96,6 @@ export default class Layout extends React.Component {
     }
 
     onCreateGameClick = () => {
-        console.log("cells", this.state.player.cells);
         const self = this;
         $.ajax({
             method: 'POST',
@@ -116,11 +119,22 @@ export default class Layout extends React.Component {
     }
 
     onJoinGameClick = () => {
-        console.log("Join game");
+        $.ajax({
+            method: 'POST',
+            url: "/games/join/8327de36-5a26-4034-a032-e7bc6b221084",
+            contentType: 'application/json',
+            data: JSON.stringify(this.state.player.cells),
+            cache: false,
+            success: function (result) {
+                console.log("Join to game:", result);
+                connect();
+            }
+        });
     }
 
     onCancelGameClick = () => {
         console.log("Cancel game");
+        // TODO: implement
     }
 
     getInitialState = (state) => {
@@ -169,6 +183,7 @@ export default class Layout extends React.Component {
 
     playerShot = (cell) => {
         console.log("Player's shot", cell);
+        sendMove(this.state.gameplay.gameId, this.state.player.playerId, 1, 2);
     }
 
     onDifficultyChange = (difficulty) => {

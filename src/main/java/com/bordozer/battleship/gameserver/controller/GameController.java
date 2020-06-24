@@ -1,7 +1,9 @@
 package com.bordozer.battleship.gameserver.controller;
 
 import com.bordozer.battleship.gameserver.dto.GameDto;
+import com.bordozer.battleship.gameserver.dto.battle.BattleDto;
 import com.bordozer.battleship.gameserver.dto.battle.CellDto;
+import com.bordozer.battleship.gameserver.service.BattleService;
 import com.bordozer.battleship.gameserver.service.GameService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,6 +32,7 @@ import static com.bordozer.battleship.gameserver.utils.RequestUtils.getPlayerId;
 public class GameController {
 
     private final GameService gameService;
+    private final BattleService battleService;
 
     @GetMapping(path = "", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<GameDto>> games() {
@@ -37,16 +40,22 @@ public class GameController {
     }
 
     @PostMapping(path = "/create", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<GameDto> createNewGame(@RequestBody final ArrayList<ArrayList<CellDto>> cells, final HttpServletRequest request) {
+    public ResponseEntity<GameDto> createNewGame(@RequestBody final ArrayList<ArrayList<CellDto>> cells,
+                                                 final HttpServletRequest request) {
         final var playerId = getPlayerId(request);
         final var game = gameService.create(playerId);
         return new ResponseEntity<>(game, HttpStatus.OK);
     }
 
     @PutMapping(path = "/join/{gameId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<GameDto> joinGame(@PathVariable("gameId") final String gameId, final HttpServletRequest request) {
+    public ResponseEntity<String> joinGame(@PathVariable("gameId") final String gameId,
+                                              @RequestBody final ArrayList<ArrayList<CellDto>> cells,
+                                              final HttpServletRequest request) {
         final var playerId = getPlayerId(request);
-        final var game = gameService.joinGame(gameId, playerId);
-        return new ResponseEntity<>(game, HttpStatus.OK);
+
+        gameService.joinGame(gameId, playerId);
+        battleService.initBattle(gameId);
+
+        return new ResponseEntity<>("OK", HttpStatus.OK);
     }
 }
