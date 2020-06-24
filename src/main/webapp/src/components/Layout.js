@@ -15,34 +15,28 @@ const STEP_FINAL = 'FINAL';
 
 let stompClient = null;
 
-function connect() {
+function connect(setStateCallback) {
     const socket = new SockJS('/gs-guide-websocket');
     stompClient = Stomp.over(socket);
     stompClient.connect({}, function (frame) {
         console.log('Connected: ' + frame);
-        stompClient.subscribe('/outbound', function (battle) {
+        stompClient.subscribe('/game-state-changed', function (battle) {
             console.log("battle", battle.body);
-            showGreeting(JSON.parse(battle.body));
-        });
-        stompClient.subscribe('/join-game', function (battle) {
-            console.log("battle", battle.body);
-            showGreeting(JSON.parse(battle.body));
+            setStateCallback(JSON.parse(battle.body));
         });
     });
 }
 
-function sendGameEvent() {
-    stompClient.send("/inbound", {}, JSON.stringify({
+function sendGameEvent(gameId, event) {
+    stompClient.send("/game-event-in", {}, JSON.stringify({
             'gameId': gameId,
-            'playerId': playerId,
-            'line': line,
-            'column': columv
+            'event': event
         }
     ));
 }
 
 function sendMove(gameId, playerId, line, columv) {
-    stompClient.send("/inbound", {}, JSON.stringify({
+    stompClient.send("/player-move-in", {}, JSON.stringify({
             'gameId': gameId,
             'playerId': playerId,
             'line': line,
@@ -51,9 +45,9 @@ function sendMove(gameId, playerId, line, columv) {
     ));
 }
 
-function showGreeting(message) {
+/*function showGreeting(message) {
     $("#greetings").append("<tr><td>" + message.playerMove.playerId + ': ' + message.playerMove.line + message.playerMove.column + "</td></tr>");
-}
+}*/
 
 /*function disconnect() {
     if (stompClient !== null) {
@@ -113,12 +107,14 @@ export default class Layout extends React.Component {
                     }
                 });
                 console.log("Game is created");
-                connect();
+                connect(self.updateGameState.bind(self));
             }
         });
     }
 
     onJoinGameClick = () => {
+        console.log("About to join a game");
+        const self = this;
         $.ajax({
             method: 'POST',
             url: "/games/join/8327de36-5a26-4034-a032-e7bc6b221084",
@@ -126,8 +122,9 @@ export default class Layout extends React.Component {
             data: JSON.stringify(this.state.player.cells),
             cache: false,
             success: function (result) {
-                console.log("Join to game:", result);
-                connect();
+                console.log("Joined to game:", result);
+                connect(self.updateGameState.bind(self));
+                sendGameEvent(self.state.gameplay.gameId, 'JOIN_GAME');
             }
         });
     }
@@ -203,6 +200,10 @@ export default class Layout extends React.Component {
                 difficulty: this.state.config.difficulty
             }
         });
+    }
+
+    updateGameState = (state) => {
+        this.setState(state);
     }
 
     render() {
@@ -297,18 +298,19 @@ export default class Layout extends React.Component {
                             disabled={this.state.gameplay.step !== STEP_GAME_INIT}>
                             Create game
                         </button>
+
                         <button
                             className="bg-primary button-rounded"
                             onClick={this.onJoinGameClick}
                             disabled={this.state.gameplay.step === STEP_GAME_INIT}>
                             Join game
                         </button>
-                        {/*<button
+                        {<button
                             className="bg-primary button-rounded"
                             onClick={this.onCancelGameClick}
                             disabled={this.state.gameplay.step === STEP_GAME_INIT}>
                             Cancel game
-                        </button>*/}
+                        </button>}
                     </div>
                     <div className="col-sm-4"/>
                 </div>
