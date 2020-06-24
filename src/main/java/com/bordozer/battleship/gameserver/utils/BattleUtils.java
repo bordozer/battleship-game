@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static com.bordozer.battleship.gameserver.dto.battle.CurrentMove.PLAYER1;
 import static com.google.common.collect.Lists.newArrayList;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -52,5 +51,9 @@ public final class BattleUtils {
             columns.add(lines);
         }
         return columns;
+    }
+
+    public static String toColumn(final int x) {
+        return X_AXE[x];
     }
 }

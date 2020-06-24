@@ -9,14 +9,17 @@ import com.bordozer.battleship.gameserver.dto.battle.LogDto;
 import com.bordozer.battleship.gameserver.dto.battle.PlayerDto;
 import com.bordozer.battleship.gameserver.dto.battle.ShipDto;
 import com.bordozer.battleship.gameserver.exception.GameNotFoundException;
+import com.bordozer.battleship.gameserver.model.Battlefield;
 import com.bordozer.battleship.gameserver.model.BattlefieldCell;
+import com.bordozer.battleship.gameserver.model.Game;
 import com.bordozer.battleship.gameserver.model.GameState;
 import com.bordozer.battleship.gameserver.model.LogItem;
+import com.bordozer.battleship.gameserver.model.PlayerMove;
 import com.bordozer.battleship.gameserver.model.Ship;
 import com.bordozer.battleship.gameserver.service.BattleService;
+import com.bordozer.battleship.gameserver.service.BattlefieldService;
 import com.bordozer.battleship.gameserver.service.GameService;
 import com.bordozer.battleship.gameserver.service.PlayerService;
-import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -29,8 +32,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static com.bordozer.battleship.gameserver.dto.battle.CurrentMove.PLAYER1;
-
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -38,13 +39,11 @@ public class BattleServiceImpl implements BattleService {
 
     private final GameService gameService;
     private final PlayerService playerService;
+    private final BattlefieldService battlefieldService;
 
     @Override
     public BattleDto getBattle(final String gameId) {
-        @CheckForNull final var game = gameService.getGame(gameId);
-        if (game == null) {
-            throw new GameNotFoundException(gameId);
-        }
+        final var game = getGame(gameId);
 
         final var battle = game.getBattle();
         final var player1Cells = battle.getBattlefield1().getCells().stream()
@@ -93,6 +92,27 @@ public class BattleServiceImpl implements BattleService {
                 .gameplay(gameplay)
                 .logs(convertLogs(battle.getLogs()))
                 .build();
+    }
+
+    @Override
+    public void move(final String gameId, final String playerId, final PlayerMove move) {
+        final var game = getGame(gameId);
+        final var battle = game.getBattle();
+
+        final var battlefield = getBattlefield(game, playerId);
+        battlefieldService.move(battlefield, move);
+    }
+
+    private Battlefield getBattlefield(final Game game, final String playerId) {
+        return game.getPlayer1Id().equals(playerId) ? game.getBattle().getBattlefield2() : game.getBattle().getBattlefield1();
+    }
+
+    private Game getGame(final String gameId) {
+        @CheckForNull final var game = gameService.getGame(gameId);
+        if (game == null) {
+            throw new GameNotFoundException(gameId);
+        }
+        return game;
     }
 
     private GameStep convertGameStep(final GameState state) {
