@@ -1,13 +1,11 @@
 package com.bordozer.battleship.gameserver.controller;
 
+import com.bordozer.battleship.gameserver.dto.GameEventDto;
 import com.bordozer.battleship.gameserver.dto.PlayerMoveDto;
 import com.bordozer.battleship.gameserver.dto.battle.BattleDto;
-import com.bordozer.battleship.gameserver.model.GameEventType;
 import com.bordozer.battleship.gameserver.service.BattleService;
-import lombok.Getter;
+import com.bordozer.battleship.gameserver.service.GameEventService;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
@@ -17,6 +15,7 @@ import org.springframework.stereotype.Controller;
 public class BattleWSController {
 
     private final BattleService battleService;
+    private final GameEventService gameEventService;
 
     @MessageMapping("/player-move-in")
     @SendTo("/game-state-changed")
@@ -27,15 +26,7 @@ public class BattleWSController {
     @MessageMapping("/game-event-in")
     @SendTo("/game-state-changed")
     public BattleDto gameEvent(final GameEventDto gameEvent) {
-        // TODO: process the event
+        gameEventService.process(gameEvent);
         return battleService.getBattle(gameEvent.getGameId());
-    }
-
-    @Getter
-    @Setter
-    @ToString
-    private static class GameEventDto {
-        private String gameId;
-        private GameEventType event;
     }
 }

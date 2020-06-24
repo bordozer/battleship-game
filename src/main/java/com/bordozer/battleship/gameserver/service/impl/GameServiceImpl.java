@@ -10,6 +10,7 @@ import com.bordozer.battleship.gameserver.service.IdentityService;
 import com.bordozer.battleship.gameserver.service.PlayerService;
 import com.bordozer.battleship.gameserver.utils.BattleUtils;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.CheckForNull;
@@ -23,6 +24,7 @@ import static com.bordozer.battleship.gameserver.converter.GameConverter.toDto;
 import static com.bordozer.battleship.gameserver.model.GameState.BATTLE;
 import static com.bordozer.battleship.gameserver.model.GameState.OPEN;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class GameServiceImpl implements GameService {

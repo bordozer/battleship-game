@@ -15,6 +15,7 @@ import com.bordozer.battleship.gameserver.service.GameService;
 import com.bordozer.battleship.gameserver.service.PlayerService;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.CheckForNull;
@@ -25,6 +26,7 @@ import java.util.stream.Collectors;
 
 import static com.bordozer.battleship.gameserver.dto.battle.CurrentMove.PLAYER1;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class BattleServiceImpl implements BattleService {
@@ -75,7 +77,7 @@ public class BattleServiceImpl implements BattleService {
                 .build();
         final var gameplay = GameplayDto.builder()
                 .step(GameStep.GAME_INIT)
-                .currentMove(PLAYER1)
+                .currentMove(battle.getCurrentMove())
                 .build();
 
         return BattleDto.builder()

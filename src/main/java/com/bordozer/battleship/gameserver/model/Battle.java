@@ -1,5 +1,6 @@
 package com.bordozer.battleship.gameserver.model;
 
+import com.bordozer.battleship.gameserver.dto.battle.CurrentMove;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NonNull;
@@ -20,4 +21,6 @@ public class Battle {
     private final Battlefield battlefield2;
     @NonNull
     private final List<LogItem> logs;
+    @NonNull
+    private final CurrentMove currentMove;
 }

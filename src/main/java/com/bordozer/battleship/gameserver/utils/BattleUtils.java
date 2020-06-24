@@ -1,7 +1,7 @@
 package com.bordozer.battleship.gameserver.utils;
 
 import com.bordozer.battleship.gameserver.dto.battle.CellDto;
-import com.bordozer.battleship.gameserver.dto.battle.ShipDto;
+import com.bordozer.battleship.gameserver.dto.battle.CurrentMove;
 import com.bordozer.battleship.gameserver.model.Battle;
 import com.bordozer.battleship.gameserver.model.Battlefield;
 import com.bordozer.battleship.gameserver.model.BattlefieldCell;
@@ -12,7 +12,10 @@ import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
+import static com.bordozer.battleship.gameserver.dto.battle.CurrentMove.PLAYER1;
+import static com.bordozer.battleship.gameserver.dto.battle.CurrentMove.PLAYER2;
 import static com.google.common.collect.Lists.newArrayList;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -25,6 +28,7 @@ public final class BattleUtils {
                 .battlefield1(new Battlefield(initCells(cells)))
                 .battlefield2(new Battlefield(initCells(cells)))
                 .logs(newArrayList(LogItem.builder().text("Game has been created").build()))
+                .currentMove(randomizeFirstMove())
                 .build();
     }
 
@@ -49,5 +53,9 @@ public final class BattleUtils {
             columns.add(lines);
         }
         return columns;
+    }
+
+    private static CurrentMove randomizeFirstMove() {
+        return new Random().nextBoolean() ? PLAYER1 : PLAYER2;
     }
 }
