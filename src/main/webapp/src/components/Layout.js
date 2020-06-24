@@ -116,7 +116,7 @@ export default class Layout extends React.Component {
         console.log("About to join a game");
         const self = this;
         $.ajax({
-            method: 'POST',
+            method: 'PUT',
             url: "/games/join/8327de36-5a26-4034-a032-e7bc6b221084",
             contentType: 'application/json',
             data: JSON.stringify(this.state.player.cells),
@@ -298,19 +298,18 @@ export default class Layout extends React.Component {
                             disabled={this.state.gameplay.step !== STEP_GAME_INIT}>
                             Create game
                         </button>
-
                         <button
                             className="bg-primary button-rounded"
                             onClick={this.onJoinGameClick}
-                            disabled={this.state.gameplay.step === STEP_GAME_INIT}>
+                            disabled={this.state.gameplay.step !== STEP_GAME_INIT}>
                             Join game
                         </button>
-                        {<button
+                        <button
                             className="bg-primary button-rounded"
                             onClick={this.onCancelGameClick}
                             disabled={this.state.gameplay.step === STEP_GAME_INIT}>
                             Cancel game
-                        </button>}
+                        </button>
                     </div>
                     <div className="col-sm-4"/>
                 </div>

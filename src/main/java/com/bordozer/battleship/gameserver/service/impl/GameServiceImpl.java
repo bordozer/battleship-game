@@ -18,6 +18,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 import static com.bordozer.battleship.gameserver.converter.GameConverter.toDto;
+import static com.bordozer.battleship.gameserver.model.GameState.BATTLE;
 import static com.bordozer.battleship.gameserver.model.GameState.OPEN;
 
 @Service
@@ -59,17 +60,24 @@ public class GameServiceImpl implements GameService {
 
     @Override
     public void joinGame(final String gameId, final String playerId) {
-        if (GAME_MAP.get(gameId).getState() != OPEN) {
-            throw new IllegalStateException("Game is busy");
+        if (!canJoin(gameId, playerId)) {
+            throw new IllegalStateException("Wrong game state");
         }
         synchronized (GAME_MAP.get(gameId)) {
             final var game = GAME_MAP.get(gameId);
-            if (game.getState() != OPEN) {
-                throw new IllegalStateException("Game is busy");
+            if (!canJoin(gameId, playerId)) {
+                throw new IllegalStateException("Wrong game state");
             }
             game.setPlayer2Id(playerId);
             game.setState(GameState.BATTLE);
         }
+    }
+
+    private boolean canJoin(final String gameId, final String playerId) {
+        final var aGame = GAME_MAP.get(gameId);
+        final boolean joinNewOpenGame = aGame.getState() == OPEN && aGame.getPlayer2Id() == null;
+        final boolean rejoinPlayer2 = aGame.getState() == BATTLE && playerId.equals(aGame.getPlayer2Id());
+        return joinNewOpenGame || rejoinPlayer2;
     }
 
     @Override
