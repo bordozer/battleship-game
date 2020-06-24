@@ -187,7 +187,7 @@ export default class Layout extends React.Component {
 
     playerShot = (cell) => {
         console.log("Player's shot", cell);
-        sendMove(this.state.gameplay.gameId, this.state.player.playerId, 1, 2);
+        sendMove(this.state.gameplay.gameId, this.state.player.playerId, cell.y, cell.x);
     }
 
     onDifficultyChange = (difficulty) => {
