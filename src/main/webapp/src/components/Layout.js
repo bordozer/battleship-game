@@ -214,6 +214,8 @@ export default class Layout extends React.Component {
     }
 
     render() {
+        console.log("this.state", JSON.stringify(this.state));
+
         const step = this.state.gameplay.step;
         const currentMove = this.state.gameplay.currentMove;
         const difficulty = this.state.config.difficulty;
