@@ -12,6 +12,7 @@ import com.bordozer.battleship.gameserver.exception.GameNotFoundException;
 import com.bordozer.battleship.gameserver.model.BattlefieldCell;
 import com.bordozer.battleship.gameserver.model.GameState;
 import com.bordozer.battleship.gameserver.model.LogItem;
+import com.bordozer.battleship.gameserver.model.Ship;
 import com.bordozer.battleship.gameserver.service.BattleService;
 import com.bordozer.battleship.gameserver.service.GameService;
 import com.bordozer.battleship.gameserver.service.PlayerService;
@@ -25,6 +26,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static com.bordozer.battleship.gameserver.dto.battle.CurrentMove.PLAYER1;
@@ -148,6 +150,20 @@ public class BattleServiceImpl implements BattleService {
                 .isHit(Boolean.TRUE.equals(cell.isHit()))
                 .isShipNeighbor(Boolean.TRUE.equals(cell.isShipNeighbor()))
                 .isKilledShipNeighborCell(Boolean.TRUE.equals(cell.isKilledShipNeighbor()))
+                .ship(convertShip(cell.getShip()))
                 .build();
+    }
+
+    @CheckForNull
+    private ShipDto convertShip(@CheckForNull final Ship ship) {
+        return Optional.ofNullable(ship)
+                .map(s -> ShipDto.builder()
+                        .id(s.getShipId())
+                        .name(s.getName())
+                        .size(s.getSize())
+                        .damage(s.getDamage())
+                        .build()
+                )
+                .orElse(null);
     }
 }

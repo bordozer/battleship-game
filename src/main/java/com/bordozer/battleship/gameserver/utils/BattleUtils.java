@@ -25,11 +25,16 @@ public final class BattleUtils {
     private static final String[] X_AXE = new String[]{"A", "B", "C", "D", "E", "F", "G", "H", "I", "K"};
 
     public static Battle initBattle(final ArrayList<ArrayList<CellDto>> cells) {
+        final var log1 = LogItem.builder().text("Game has been created").build();
+        final var firstMove = randomizeFirstMove();
+        final var log2 = LogItem.builder().text(String.format("%s", firstMove == PLAYER1 ? "Player 1" : "Player 2")).build();
+        final var logs = newArrayList(log1, log2);
+
         return Battle.builder()
                 .battlefield1(new Battlefield(convertCells(cells)))
                 .battlefield2(new Battlefield(Collections.emptyList()))
-                .logs(newArrayList(LogItem.builder().text("Game has been created").build()))
-                .currentMove(randomizeFirstMove())
+                .currentMove(firstMove)
+                .logs(logs)
                 .build();
     }
 
