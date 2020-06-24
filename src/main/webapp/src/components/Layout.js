@@ -215,6 +215,7 @@ export default class Layout extends React.Component {
                 <div className="row mt-10">
                     <div className="col-sm-1">
                         <ShipsStateRenderer
+                            playerName={this.state.player.playerName}
                             ships={this.state.player.ships}
                             isPlayer={true}
                             winner={this.state.gameplay.winner}
@@ -239,6 +240,7 @@ export default class Layout extends React.Component {
                     </div>
                     <div className="col-sm-1">
                         <ShipsStateRenderer
+                            playerName={this.state.enemy.playerName}
                             ships={this.state.enemy.ships}
                             isPlayer={false}
                             winner={this.state.gameplay.winner}
