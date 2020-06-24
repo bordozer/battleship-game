@@ -7,6 +7,7 @@ import com.bordozer.battleship.gameserver.dto.battle.GameStep;
 import com.bordozer.battleship.gameserver.dto.battle.GameplayDto;
 import com.bordozer.battleship.gameserver.dto.battle.LogDto;
 import com.bordozer.battleship.gameserver.dto.battle.PlayerDto;
+import com.bordozer.battleship.gameserver.dto.battle.ShipDto;
 import com.bordozer.battleship.gameserver.exception.GameNotFoundException;
 import com.bordozer.battleship.gameserver.model.BattlefieldCell;
 import com.bordozer.battleship.gameserver.model.LogItem;
@@ -19,6 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.CheckForNull;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -53,7 +55,7 @@ public class BattleServiceImpl implements BattleService {
                 .playerId(game.getPlayer1Id())
                 .name(playerService.getById(game.getPlayer1Id()).getName())
                 .cells(player1Cells)
-                .ships(Collections.emptyList())
+                .ships(convertShips(game.getBattle().getBattlefield1().getCells()))
                 .lastShot(null)
                 .damagedShipCells(Collections.emptyList())
                 .points(0)
@@ -88,6 +90,23 @@ public class BattleServiceImpl implements BattleService {
                 .gameplay(gameplay)
                 .logs(convertLogs(battle.getLogs()))
                 .build();
+    }
+
+    private List<? extends ShipDto> convertShips(final List<List<BattlefieldCell>> cells) {
+        return cells.stream()
+                .flatMap(Collection::stream)
+                .map(BattlefieldCell::getShip)
+                .filter(Objects::nonNull)
+                .distinct()
+                .map(ship -> ShipDto.builder()
+                        .id(ship.getShipId())
+                        .name(ship.getName())
+                        .size(ship.getSize())
+                        .damage(ship.getDamage())
+                        .cells(Collections.emptyList())
+                        .build()
+                )
+                .collect(Collectors.toList());
     }
 
     private List<LogDto> convertLogs(final List<LogItem> logs) {

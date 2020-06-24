@@ -47,7 +47,7 @@ public final class BattleUtils {
                 final var cell = new BattlefieldCell(column, line, xLabel, yLabel);
                 final var ship = player1Cell.getShip();
                 if (ship != null) {
-                    cell.setShip(new Ship(ship.getId()));
+                    cell.setShip(Ship.builder().shipId(ship.getId()).name(ship.getName()).size(ship.getSize()).damage(ship.getDamage()).build());
                 }
                 lines.add(cell);
             }

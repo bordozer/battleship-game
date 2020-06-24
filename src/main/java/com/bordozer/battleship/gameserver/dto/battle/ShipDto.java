@@ -26,4 +26,7 @@ public abstract class ShipDto {
 
     public abstract List<CellDto> getCells();
 
+    public static ImmutableShipDto.Builder builder() {
+        return ImmutableShipDto.builder();
+    }
 }
