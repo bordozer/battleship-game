@@ -34,7 +34,11 @@ public class BattlefieldServiceImpl implements BattlefieldService {
         final var ship = cell.getShip();
         if (ship != null) {
             ship.damage();
-            damage = ship.isKilled() ? " - KILLED" : " - DAMAGED";
+            final var isKilled = ship.isKilled();
+            damage = isKilled ? " - KILLED" : " - DAMAGED";
+            if (isKilled) {
+                // TODO: mark neighbour cells as busy
+            }
         }
 
         logs.add(LogItem.builder().text(String.format("%s: %s%s", player.getName(), cell.humanize(), damage)).build());
