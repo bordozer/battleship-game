@@ -1,6 +1,5 @@
 package com.bordozer.battleship.gameserver.service.impl;
 
-import com.bordozer.battleship.gameserver.converter.CellConverter;
 import com.bordozer.battleship.gameserver.converter.LogConverter;
 import com.bordozer.battleship.gameserver.dto.GamePlayerDto;
 import com.bordozer.battleship.gameserver.dto.battle.BattleDto;
@@ -30,6 +29,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static com.bordozer.battleship.gameserver.converter.CellConverter.convertCellsToDto;
 import static com.bordozer.battleship.gameserver.utils.SecurityUtils.assertAccess;
 import static com.bordozer.battleship.gameserver.utils.ShipUtils.extractShips;
 
@@ -50,9 +50,9 @@ public class BattleServiceImpl implements BattleService {
         final var game = getGame(gameId);
         final var battle = game.getBattle();
 
-        final var player = getPlayerDto(game);
-        final var enemy = getOpponentDto(game);
         final var isForPlayer1 = isForPlayer1(forPlayerId, game);
+        final var player = getPlayerDto(game, isForPlayer1);
+        final var enemy = getEnemyDto(game, !isForPlayer1);
 
         return BattleDto.builder()
                 .player(isForPlayer1 ? player : enemy)
@@ -71,14 +71,14 @@ public class BattleServiceImpl implements BattleService {
         battlefieldService.move(game, battlefield, playerId, move);
     }
 
-    private PlayerDto getPlayerDto(final Game game) {
+    private PlayerDto getPlayerDto(final Game game, final boolean showShips) {
         final var battle = game.getBattle();
         final var battlefield = battle.getBattlefield1();
         @CheckForNull final var lastShot = battlefield.getLastShot();
 
         final var player1 = playerService.getById(game.getPlayer1Id()).getName();
         final var cells = battlefield.getCells().stream()
-                .map(CellConverter::convertCellsToDto)
+                .map(columns -> convertCellsToDto(columns, showShips))
                 .collect(Collectors.toList());
         return PlayerDto.builder()
                 .playerId(game.getPlayer1Id())
@@ -91,21 +91,14 @@ public class BattleServiceImpl implements BattleService {
                 .build();
     }
 
-    @CheckForNull
-    private CellDto convertLastShot(@CheckForNull final PlayerMove lastShot, final List<List<CellDto>> cells) {
-        return Optional.ofNullable(lastShot)
-                .map(shot -> CellUtils.getCell(shot.getLine(), shot.getColumn(), cells))
-                .orElse(null);
-    }
-
-    private PlayerDto getOpponentDto(final Game game) {
+    private PlayerDto getEnemyDto(final Game game, final boolean showShips) {
         final var battle = game.getBattle();
         final var battlefield = battle.getBattlefield2();
         final var lastShot = battlefield.getLastShot();
 
         final var player2 = getPlayer2(game);
         final var cells = battlefield.getCells().stream()
-                .map(CellConverter::convertCellsToDto)
+                .map(columns -> convertCellsToDto(columns, showShips))
                 .collect(Collectors.toList());
         return PlayerDto.builder()
                 .playerId(player2.getId())
@@ -116,6 +109,13 @@ public class BattleServiceImpl implements BattleService {
                 .damagedShipCells(Collections.emptyList())
                 .points(0)
                 .build();
+    }
+
+    @CheckForNull
+    private CellDto convertLastShot(@CheckForNull final PlayerMove lastShot, final List<List<CellDto>> cells) {
+        return Optional.ofNullable(lastShot)
+                .map(shot -> CellUtils.getCell(shot.getLine(), shot.getColumn(), cells))
+                .orElse(null);
     }
 
     private GameConfigDto getGameConfig() {

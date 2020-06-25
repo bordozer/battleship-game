@@ -1,6 +1,7 @@
 package com.bordozer.battleship.gameserver.converter;
 
 import com.bordozer.battleship.gameserver.dto.battle.CellDto;
+import com.bordozer.battleship.gameserver.dto.battle.ShipDto;
 import com.bordozer.battleship.gameserver.model.BattlefieldCell;
 import com.bordozer.battleship.gameserver.model.Ship;
 import com.bordozer.battleship.gameserver.utils.BattleUtils;
@@ -48,13 +49,13 @@ public final class CellConverter {
         return new BattlefieldCell(line, column);
     }
 
-    public static List<CellDto> convertCellsToDto(final List<BattlefieldCell> columns) {
+    public static List<CellDto> convertCellsToDto(final List<BattlefieldCell> columns, final boolean showShips) {
         return columns.stream()
-                .map(CellConverter::convertCellToDto)
+                .map(cell -> convertCellToDto(cell, showShips))
                 .collect(Collectors.toList());
     }
 
-    private static CellDto convertCellToDto(final BattlefieldCell cell) {
+    private static CellDto convertCellToDto(final BattlefieldCell cell, final boolean showShips) {
         return CellDto.builder()
                 .x(cell.getColumn())
                 .y(cell.getLine())
@@ -63,7 +64,18 @@ public final class CellConverter {
                 .isHit(Boolean.TRUE.equals(cell.isHit()))
                 .isShipNeighbor(Boolean.TRUE.equals(cell.isShipNeighbor()))
                 .isKilledShipNeighborCell(Boolean.TRUE.equals(cell.isKilledShipNeighbor()))
-                .ship(ShipConverter.convertShip(cell.getShip()))
+                .ship(getShip(cell, showShips))
                 .build();
+    }
+
+    private static ShipDto getShip(final BattlefieldCell cell, final boolean showShips) {
+        final var ship = cell.getShip();
+        if (showShips){
+            return ShipConverter.convertShip(ship);
+        }
+        if (ship != null && cell.isHit()) {
+            return ShipConverter.convertShip(ship);
+        }
+        return null;
     }
 }
