@@ -60,7 +60,7 @@ public class BattleServiceImpl implements BattleService {
 
         final var player1 = PlayerDto.builder()
                 .playerId(game.getPlayer1Id())
-                .name(playerService.getById(game.getPlayer1Id()).getName())
+                .playerName(playerService.getById(game.getPlayer1Id()).getName())
                 .cells(player1Cells)
                 .ships(convertShips(game.getBattle().getBattlefield1().getCells()))
                 .lastShot(null)
@@ -71,7 +71,7 @@ public class BattleServiceImpl implements BattleService {
         final var player2 = getOpponent(game);
         final var enemy = PlayerDto.builder()
                 .playerId(player2.getId())
-                .name(player2.getName())
+                .playerName(player2.getName())
                 .cells(player2Cells)
                 .ships(convertShips(game.getBattle().getBattlefield2().getCells()))
                 .lastShot(null)

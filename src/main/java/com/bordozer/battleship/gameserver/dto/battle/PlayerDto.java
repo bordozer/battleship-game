@@ -19,7 +19,7 @@ public abstract class PlayerDto {
 
     public abstract String getPlayerId();
 
-    public abstract String getName();
+    public abstract String getPlayerName();
 
     public abstract List<List<CellDto>> getCells();
 
