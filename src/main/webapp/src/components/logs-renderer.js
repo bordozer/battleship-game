@@ -4,20 +4,16 @@ import React from 'react';
 function renderLogs(logs) {
     const result = [];
     let counter = 0;
-    logs
-        .sort(function (log1, log2) {
-            return log1.time - log2.time;
-        })
-        .forEach(rec => {
-            result.push(
-                <div key={'log-row-' + counter} className="row">
-                    <div key={'log-row-col-' + counter} className="col-sm-12 small text-muted">
-                        {rec.text}
-                    </div>
+    logs.forEach(rec => {
+        result.push(
+            <div key={'log-row-' + counter} className="row">
+                <div key={'log-row-col-' + counter} className="col-sm-12 small text-muted">
+                    {rec.text}
                 </div>
-            );
-            counter++;
-        });
+            </div>
+        );
+        counter++;
+    });
     return result;
 }
 
