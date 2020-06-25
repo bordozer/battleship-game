@@ -32,6 +32,18 @@ public class BattlefieldServiceImpl implements BattlefieldService {
 
         final var cells = battlefield.getCells();
         final var cell = CellUtils.getCell(cells, move);
+
+        if (cell.isHit()) {
+            logs.add(LogItem.builder().text(String.format("%s: %s - cell has already been hit. Try another one", player.getName(), cell.humanize())).build());
+            game.getBattle().addLogs(logs);
+            return;
+        }
+        if (cell.isKilledShipNeighbor()) {
+            logs.add(LogItem.builder().text(String.format("%s: %s - cell is killed ship neighbor and cannot contains a ship. Try another cell", player.getName(), cell.humanize())).build());
+            game.getBattle().addLogs(logs);
+            return;
+        }
+
         cell.setHit(true);
 
         var damage = " - missed";
