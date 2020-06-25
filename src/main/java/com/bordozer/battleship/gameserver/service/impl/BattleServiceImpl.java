@@ -9,7 +9,6 @@ import com.bordozer.battleship.gameserver.dto.battle.GameplayDto;
 import com.bordozer.battleship.gameserver.dto.battle.ImmutableShipDto;
 import com.bordozer.battleship.gameserver.dto.battle.LogDto;
 import com.bordozer.battleship.gameserver.dto.battle.PlayerDto;
-import com.bordozer.battleship.gameserver.dto.battle.PlayerType;
 import com.bordozer.battleship.gameserver.dto.battle.ShipDto;
 import com.bordozer.battleship.gameserver.exception.GameNotFoundException;
 import com.bordozer.battleship.gameserver.model.Battle;
@@ -49,15 +48,15 @@ public class BattleServiceImpl implements BattleService {
     private final BattlefieldService battlefieldService;
 
     @Override
-    public BattleDto getGameState(final String gameId, final PlayerType forPlayer) {
+    public BattleDto getGameState(final String gameId, final String forPlayerId) {
         final var game = getGame(gameId);
         final var battle = game.getBattle();
 
         final var player = getPlayerDto(game, battle);
         final var enemy = getOpponentDto(game, battle);
         return BattleDto.builder()
-                .player(forPlayer == PlayerType.PLAYER1 ? player : enemy)
-                .enemy(forPlayer == PlayerType.PLAYER2 ? enemy : player)
+                .player(forPlayerId.equals(game.getPlayer1Id()) ? player : enemy)
+                .enemy(forPlayerId.equals(game.getPlayer2Id()) ? enemy : player)
                 .config(getGameConfig())
                 .gameplay(getGameplay(gameId, game, battle))
                 .logs(getLogs(battle.getLogs()))
