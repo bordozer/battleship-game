@@ -1,5 +1,7 @@
 package com.bordozer.battleship.gameserver.service.impl;
 
+import com.bordozer.battleship.gameserver.dto.battle.PlayerType;
+import com.bordozer.battleship.gameserver.model.Battle;
 import com.bordozer.battleship.gameserver.model.Battlefield;
 import com.bordozer.battleship.gameserver.model.BattlefieldCell;
 import com.bordozer.battleship.gameserver.model.Game;
@@ -9,6 +11,7 @@ import com.bordozer.battleship.gameserver.model.Ship;
 import com.bordozer.battleship.gameserver.service.BattlefieldService;
 import com.bordozer.battleship.gameserver.service.PlayerService;
 import com.bordozer.battleship.gameserver.utils.CellUtils;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -27,6 +30,7 @@ public class BattlefieldServiceImpl implements BattlefieldService {
 
     @Override
     public void move(final Game game, final Battlefield battlefield, final String playerId, final PlayerMove move) {
+        final var battle = game.getBattle();
         final var logs = new ArrayList<LogItem>();
         final var player = playerService.getById(playerId);
 
@@ -35,12 +39,12 @@ public class BattlefieldServiceImpl implements BattlefieldService {
 
         if (cell.isHit()) {
             logs.add(LogItem.builder().text(String.format("%s: %s - cell has already been hit. Try another one", player.getName(), cell.humanize())).build());
-            game.getBattle().addLogs(logs);
+            battle.addLogs(logs);
             return;
         }
         if (cell.isKilledShipNeighbor()) {
             logs.add(LogItem.builder().text(String.format("%s: %s - cell is killed ship neighbor and cannot contains a ship. Try another cell", player.getName(), cell.humanize())).build());
-            game.getBattle().addLogs(logs);
+            battle.addLogs(logs);
             return;
         }
 
@@ -59,10 +63,13 @@ public class BattlefieldServiceImpl implements BattlefieldService {
                 }
             }
         }
-
         logs.add(LogItem.builder().text(String.format("%s: %s%s", player.getName(), cell.humanize(), shotResult)).build());
 
-        game.getBattle().addLogs(logs);
+        if (ship == null) {
+            battle.setCurrentMove(game.getPlayer1Id().equals(playerId) ? PlayerType.PLAYER2 : PlayerType.PLAYER1);
+        }
+
+        battle.addLogs(logs);
     }
 
     private boolean hasAliveShips(final List<List<BattlefieldCell>> cells) {
