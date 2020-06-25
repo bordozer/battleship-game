@@ -5,9 +5,9 @@ import ReactDOM from "react-dom"
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../css/app.css';
 
-import Layout from "components/Layout"
+import AppRouter from 'src/router';
 
 ReactDOM.render(
-    <Layout />,
+    <AppRouter />,
     document.getElementById('js-app-context')
 );

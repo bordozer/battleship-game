@@ -118,7 +118,7 @@ module.exports = (env, options) => {
             contentBase: path.join(__dirname, 'dist'),
             compress: true,
             useLocalIp: false,
-            port: 3100
+            port: 3101
         }/*,
         target: "node"*/
     }

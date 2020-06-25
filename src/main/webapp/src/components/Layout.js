@@ -1,3 +1,4 @@
+/* jshint esversion: 6 */
 import React from "react"
 import $ from "jquery"
 
@@ -8,6 +9,8 @@ import GameConfigRenderer from 'components/game-config-renderer';
 import ShipsStateRenderer from 'components/ships-state';
 import LogsRenderer from 'components/logs-renderer';
 import Swal from "sweetalert2";
+
+const qs = require('query-string');
 
 const STEP_GAME_INIT = 'GAME_INIT';
 const STEP_WAITING_FOR_OPPONENT = 'WAITING_FOR_OPPONENT';
@@ -68,6 +71,7 @@ export default class Layout extends React.Component {
     }
 
     componentDidMount() {
+        const gameId = qs.parse(location.search).gameId;
         fetch('/whoami')
             .then(response => response.json())
             .then(data => {
@@ -80,6 +84,12 @@ export default class Layout extends React.Component {
                         lastShot: null,
                         damagedShipCells: [],
                         points: this.state.player.points
+                    },
+                    gameplay: {
+                        gameId: gameId,
+                        step: STEP_GAME_INIT,
+                        currentMove: null,
+                        winner: null
                     }
                 });
                 // console.log("PlayerId: ", data.player.id, 'Player name: ', data.player.name);
@@ -183,7 +193,7 @@ export default class Layout extends React.Component {
                 difficulty: state ? state.config.difficulty : 3, /* 1 - easy, 2 - medium, 3 - hard */
             },
             gameplay: {
-                gameId: "8327de36-5a26-4034-a032-e7bc6b221084", // TODO: hardcoded game ID
+                gameId: '',
                 step: STEP_GAME_INIT,
                 currentMove: null,
                 winner: null
@@ -350,7 +360,7 @@ export default class Layout extends React.Component {
                         <button
                             className="bg-primary button-rounded"
                             onClick={this.onCreateGameClick}
-                            disabled={this.state.gameplay.step !== STEP_GAME_INIT}>
+                            disabled={this.state.gameplay.gameId !== '' && this.state.gameplay.step !== STEP_GAME_INIT}>
                             Create game
                         </button>
                         <button
