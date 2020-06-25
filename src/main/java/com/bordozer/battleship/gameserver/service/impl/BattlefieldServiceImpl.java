@@ -46,12 +46,12 @@ public class BattlefieldServiceImpl implements BattlefieldService {
 
         cell.setHit(true);
 
-        var damage = " - missed";
+        var shotResult = " - missed";
         final var ship = cell.getShip();
         if (ship != null) {
             ship.damage();
             final var isKilled = ship.isKilled();
-            damage = isKilled ? " - KILLED" : " - DAMAGED";
+            shotResult = isKilled ? " - KILLED" : " - DAMAGED";
             if (isKilled) {
                 markNeighbourCells(ship.getShipId(), cells);
                 if (!hasAliveShips(cells)) {
@@ -60,7 +60,7 @@ public class BattlefieldServiceImpl implements BattlefieldService {
             }
         }
 
-        logs.add(LogItem.builder().text(String.format("%s: %s%s", player.getName(), cell.humanize(), damage)).build());
+        logs.add(LogItem.builder().text(String.format("%s: %s%s", player.getName(), cell.humanize(), shotResult)).build());
 
         game.getBattle().addLogs(logs);
     }

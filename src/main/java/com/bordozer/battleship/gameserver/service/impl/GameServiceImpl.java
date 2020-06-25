@@ -27,6 +27,7 @@ import static com.bordozer.battleship.gameserver.converter.GameConverter.toDto;
 import static com.bordozer.battleship.gameserver.dto.battle.PlayerType.PLAYER1;
 import static com.bordozer.battleship.gameserver.model.GameState.BATTLE;
 import static com.bordozer.battleship.gameserver.model.GameState.OPEN;
+import static com.bordozer.battleship.gameserver.utils.RandomUtils.randomizeFirstMove;
 
 @Slf4j
 @Service
@@ -83,7 +84,7 @@ public class GameServiceImpl implements GameService {
                 final var battle = game.getBattle();
                 battle.getBattlefield2().setCells(convertCells(cells));
 
-                final var firstMove = PLAYER1; // TODO: randomizeFirstMove();
+                final var firstMove = randomizeFirstMove();
                 battle.setCurrentMove(firstMove);
                 battle
                         .addLog(LogItem.builder().text(String.format("Player %s joined the game", getPlayerName(playerId))).build())
