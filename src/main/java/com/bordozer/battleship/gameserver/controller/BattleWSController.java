@@ -10,6 +10,8 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 
+import javax.annotation.CheckForNull;
+
 @Controller
 @RequiredArgsConstructor
 public class BattleWSController {
@@ -32,8 +34,12 @@ public class BattleWSController {
         sendPlayerNewGameState(gameEvent.getGameId(), players.getPlayer12d());
     }
 
-    private void sendPlayerNewGameState(final String gameId, final String playerId) {
-        simpMessagingTemplate.convertAndSend(destination(gameId, playerId), battleService.getGameState(gameId, playerId));
+    private void sendPlayerNewGameState(final String gameId, @CheckForNull final String playerId) {
+        if (playerId == null) {
+            return;
+        }
+        final var destination = destination(gameId, playerId);
+        simpMessagingTemplate.convertAndSend(destination, battleService.getGameState(gameId, playerId));
     }
 
     private String destination(final String gameId, final String playerId) {
