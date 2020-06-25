@@ -20,7 +20,7 @@ function connect(gameId, playerId, setStateCallback) {
     stompClient = Stomp.over(socket);
     stompClient.connect({}, function (frame) {
         console.log('Connected', frame);
-        requestGameStateRefresh(gameId, playerId);
+        notifyAboutGameEvent(gameId);
         const subscription = '/game-state-changed/' + gameId + '/' + playerId;
         console.log('Subscription', subscription);
         stompClient.subscribe(subscription, function (battle) {
@@ -30,10 +30,9 @@ function connect(gameId, playerId, setStateCallback) {
     });
 }
 
-function requestGameStateRefresh(gameId, playerId) {
+function notifyAboutGameEvent(gameId) {
     stompClient.send("/game-event-in", {}, JSON.stringify({
-            'gameId': gameId,
-            'playerId': playerId
+            'gameId': gameId
         }
     ));
 }

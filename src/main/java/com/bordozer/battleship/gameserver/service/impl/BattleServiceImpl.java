@@ -53,9 +53,11 @@ public class BattleServiceImpl implements BattleService {
         final var game = getGame(gameId);
         final var battle = game.getBattle();
 
+        final var player = getPlayerDto(game, battle);
+        final var enemy = getOpponentDto(game, battle);
         return BattleDto.builder()
-                .player(getPlayerDto(game, battle))
-                .enemy(getOpponentDto(game, battle))
+                .player(forPlayer == PlayerType.PLAYER1 ? player : enemy)
+                .enemy(forPlayer == PlayerType.PLAYER2 ? enemy : player)
                 .config(getGameConfig())
                 .gameplay(getGameplay(gameId, game, battle))
                 .logs(getLogs(battle.getLogs()))

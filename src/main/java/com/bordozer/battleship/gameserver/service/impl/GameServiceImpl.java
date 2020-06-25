@@ -2,7 +2,9 @@ package com.bordozer.battleship.gameserver.service.impl;
 
 import com.bordozer.battleship.gameserver.dto.GameDto;
 import com.bordozer.battleship.gameserver.dto.battle.CellDto;
+import com.bordozer.battleship.gameserver.exception.GameNotFoundException;
 import com.bordozer.battleship.gameserver.model.Game;
+import com.bordozer.battleship.gameserver.model.GamePlayers;
 import com.bordozer.battleship.gameserver.model.GameState;
 import com.bordozer.battleship.gameserver.model.LogItem;
 import com.bordozer.battleship.gameserver.service.GameService;
@@ -111,6 +113,15 @@ public class GameServiceImpl implements GameService {
     @CheckForNull
     public Game getGame(final String gameId) {
         return GAME_MAP.get(gameId);
+    }
+
+    @Override
+    public GamePlayers getGamePlayers(final String gameId) {
+        final var game = getGame(gameId);
+        if (game == null) {
+            throw new GameNotFoundException(gameId);
+        }
+        return GamePlayers.of(game.getPlayer1Id(), game.getPlayer2Id());
     }
 
     private GameDto convertToDto(final String gameId) {
