@@ -20,5 +20,5 @@ public interface GameService {
 
     GamePlayers getGamePlayers(String gameId);
 
-    void delete(String gameId);
+    void delete(String gameId, final String playerId);
 }

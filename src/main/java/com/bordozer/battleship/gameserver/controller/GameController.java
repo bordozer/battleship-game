@@ -58,8 +58,9 @@ public class GameController {
     }
 
     @DeleteMapping(path = "/delete/{gameId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Ok> joinGame(@PathVariable("gameId") final String gameId) {
-        gameService.delete(gameId);
+    public ResponseEntity<Ok> joinGame(@PathVariable("gameId") final String gameId, final HttpServletRequest request) {
+        final var playerId = getPlayerId(request);
+        gameService.delete(gameId, playerId);
         return new ResponseEntity<>(Ok.of(), HttpStatus.OK);
     }
 

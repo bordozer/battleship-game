@@ -15,7 +15,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.CheckForNull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -28,6 +27,7 @@ import static com.bordozer.battleship.gameserver.dto.battle.PlayerType.PLAYER1;
 import static com.bordozer.battleship.gameserver.model.GameState.BATTLE;
 import static com.bordozer.battleship.gameserver.model.GameState.OPEN;
 import static com.bordozer.battleship.gameserver.utils.RandomUtils.randomizeFirstMove;
+import static com.bordozer.battleship.gameserver.utils.SecurityUtils.assertAccess;
 
 @Slf4j
 @Service
@@ -111,22 +111,23 @@ public class GameServiceImpl implements GameService {
     }
 
     @Override
-    @CheckForNull
     public Game getGame(final String gameId) {
+        if (!GAME_MAP.containsKey(gameId)) {
+            throw new GameNotFoundException(gameId);
+        }
         return GAME_MAP.get(gameId);
     }
 
     @Override
     public GamePlayers getGamePlayers(final String gameId) {
         final var game = getGame(gameId);
-        if (game == null) {
-            throw new GameNotFoundException(gameId);
-        }
         return GamePlayers.of(game.getPlayer1Id(), game.getPlayer2Id());
     }
 
     @Override
-    public void delete(final String gameId) {
+    public void delete(final String gameId, final String playerId) {
+        final var game = getGame(gameId);
+        assertAccess(game, playerId);
         GAME_MAP.remove(gameId);
     }
 

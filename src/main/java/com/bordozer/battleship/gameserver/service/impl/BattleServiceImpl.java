@@ -10,7 +10,6 @@ import com.bordozer.battleship.gameserver.dto.battle.GameStep;
 import com.bordozer.battleship.gameserver.dto.battle.GameplayDto;
 import com.bordozer.battleship.gameserver.dto.battle.PlayerDto;
 import com.bordozer.battleship.gameserver.dto.battle.PlayerType;
-import com.bordozer.battleship.gameserver.exception.GameNotFoundException;
 import com.bordozer.battleship.gameserver.model.Battlefield;
 import com.bordozer.battleship.gameserver.model.Game;
 import com.bordozer.battleship.gameserver.model.GameState;
@@ -31,6 +30,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static com.bordozer.battleship.gameserver.utils.SecurityUtils.assertAccess;
 import static com.bordozer.battleship.gameserver.utils.ShipUtils.extractShips;
 
 @Slf4j
@@ -66,6 +66,7 @@ public class BattleServiceImpl implements BattleService {
     @Override
     public void move(final String gameId, final String playerId, final PlayerMove move) {
         final var game = getGame(gameId);
+        assertAccess(game, playerId);
         final var battlefield = getBattlefield(game, playerId);
         battlefieldService.move(game, battlefield, playerId, move);
     }
@@ -193,11 +194,7 @@ public class BattleServiceImpl implements BattleService {
     }
 
     private Game getGame(final String gameId) {
-        @CheckForNull final var game = gameService.getGame(gameId);
-        if (game == null) {
-            throw new GameNotFoundException(gameId);
-        }
-        return game;
+        return gameService.getGame(gameId);
     }
 
     private GameStep convertGameStep(final GameState state) {
