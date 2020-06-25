@@ -19,7 +19,7 @@ public class IdentityServiceImpl implements IdentityService {
 
     @Override
     public String generateForGame() {
-        return "8327de36-5a26-4034-a032-e7bc6b221084"; // TODO: stub, use generate()0
+        return "8327de36-5a26-4034-a032-e7bc6b221084"; // TODO: stub, use generate()
     }
 
     private static String generate() {

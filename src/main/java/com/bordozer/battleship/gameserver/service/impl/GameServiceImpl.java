@@ -125,6 +125,11 @@ public class GameServiceImpl implements GameService {
         return GamePlayers.of(game.getPlayer1Id(), game.getPlayer2Id());
     }
 
+    @Override
+    public void delete(final String gameId) {
+        GAME_MAP.remove(gameId);
+    }
+
     private GameDto convertToDto(final String gameId) {
         final var game = GAME_MAP.get(gameId);
         final var player1 = playerService.getById(game.getPlayer1Id());

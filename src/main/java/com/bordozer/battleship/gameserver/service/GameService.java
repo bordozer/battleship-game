@@ -19,4 +19,6 @@ public interface GameService {
     Game getGame(String gameId);
 
     GamePlayers getGamePlayers(String gameId);
+
+    void delete(String gameId);
 }

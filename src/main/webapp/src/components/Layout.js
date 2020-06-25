@@ -52,13 +52,12 @@ function sendMove(gameId, playerId, line, column) {
     $("#greetings").append("<tr><td>" + message.playerMove.playerId + ': ' + message.playerMove.line + message.playerMove.column + "</td></tr>");
 }*/
 
-/*function disconnect() {
+function disconnect() {
     if (stompClient !== null) {
         stompClient.disconnect();
     }
-    setConnected(false);
     console.log("Disconnected");
-}*/
+}
 
 export default class Layout extends React.Component {
 
@@ -142,7 +141,19 @@ export default class Layout extends React.Component {
 
     onCancelGameClick = () => {
         console.log("About to cancel game");
-        // TODO: implement
+        $.ajax({
+            method: 'DELETE',
+            url: "/games/delete/" + this.state.gameplay.gameId,
+            contentType: 'application/json',
+            cache: false,
+            success: function (result) {
+                console.log("Joined to game:", result);
+                disconnect();
+            },
+            error: function (request, status, error) {
+                console.error("Cannot delet game", request.responseText, error);
+            }
+        });
     }
 
     getInitialState = (state) => {
@@ -225,6 +236,7 @@ export default class Layout extends React.Component {
                 "Congratulations, " + this.state.player.playerName,
                 'success'
             );
+            disconnect();
         }
         if (winner === 'enemy') {
             Swal.fire(
@@ -232,6 +244,7 @@ export default class Layout extends React.Component {
                 "Congratulations, " + this.state.enemy.playerName,
                 'error'
             );
+            disconnect();
         }
     }
 
