@@ -9,6 +9,8 @@ public enum GameStep {
     WAITING_FOR_OPPONENT,
     @JsonProperty("BATTLE")
     BATTLE,
-    @JsonProperty("FINAL")
-    FINAL;
+    @JsonProperty("FINISHED")
+    FINISHED,
+    @JsonProperty("CANCELLED")
+    CANCELLED;
 }

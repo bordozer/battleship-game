@@ -12,7 +12,8 @@ import Swal from "sweetalert2";
 const STEP_GAME_INIT = 'GAME_INIT';
 const STEP_WAITING_FOR_OPPONENT = 'WAITING_FOR_OPPONENT';
 const STEP_BATTLE = 'BATTLE';
-const STEP_FINAL = 'FINAL';
+const FINISHED = 'FINISHED';
+const STEP_CANCELLED = 'CANCELLED';
 
 let stompClient = null;
 
@@ -151,7 +152,7 @@ export default class Layout extends React.Component {
                 disconnect();
             },
             error: function (request, status, error) {
-                console.error("Cannot delet game", request.responseText, error);
+                console.error("Cannot delete game", request.responseText, error);
             }
         });
     }
@@ -225,10 +226,20 @@ export default class Layout extends React.Component {
 
     updateGameState = (newState) => {
         // console.log("Game state is updated", newState);
-        this.setState(newState, () => this.checkForWinner());
+        this.setState(newState, () => this.stateUpdateCallback());
     }
 
-    checkForWinner = () => {
+    stateUpdateCallback = () => {
+        /*const step = this.state.gameplay.step;
+        if (step === STEP_CANCELLED) {
+            Swal.fire(
+                'Game has been cancelled',
+                "Congratulations",
+                'success'
+            );
+            disconnect();
+        }*/
+
         const winner = this.state.gameplay.winner;
         if (winner === 'player') {
             Swal.fire(
@@ -350,8 +361,7 @@ export default class Layout extends React.Component {
                         </button>
                         <button
                             className="bg-primary button-rounded"
-                            onClick={this.onCancelGameClick}
-                            disabled={this.state.gameplay.step === STEP_GAME_INIT}>
+                            onClick={this.onCancelGameClick}>
                             Cancel game
                         </button>
                     </div>

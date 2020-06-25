@@ -207,7 +207,9 @@ public class BattleServiceImpl implements BattleService {
             case BATTLE:
                 return GameStep.BATTLE;
             case FINISHED:
-                return GameStep.FINAL;
+                return GameStep.FINISHED;
+            case CANCELLED:
+                return GameStep.CANCELLED;
             default:
                 throw new IllegalArgumentException(String.format("Unsupported game state: '%s'", state));
         }
