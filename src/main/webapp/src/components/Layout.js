@@ -20,10 +20,10 @@ function connect(gameId, playerId, setStateCallback) {
     const socket = new SockJS('/gs-guide-websocket');
     stompClient = Stomp.over(socket);
     stompClient.connect({}, function (frame) {
-        console.log('Connected', frame);
+        // console.log('Connected', frame);
         notifyAboutGameEvent(gameId);
         const subscription = '/game-state-changed/' + gameId + '/' + playerId;
-        console.log('Subscription', subscription);
+        // console.log('Subscription', subscription);
         stompClient.subscribe(subscription, function (battle) {
             // console.log("battle", battle.body);
             setStateCallback(JSON.parse(battle.body));
@@ -56,7 +56,7 @@ function disconnect() {
     if (stompClient !== null) {
         stompClient.disconnect();
     }
-    console.log("Disconnected");
+    // console.log("Disconnected");
 }
 
 export default class Layout extends React.Component {
@@ -81,7 +81,7 @@ export default class Layout extends React.Component {
                         points: this.state.player.points
                     }
                 });
-                console.log("PlayerId: ", data.player.id, 'Player name: ', data.player.name);
+                // console.log("PlayerId: ", data.player.id, 'Player name: ', data.player.name);
             });
     }
 
@@ -108,14 +108,14 @@ export default class Layout extends React.Component {
                         winner: null
                     }
                 });
-                console.log("Game is created");
+                // console.log("Game is created");
                 self.connect();
             }
         });
     }
 
     onJoinGameClick = () => {
-        console.log("About to join a game");
+        // console.log("About to join a game");
         const self = this;
         $.ajax({
             method: 'PUT',
@@ -124,7 +124,7 @@ export default class Layout extends React.Component {
             data: JSON.stringify(this.state.player.cells),
             cache: false,
             success: function (result) {
-                console.log("Joined to game:", result);
+                // console.log("Joined to game:", result);
                 self.connect();
             },
             error: function (request, status, error) {
@@ -140,14 +140,14 @@ export default class Layout extends React.Component {
     }
 
     onCancelGameClick = () => {
-        console.log("About to cancel game");
+        // console.log("About to cancel game");
         $.ajax({
             method: 'DELETE',
             url: "/games/delete/" + this.state.gameplay.gameId,
             contentType: 'application/json',
             cache: false,
             success: function (result) {
-                console.log("Joined to game:", result);
+                // console.log("Game cancelled:", result);
                 disconnect();
             },
             error: function (request, status, error) {
