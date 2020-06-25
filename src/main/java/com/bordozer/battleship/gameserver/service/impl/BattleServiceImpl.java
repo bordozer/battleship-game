@@ -1,10 +1,12 @@
 package com.bordozer.battleship.gameserver.service.impl;
 
+import com.bordozer.battleship.gameserver.dto.GamePlayerDto;
 import com.bordozer.battleship.gameserver.dto.battle.BattleDto;
 import com.bordozer.battleship.gameserver.dto.battle.CellDto;
 import com.bordozer.battleship.gameserver.dto.battle.GameConfigDto;
 import com.bordozer.battleship.gameserver.dto.battle.GameStep;
 import com.bordozer.battleship.gameserver.dto.battle.GameplayDto;
+import com.bordozer.battleship.gameserver.dto.battle.ImmutableShipDto;
 import com.bordozer.battleship.gameserver.dto.battle.LogDto;
 import com.bordozer.battleship.gameserver.dto.battle.PlayerDto;
 import com.bordozer.battleship.gameserver.dto.battle.ShipDto;
@@ -37,6 +39,9 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class BattleServiceImpl implements BattleService {
 
+    private static final String NO_OPPONENT_YET_ID = "no-opponent-yet-id";
+    private static final String NO_OPPONENT_YET_NAME = "unknown yet";
+
     private final GameService gameService;
     private final PlayerService playerService;
     private final BattlefieldService battlefieldService;
@@ -63,11 +68,10 @@ public class BattleServiceImpl implements BattleService {
                 .points(0)
                 .build();
 
-        final var player2 = game.getPlayer2Id();
-        Objects.requireNonNull(player2, "Player2 cannot be null at this step");
+        final var player2 = getOpponent(game);
         final var enemy = PlayerDto.builder()
-                .playerId(player2)
-                .name(playerService.getById(game.getPlayer2Id()).getName())
+                .playerId(player2.getId())
+                .name(player2.getName())
                 .cells(player2Cells)
                 .ships(convertShips(game.getBattle().getBattlefield2().getCells()))
                 .lastShot(null)
@@ -128,22 +132,36 @@ public class BattleServiceImpl implements BattleService {
         }
     }
 
+    private GamePlayerDto getOpponent(final Game game) {
+        return Optional.ofNullable(game.getPlayer2Id())
+                .map(playerService::getById)
+                .orElse(GamePlayerDto.builder()
+                        .id(NO_OPPONENT_YET_ID)
+                        .name(NO_OPPONENT_YET_NAME)
+                        .build()
+                );
+    }
+
     /* TODO: move to converter */
-    public static List<? extends ShipDto> convertShips(final List<List<BattlefieldCell>> cells) {
+    private static List<? extends ShipDto> convertShips(final List<List<BattlefieldCell>> cells) {
         return cells.stream()
                 .flatMap(Collection::stream)
                 .map(BattlefieldCell::getShip)
                 .filter(Objects::nonNull)
                 .distinct()
-                .map(ship -> ShipDto.builder()
-                        .id(ship.getShipId())
-                        .name(ship.getName())
-                        .size(ship.getSize())
-                        .damage(ship.getDamage())
-                        .cells(Collections.emptyList())
-                        .build()
-                )
+                .map(BattleServiceImpl::convertToShipDto)
                 .collect(Collectors.toList());
+    }
+
+    /* TODO: move to converter */
+    private static ImmutableShipDto convertToShipDto(final Ship ship) {
+        return ShipDto.builder()
+                .id(ship.getShipId())
+                .name(ship.getName())
+                .size(ship.getSize())
+                .damage(ship.getDamage())
+                .cells(Collections.emptyList())
+                .build();
     }
 
     /* TODO: move to converter */
@@ -174,6 +192,7 @@ public class BattleServiceImpl implements BattleService {
                 .build();
     }
 
+    /* TODO: move to converter */
     @CheckForNull
     private ShipDto convertShip(@CheckForNull final Ship ship) {
         return Optional.ofNullable(ship)
@@ -182,8 +201,7 @@ public class BattleServiceImpl implements BattleService {
                         .name(s.getName())
                         .size(s.getSize())
                         .damage(s.getDamage())
-                        .build()
-                )
+                        .build())
                 .orElse(null);
     }
 }

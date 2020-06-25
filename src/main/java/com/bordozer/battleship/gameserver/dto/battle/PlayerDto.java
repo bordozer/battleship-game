@@ -15,7 +15,7 @@ import java.util.List;
 @Value.Immutable
 @Value.Modifiable
 @ToString
-    public abstract class PlayerDto {
+public abstract class PlayerDto {
 
     public abstract String getPlayerId();
 

@@ -143,7 +143,6 @@ export default class Layout extends React.Component {
 
     getInitialState = (state) => {
         const playerData = this.randomizeBattleFieldWithShips();
-        const enemyData = this.randomizeBattleFieldWithShips();
         return {
             player: {
                 playerId: null,
@@ -156,9 +155,9 @@ export default class Layout extends React.Component {
             },
             enemy: {
                 playerId: null,
-                playerName: 'Enemy',
-                cells: enemyData.cells,
-                ships: enemyData.ships,
+                playerName: 'unknown yet',
+                cells: initBattleFieldCells(10),
+                ships: [],
                 lastShot: null,
                 damagedShipCells: [],
                 points: state ? state.enemy.points : 0

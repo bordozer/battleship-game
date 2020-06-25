@@ -2,7 +2,6 @@ package com.bordozer.battleship.gameserver.service.impl;
 
 import com.bordozer.battleship.gameserver.dto.GameDto;
 import com.bordozer.battleship.gameserver.dto.battle.CellDto;
-import com.bordozer.battleship.gameserver.dto.battle.CurrentMove;
 import com.bordozer.battleship.gameserver.model.Game;
 import com.bordozer.battleship.gameserver.model.GameState;
 import com.bordozer.battleship.gameserver.model.LogItem;
@@ -26,7 +25,6 @@ import static com.bordozer.battleship.gameserver.dto.battle.CurrentMove.PLAYER1;
 import static com.bordozer.battleship.gameserver.model.GameState.BATTLE;
 import static com.bordozer.battleship.gameserver.model.GameState.OPEN;
 import static com.bordozer.battleship.gameserver.utils.BattleUtils.convertCells;
-import static com.bordozer.battleship.gameserver.utils.RandomUtils.randomizeFirstMove;
 
 @Slf4j
 @Service

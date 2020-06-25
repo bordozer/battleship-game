@@ -1,7 +1,6 @@
 package com.bordozer.battleship.gameserver.controller;
 
 import com.bordozer.battleship.gameserver.dto.GameDto;
-import com.bordozer.battleship.gameserver.dto.battle.BattleDto;
 import com.bordozer.battleship.gameserver.dto.battle.CellDto;
 import com.bordozer.battleship.gameserver.service.BattleService;
 import com.bordozer.battleship.gameserver.service.GameService;
@@ -49,8 +48,8 @@ public class GameController {
 
     @PutMapping(path = "/join/{gameId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> joinGame(@PathVariable("gameId") final String gameId,
-                                              @RequestBody final ArrayList<ArrayList<CellDto>> cells,
-                                              final HttpServletRequest request) {
+                                           @RequestBody final ArrayList<ArrayList<CellDto>> cells,
+                                           final HttpServletRequest request) {
         final var playerId = getPlayerId(request);
 
         gameService.joinGame(gameId, playerId, cells);
