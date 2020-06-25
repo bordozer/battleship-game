@@ -7,6 +7,7 @@ import BattleFieldRenderer from 'components/battle-field-renderer';
 import GameConfigRenderer from 'components/game-config-renderer';
 import ShipsStateRenderer from 'components/ships-state';
 import LogsRenderer from 'components/logs-renderer';
+import Swal from "sweetalert2";
 
 const STEP_GAME_INIT = 'GAME_INIT';
 const STEP_WAITING_FOR_OPPONENT = 'WAITING_FOR_OPPONENT';
@@ -188,7 +189,7 @@ export default class Layout extends React.Component {
     }
 
     playerShot = (cell) => {
-        console.log("Player's shot", cell);
+        // console.log("Player's shot", cell);
         sendMove(this.state.gameplay.gameId, this.state.player.playerId, cell.y, cell.x);
     }
 
@@ -212,12 +213,30 @@ export default class Layout extends React.Component {
     }
 
     updateGameState = (newState) => {
-        console.log("Game state is updated", newState);
-        this.setState(newState);
+        // console.log("Game state is updated", newState);
+        this.setState(newState, () => this.checkForWinner());
+    }
+
+    checkForWinner = () => {
+        const winner = this.state.gameplay.winner;
+        if (winner === 'player') {
+            Swal.fire(
+                'You have won',
+                "You won",
+                'success'
+            );
+        }
+        if (winner === 'enemy') {
+            Swal.fire(
+                this.state.enemy.playerName + ' has won!',
+                'You lose',
+                'error'
+            );
+        }
     }
 
     render() {
-        console.log("this.state", JSON.stringify(this.state));
+        // console.log("this.state", JSON.stringify(this.state));
 
         const step = this.state.gameplay.step;
         const currentMove = this.state.gameplay.currentMove;
