@@ -21,7 +21,7 @@ public abstract class GameplayDto {
     public abstract GameStep getStep();
 
     @CheckForNull
-    public abstract CurrentMove getCurrentMove();
+    public abstract PlayerType getCurrentMove();
 
     @CheckForNull
     public abstract String getWinner();

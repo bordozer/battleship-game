@@ -15,13 +15,15 @@ const STEP_FINAL = 'FINAL';
 
 let stompClient = null;
 
-function connect(gameId, onConnectCallback, setStateCallback) {
+function connect(gameId, playerId, setStateCallback) {
     const socket = new SockJS('/gs-guide-websocket');
     stompClient = Stomp.over(socket);
     stompClient.connect({}, function (frame) {
-        console.log('Connected: ' + frame);
-        onConnectCallback();
-        stompClient.subscribe('/game-state-changed/' + gameId, function (battle) {
+        console.log('Connected', frame);
+        requestGameStateRefresh(gameId, playerId);
+        const subscription = '/game-state-changed/' + gameId + '/' + playerId;
+        console.log('Subscription', subscription);
+        stompClient.subscribe(subscription, function (battle) {
             // console.log("battle", battle.body);
             setStateCallback(JSON.parse(battle.body));
         });
@@ -108,10 +110,7 @@ export default class Layout extends React.Component {
                     }
                 });
                 console.log("Game is created");
-                const onConnectCallback = function () {
-                    requestGameStateRefresh(self.state.gameplay.gameId, self.state.player.playerId);
-                };
-                connect(self.state.gameplay.gameId, onConnectCallback, self.updateGameState.bind(self));
+                self.connect();
             }
         });
     }
@@ -127,15 +126,18 @@ export default class Layout extends React.Component {
             cache: false,
             success: function (result) {
                 console.log("Joined to game:", result);
-                const onConnectCallback = function () {
-                    requestGameStateRefresh(self.state.gameplay.gameId, self.state.player.playerId);
-                };
-                connect(self.state.gameplay.gameId, onConnectCallback, self.updateGameState.bind(self));
+                self.connect();
             },
             error: function (request, status, error) {
                 console.error("Cannot join game", request.responseText, error);
             }
         });
+    }
+
+    connect = () => {
+        const gameId = this.state.gameplay.gameId;
+        const playerId = this.state.player.playerId;
+        connect(gameId, playerId, this.updateGameState.bind(self));
     }
 
     onCancelGameClick = () => {

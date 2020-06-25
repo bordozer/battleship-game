@@ -1,6 +1,6 @@
 package com.bordozer.battleship.gameserver.model;
 
-import com.bordozer.battleship.gameserver.dto.battle.CurrentMove;
+import com.bordozer.battleship.gameserver.dto.battle.PlayerType;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NonNull;
@@ -23,7 +23,7 @@ public class Battle {
     @NonNull
     private final List<LogItem> logs;
     @CheckForNull
-    private CurrentMove currentMove;
+    private PlayerType playerType;
 
     public Battle addLog(final LogItem logItem) {
         logs.add(logItem);

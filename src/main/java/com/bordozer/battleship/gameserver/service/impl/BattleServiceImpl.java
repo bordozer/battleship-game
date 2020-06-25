@@ -9,6 +9,7 @@ import com.bordozer.battleship.gameserver.dto.battle.GameplayDto;
 import com.bordozer.battleship.gameserver.dto.battle.ImmutableShipDto;
 import com.bordozer.battleship.gameserver.dto.battle.LogDto;
 import com.bordozer.battleship.gameserver.dto.battle.PlayerDto;
+import com.bordozer.battleship.gameserver.dto.battle.PlayerType;
 import com.bordozer.battleship.gameserver.dto.battle.ShipDto;
 import com.bordozer.battleship.gameserver.exception.GameNotFoundException;
 import com.bordozer.battleship.gameserver.model.Battle;
@@ -48,7 +49,7 @@ public class BattleServiceImpl implements BattleService {
     private final BattlefieldService battlefieldService;
 
     @Override
-    public BattleDto getGameState(final String gameId, final String forPlayerId) {
+    public BattleDto getGameState(final String gameId, final PlayerType forPlayer) {
         final var game = getGame(gameId);
         final var battle = game.getBattle();
 
@@ -112,7 +113,7 @@ public class BattleServiceImpl implements BattleService {
         return GameplayDto.builder()
                 .gameId(gameId)
                 .step(convertGameStep(game.getState()))
-                .currentMove(battle.getCurrentMove())
+                .currentMove(battle.getPlayerType())
                 .build();
     }
 
