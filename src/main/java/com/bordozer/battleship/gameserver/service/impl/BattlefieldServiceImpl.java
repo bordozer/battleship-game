@@ -1,7 +1,6 @@
 package com.bordozer.battleship.gameserver.service.impl;
 
 import com.bordozer.battleship.gameserver.dto.battle.PlayerType;
-import com.bordozer.battleship.gameserver.model.Battle;
 import com.bordozer.battleship.gameserver.model.Battlefield;
 import com.bordozer.battleship.gameserver.model.BattlefieldCell;
 import com.bordozer.battleship.gameserver.model.Game;
@@ -11,7 +10,6 @@ import com.bordozer.battleship.gameserver.model.Ship;
 import com.bordozer.battleship.gameserver.service.BattlefieldService;
 import com.bordozer.battleship.gameserver.service.PlayerService;
 import com.bordozer.battleship.gameserver.utils.CellUtils;
-import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
@@ -50,7 +48,7 @@ public class BattlefieldServiceImpl implements BattlefieldService {
         }
 
         cell.setHit(true);
-        battlefield.setLastShot(move);
+        game.getBattlefieldFor(playerId).setLastShot(move);
 
         var shotResult = " - missed";
         final var ship = cell.getShip();

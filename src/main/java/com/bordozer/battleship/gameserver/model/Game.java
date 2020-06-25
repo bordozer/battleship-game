@@ -25,4 +25,8 @@ public class Game {
     private final Battle battle;
     @CheckForNull
     private String winnerId;
+
+    public Battlefield getBattlefieldFor(final String playerId) {
+        return playerId.equals(player1Id) ? battle.getBattlefield1() : battle.getBattlefield2();
+    }
 }
