@@ -11,6 +11,7 @@ import com.bordozer.battleship.gameserver.dto.battle.LogDto;
 import com.bordozer.battleship.gameserver.dto.battle.PlayerDto;
 import com.bordozer.battleship.gameserver.dto.battle.ShipDto;
 import com.bordozer.battleship.gameserver.exception.GameNotFoundException;
+import com.bordozer.battleship.gameserver.model.Battle;
 import com.bordozer.battleship.gameserver.model.Battlefield;
 import com.bordozer.battleship.gameserver.model.BattlefieldCell;
 import com.bordozer.battleship.gameserver.model.Game;
@@ -49,52 +50,14 @@ public class BattleServiceImpl implements BattleService {
     @Override
     public BattleDto getBattle(final String gameId) {
         final var game = getGame(gameId);
-
         final var battle = game.getBattle();
-        final var player1Cells = battle.getBattlefield1().getCells().stream()
-                .map(this::convertCellsToDto)
-                .collect(Collectors.toList());
-        final var player2Cells = battle.getBattlefield2().getCells().stream()
-                .map(this::convertCellsToDto)
-                .collect(Collectors.toList());
-
-        final var player1 = PlayerDto.builder()
-                .playerId(game.getPlayer1Id())
-                .playerName(playerService.getById(game.getPlayer1Id()).getName())
-                .cells(player1Cells)
-                .ships(convertShips(game.getBattle().getBattlefield1().getCells()))
-                .lastShot(null)
-                .damagedShipCells(Collections.emptyList())
-                .points(0)
-                .build();
-
-        final var player2 = getOpponent(game);
-        final var enemy = PlayerDto.builder()
-                .playerId(player2.getId())
-                .playerName(player2.getName())
-                .cells(player2Cells)
-                .ships(convertShips(game.getBattle().getBattlefield2().getCells()))
-                .lastShot(null)
-                .damagedShipCells(Collections.emptyList())
-                .points(0)
-                .build();
-
-        final var gameConfig = GameConfigDto.builder()
-                .difficulty(1)
-                .showShotHints(false)
-                .build();
-        final var gameplay = GameplayDto.builder()
-                .gameId(gameId)
-                .step(convertGameStep(game.getState()))
-                .currentMove(battle.getCurrentMove())
-                .build();
 
         return BattleDto.builder()
-                .player(player1)
-                .enemy(enemy)
-                .config(gameConfig)
-                .gameplay(gameplay)
-                .logs(convertLogs(battle.getLogs()))
+                .player(getPlayerDto(game, battle))
+                .enemy(getOpponentDto(game, battle))
+                .config(getGameConfig())
+                .gameplay(getGameplay(gameId, game, battle))
+                .logs(getLogs(battle.getLogs()))
                 .build();
     }
 
@@ -104,6 +67,53 @@ public class BattleServiceImpl implements BattleService {
         final var battlefield = getBattlefield(game, playerId);
         final var logs = battlefieldService.move(battlefield, playerId, move);
         game.getBattle().addLogs(logs);
+    }
+
+    private PlayerDto getPlayerDto(final Game game, final Battle battle) {
+        final var player = playerService.getById(game.getPlayer1Id()).getName();
+        final var playerCells = battle.getBattlefield1().getCells().stream()
+                .map(this::convertCellsToDto)
+                .collect(Collectors.toList());
+        return PlayerDto.builder()
+                .playerId(game.getPlayer1Id())
+                .playerName(player)
+                .cells(playerCells)
+                .ships(convertShips(game.getBattle().getBattlefield1().getCells()))
+                .lastShot(null)
+                .damagedShipCells(Collections.emptyList())
+                .points(0)
+                .build();
+    }
+
+    private PlayerDto getOpponentDto(final Game game, final Battle battle) {
+        final var opponent = getPlayer2(game);
+        final var opponentCells = battle.getBattlefield2().getCells().stream()
+                .map(this::convertCellsToDto)
+                .collect(Collectors.toList());
+        return PlayerDto.builder()
+                .playerId(opponent.getId())
+                .playerName(opponent.getName())
+                .cells(opponentCells)
+                .ships(convertShips(game.getBattle().getBattlefield2().getCells()))
+                .lastShot(null)
+                .damagedShipCells(Collections.emptyList())
+                .points(0)
+                .build();
+    }
+
+    private GameConfigDto getGameConfig() {
+        return GameConfigDto.builder()
+                .difficulty(1)
+                .showShotHints(false)
+                .build();
+    }
+
+    private GameplayDto getGameplay(final String gameId, final Game game, final Battle battle) {
+        return GameplayDto.builder()
+                .gameId(gameId)
+                .step(convertGameStep(game.getState()))
+                .currentMove(battle.getCurrentMove())
+                .build();
     }
 
     private Battlefield getBattlefield(final Game game, final String playerId) {
@@ -131,7 +141,7 @@ public class BattleServiceImpl implements BattleService {
         }
     }
 
-    private GamePlayerDto getOpponent(final Game game) {
+    private GamePlayerDto getPlayer2(final Game game) {
         return Optional.ofNullable(game.getPlayer2Id())
                 .map(playerService::getById)
                 .orElse(GamePlayerDto.builder()
@@ -164,7 +174,7 @@ public class BattleServiceImpl implements BattleService {
     }
 
     /* TODO: move to converter */
-    private List<LogDto> convertLogs(final List<LogItem> logs) {
+    private List<LogDto> getLogs(final List<LogItem> logs) {
         return logs.stream()
                 .map(log -> LogDto.builder().time(log.getTime()).text(log.getText()).build())
                 .collect(Collectors.toList());
