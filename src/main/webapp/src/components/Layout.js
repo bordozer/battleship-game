@@ -8,6 +8,8 @@ import BattleFieldRenderer from 'components/battle-field-renderer';
 import GameConfigRenderer from 'components/game-config-renderer';
 import ShipsStateRenderer from 'components/ships-state';
 import LogsRenderer from 'components/logs-renderer';
+import {getUserIdFromCookie} from 'src/utils/cookies-utils';
+
 import Swal from "sweetalert2";
 
 const qs = require('query-string');
@@ -24,7 +26,7 @@ function connect(gameId, playerId, setStateCallback) {
     const socket = new SockJS('/gs-guide-websocket');
     stompClient = Stomp.over(socket);
     stompClient.connect({}, function (frame) {
-        // console.log('Connected', frame);
+        console.log('Connected', frame);
         notifyAboutGameEvent(gameId);
         const subscription = '/game-state-changed/' + gameId + '/' + playerId;
         // console.log('Subscription', subscription);
@@ -92,6 +94,9 @@ export default class Layout extends React.Component {
                         winner: null
                     }
                 });
+                if (gameId !== '' && data.player.id === getUserIdFromCookie()) {
+                    this.connect();
+                }
                 // console.log("PlayerId: ", data.player.id, 'Player name: ', data.player.name);
             });
     }
