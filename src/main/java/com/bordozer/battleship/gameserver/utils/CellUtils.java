@@ -16,6 +16,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static com.bordozer.battleship.gameserver.utils.BattleUtils.BATTLEFIELD_SIZE;
+import static com.bordozer.battleship.gameserver.utils.ShipUtils.getShipCells;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class CellUtils {
@@ -59,7 +60,14 @@ public final class CellUtils {
         return cells;
     }
 
-    public static List<BattlefieldCell> getNeighbourCells(final BattlefieldCell cell, final List<List<BattlefieldCell>> cells) {
+    public static List<BattlefieldCell> getShipNeighbourCells(final String shipId, final List<List<BattlefieldCell>> cells) {
+        return getShipCells(shipId, cells).stream()
+                .map(cell -> getNeighbourCells(cell, cells))
+                .flatMap(Collection::stream)
+                .collect(Collectors.toList());
+    }
+
+    private static List<BattlefieldCell> getNeighbourCells(final BattlefieldCell cell, final List<List<BattlefieldCell>> cells) {
         final var result = new ArrayList<BattlefieldCell>();
 
         final var cellY = cell.getColumn();

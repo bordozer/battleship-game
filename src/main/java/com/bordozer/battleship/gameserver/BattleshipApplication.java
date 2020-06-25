@@ -1,7 +1,7 @@
 package com.bordozer.battleship.gameserver;
 
-import com.bordozer.battleship.gameserver.config.WebAppConfig;
 import com.bordozer.battleship.gameserver.config.WSConfigurer;
+import com.bordozer.battleship.gameserver.config.WebAppConfig;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;

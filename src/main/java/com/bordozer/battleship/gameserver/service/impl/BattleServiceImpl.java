@@ -2,7 +2,6 @@ package com.bordozer.battleship.gameserver.service.impl;
 
 import com.bordozer.battleship.gameserver.converter.CellConverter;
 import com.bordozer.battleship.gameserver.converter.LogConverter;
-import com.bordozer.battleship.gameserver.converter.ShipConverter;
 import com.bordozer.battleship.gameserver.dto.GamePlayerDto;
 import com.bordozer.battleship.gameserver.dto.battle.BattleDto;
 import com.bordozer.battleship.gameserver.dto.battle.GameConfigDto;
@@ -28,6 +27,8 @@ import javax.annotation.CheckForNull;
 import java.util.Collections;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import static com.bordozer.battleship.gameserver.utils.ShipUtils.extractShips;
 
 @Slf4j
 @Service
@@ -76,7 +77,7 @@ public class BattleServiceImpl implements BattleService {
                 .playerId(game.getPlayer1Id())
                 .playerName(player1)
                 .cells(cells)
-                .ships(ShipConverter.convertShips(game.getBattle().getBattlefield1().getCells()))
+                .ships(extractShips(game.getBattle().getBattlefield1().getCells()))
                 .lastShot(null)
                 .damagedShipCells(Collections.emptyList())
                 .points(0)
@@ -93,7 +94,7 @@ public class BattleServiceImpl implements BattleService {
                 .playerId(player2.getId())
                 .playerName(player2.getName())
                 .cells(cells)
-                .ships(ShipConverter.convertShips(game.getBattle().getBattlefield2().getCells()))
+                .ships(extractShips(game.getBattle().getBattlefield2().getCells()))
                 .lastShot(null)
                 .damagedShipCells(Collections.emptyList())
                 .points(0)

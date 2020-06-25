@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.bordozer.battleship.gameserver.utils.CellUtils.getNeighbourCells;
+import static com.bordozer.battleship.gameserver.utils.CellUtils.getShipNeighbourCells;
 
 @Slf4j
 @Service
@@ -41,7 +41,7 @@ public class BattlefieldServiceImpl implements BattlefieldService {
             final var isKilled = ship.isKilled();
             damage = isKilled ? " - KILLED" : " - DAMAGED";
             if (isKilled) {
-                markNeighbourCells(cell, cells);
+                markNeighbourCells(ship.getShipId(), cells);
                 if (!hasAliveShips(cells)) {
                     game.setWinnerId(playerId);
                 }
@@ -58,8 +58,8 @@ public class BattlefieldServiceImpl implements BattlefieldService {
         return ships.stream().anyMatch(ship -> !ship.isKilled());
     }
 
-    private void markNeighbourCells(final BattlefieldCell cell, final List<List<BattlefieldCell>> cells) {
-        getNeighbourCells(cell, cells)
-                .forEach(c -> c.setKilledShipNeighbor(true));
+    private void markNeighbourCells(final String shipId, final List<List<BattlefieldCell>> cells) {
+        getShipNeighbourCells(shipId, cells)
+                .forEach(cell -> cell.setKilledShipNeighbor(true));
     }
 }

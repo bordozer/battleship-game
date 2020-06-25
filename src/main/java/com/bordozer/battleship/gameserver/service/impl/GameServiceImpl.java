@@ -22,11 +22,11 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
+import static com.bordozer.battleship.gameserver.converter.CellConverter.convertCells;
 import static com.bordozer.battleship.gameserver.converter.GameConverter.toDto;
 import static com.bordozer.battleship.gameserver.dto.battle.PlayerType.PLAYER1;
 import static com.bordozer.battleship.gameserver.model.GameState.BATTLE;
 import static com.bordozer.battleship.gameserver.model.GameState.OPEN;
-import static com.bordozer.battleship.gameserver.converter.CellConverter.convertCells;
 
 @Slf4j
 @Service
