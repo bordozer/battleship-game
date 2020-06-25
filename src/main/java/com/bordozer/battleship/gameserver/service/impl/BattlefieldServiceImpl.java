@@ -14,6 +14,7 @@ import com.bordozer.battleship.gameserver.utils.CellUtils;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -64,6 +65,10 @@ public class BattlefieldServiceImpl implements BattlefieldService {
             }
         }
         logs.add(LogItem.builder().text(String.format("%s: %s%s", player.getName(), cell.humanize(), shotResult)).build());
+
+        if (StringUtils.isNotEmpty(game.getWinnerId())) {
+            logs.add(LogItem.builder().text(String.format("%s wins!", player.getName())).build());
+        }
 
         if (ship == null) {
             battle.setCurrentMove(game.getPlayer1Id().equals(playerId) ? PlayerType.PLAYER2 : PlayerType.PLAYER1);
