@@ -222,14 +222,14 @@ export default class Layout extends React.Component {
         if (winner === 'player') {
             Swal.fire(
                 'You have won',
-                "You won",
+                "Congratulations, " + this.state.player.playerName,
                 'success'
             );
         }
         if (winner === 'enemy') {
             Swal.fire(
-                this.state.enemy.playerName + ' has won!',
                 'You lose',
+                "Congratulations, " + this.state.enemy.playerName,
                 'error'
             );
         }
