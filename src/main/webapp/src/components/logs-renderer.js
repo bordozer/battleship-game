@@ -11,7 +11,7 @@ function renderLogs(logs) {
         .forEach(rec => {
             result.push(
                 <div key={'log-row-' + counter} className="row">
-                    <div key={'log-row-col-' + counter} className="col-sm-12 small text-muted logs-container">
+                    <div key={'log-row-col-' + counter} className="col-sm-12 small text-muted">
                         {rec.text}
                     </div>
                 </div>
@@ -23,7 +23,7 @@ function renderLogs(logs) {
 
 const LogsRenderer = ({logs}) => {
     return (
-        <div>
+        <div className="logs-container">
             {renderLogs(logs)}
         </div>
     )

@@ -30,11 +30,11 @@ public class BattlefieldServiceImpl implements BattlefieldService {
         final var cell = CellUtils.getCell(battlefield.getCells(), move);
         cell.setHit(true);
 
-        var damage = "- missed";
+        var damage = " - missed";
         final var ship = cell.getShip();
         if (ship != null) {
             ship.damage();
-            damage = ship.isKilled() ? "- KILLED" : "- DAMAGED";
+            damage = ship.isKilled() ? " - KILLED" : " - DAMAGED";
         }
 
         logs.add(LogItem.builder().text(String.format("%s: %s%s", player.getName(), cell.humanize(), damage)).build());
