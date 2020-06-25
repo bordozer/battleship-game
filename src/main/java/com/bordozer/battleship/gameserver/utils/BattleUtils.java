@@ -1,6 +1,7 @@
 package com.bordozer.battleship.gameserver.utils;
 
 import com.bordozer.battleship.gameserver.dto.battle.CellDto;
+import com.bordozer.battleship.gameserver.dto.battle.ShipDto;
 import com.bordozer.battleship.gameserver.model.Battle;
 import com.bordozer.battleship.gameserver.model.Battlefield;
 import com.bordozer.battleship.gameserver.model.BattlefieldCell;
@@ -10,8 +11,11 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 import static com.google.common.collect.Lists.newArrayList;
 
@@ -31,6 +35,7 @@ public final class BattleUtils {
 
     /* TODO: move to converter */
     public static List<List<BattlefieldCell>> convertCells(final ArrayList<ArrayList<CellDto>> cells) {
+        final var ships = collectShips(cells);
         final List<List<BattlefieldCell>> columns = new ArrayList<>();
         for (int column = 0; column < 9; column++) {
             final var lines = new ArrayList<BattlefieldCell>();
@@ -42,14 +47,9 @@ public final class BattleUtils {
                 final var player1Cell = player1Lines.get(line);
 
                 final var cell = new BattlefieldCell(line, column, xLabel, yLabel);
-                final var ship = player1Cell.getShip();
-                if (ship != null) {
-                    cell.setShip(Ship.builder()
-                            .shipId(ship.getId())
-                            .name(ship.getName())
-                            .size(ship.getSize())
-                            .damage(ship.getDamage())
-                            .build());
+                final var shipDto = player1Cell.getShip();
+                if (shipDto != null) {
+                    cell.setShip(getShip(shipDto.getId(), ships));
                 }
                 lines.add(cell);
             }
@@ -60,5 +60,31 @@ public final class BattleUtils {
 
     public static String toColumn(final int x) {
         return X_AXE[x];
+    }
+
+    public static List<Ship> collectShips(final ArrayList<ArrayList<CellDto>> cells) {
+        return cells.stream()
+                .flatMap(Collection::stream)
+                .map(CellDto::getShip)
+                .filter(Objects::nonNull)
+                .distinct()
+                .map(BattleUtils::convertToShip)
+                .collect(Collectors.toList());
+    }
+
+    private static Ship getShip(final String shipId, final List<Ship> ships) {
+        return ships.stream()
+                .filter(s -> s.getShipId().equals(shipId))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException(String.format("shipId %s not found", shipId)));
+    }
+
+    private static Ship convertToShip(final ShipDto ship) {
+        return Ship.builder()
+                .shipId(ship.getId())
+                .name(ship.getName())
+                .size(ship.getSize())
+                .damage(ship.getDamage())
+                .build();
     }
 }

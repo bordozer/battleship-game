@@ -1,6 +1,7 @@
 package com.bordozer.battleship.gameserver.model;
 
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -9,6 +10,7 @@ import lombok.ToString;
 @Setter
 @Builder
 @ToString
+@EqualsAndHashCode(of = {"shipId"})
 public class Ship {
     private final String shipId;
     private final String name;

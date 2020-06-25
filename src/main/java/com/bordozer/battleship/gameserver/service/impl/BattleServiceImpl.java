@@ -129,7 +129,7 @@ public class BattleServiceImpl implements BattleService {
     }
 
     /* TODO: move to converter */
-    private List<? extends ShipDto> convertShips(final List<List<BattlefieldCell>> cells) {
+    public static List<? extends ShipDto> convertShips(final List<List<BattlefieldCell>> cells) {
         return cells.stream()
                 .flatMap(Collection::stream)
                 .map(BattlefieldCell::getShip)
