@@ -28,20 +28,20 @@ function connect(gameId, onConnectCallback, setStateCallback) {
     });
 }
 
-function sendGameEvent(gameId, event) {
+function requestGameStateRefresh(gameId, playerId) {
     stompClient.send("/game-event-in", {}, JSON.stringify({
             'gameId': gameId,
-            'eventType': event
+            'playerId': playerId
         }
     ));
 }
 
-function sendMove(gameId, playerId, line, columv) {
+function sendMove(gameId, playerId, line, column) {
     stompClient.send("/player-move-in", {}, JSON.stringify({
             'gameId': gameId,
             'playerId': playerId,
             'line': line,
-            'column': columv
+            'column': column
         }
     ));
 }
@@ -109,7 +109,7 @@ export default class Layout extends React.Component {
                 });
                 console.log("Game is created");
                 const onConnectCallback = function () {
-                    sendGameEvent(self.state.gameplay.gameId, 'GAME_CREATED');
+                    requestGameStateRefresh(self.state.gameplay.gameId, self.state.player.playerId);
                 };
                 connect(self.state.gameplay.gameId, onConnectCallback, self.updateGameState.bind(self));
             }
@@ -128,7 +128,7 @@ export default class Layout extends React.Component {
             success: function (result) {
                 console.log("Joined to game:", result);
                 const onConnectCallback = function () {
-                    sendGameEvent(self.state.gameplay.gameId, 'JOIN_GAME');
+                    requestGameStateRefresh(self.state.gameplay.gameId, self.state.player.playerId);
                 };
                 connect(self.state.gameplay.gameId, onConnectCallback, self.updateGameState.bind(self));
             },

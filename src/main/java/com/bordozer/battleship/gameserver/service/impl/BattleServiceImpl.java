@@ -48,7 +48,7 @@ public class BattleServiceImpl implements BattleService {
     private final BattlefieldService battlefieldService;
 
     @Override
-    public BattleDto getBattle(final String gameId) {
+    public BattleDto getGameState(final String gameId, final String forPlayerId) {
         final var game = getGame(gameId);
         final var battle = game.getBattle();
 

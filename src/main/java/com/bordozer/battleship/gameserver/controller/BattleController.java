@@ -22,11 +22,11 @@ public class BattleController {
 
     @GetMapping(path = "/state/{gameId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<BattleDto> getBattleState(@PathVariable("gameId") final String gameId) {
-        return new ResponseEntity<>(battleService.getBattle(gameId), HttpStatus.OK);
+        return new ResponseEntity<>(battleService.getGameState(gameId, playerId), HttpStatus.OK);
     }
 
     @GetMapping(path = "/start/{gameId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<BattleDto> startGame(@PathVariable("gameId") final String gameId) {
-        return new ResponseEntity<>(battleService.getBattle(gameId), HttpStatus.OK);
+        return new ResponseEntity<>(battleService.getGameState(gameId, playerId), HttpStatus.OK);
     }
 }

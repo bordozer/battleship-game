@@ -5,7 +5,7 @@ import com.bordozer.battleship.gameserver.model.PlayerMove;
 
 public interface BattleService {
 
-    BattleDto getBattle(String gameId);
+    BattleDto getGameState(String gameId, final String forPlayerId);
 
     void move(String gameId, String playerId, PlayerMove move);
 }

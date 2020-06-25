@@ -7,15 +7,15 @@ import lombok.ToString;
 import org.immutables.value.Value;
 
 @JsonDeserialize(
-        builder = ImmutableGameEventDto.Builder.class
+        builder = ImmutableGameStateRequestDto.Builder.class
 )
 @JsonIgnoreProperties("initialized")
 @Value.Immutable
 @Value.Modifiable
 @ToString
-public abstract class GameEventDto {
+public abstract class GameStateRequestDto {
 
     public abstract String getGameId();
 
-    public abstract GameEventType getEventType();
+    public abstract String getPlayerId();
 }
