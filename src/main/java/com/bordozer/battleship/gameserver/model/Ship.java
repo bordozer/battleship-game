@@ -16,7 +16,6 @@ public class Ship {
     private final String name;
     private final int size;
     private int damage;
-    //    private final List<ShipCell> shipCells;
 
     public void damage() {
         damage++;

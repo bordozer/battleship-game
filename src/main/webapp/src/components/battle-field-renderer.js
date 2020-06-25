@@ -146,7 +146,7 @@ function renderCells(x, cells, onCellClick, options) {
                  title={cell.xLabel + '' + cell.yLabel + (options.isPlayer && cell.ship ? ' - ' + cell.ship.name : '')}
             >
                 {getIcon(cell, options)}
-                {/*{cell.ship ? 'x' : ''}*/}
+                {cell.ship ? 'x' : ''}
                 {/*{cell.isShipNeighbor ? 'n' : ''}*/}
             </div>
         );

@@ -5,6 +5,7 @@ import com.bordozer.battleship.gameserver.dto.battle.ShipDto;
 import com.bordozer.battleship.gameserver.model.Battle;
 import com.bordozer.battleship.gameserver.model.Battlefield;
 import com.bordozer.battleship.gameserver.model.BattlefieldCell;
+import com.bordozer.battleship.gameserver.model.Cell;
 import com.bordozer.battleship.gameserver.model.LogItem;
 import com.bordozer.battleship.gameserver.model.Ship;
 import lombok.AccessLevel;
@@ -21,7 +22,6 @@ import static com.google.common.collect.Lists.newArrayList;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class BattleUtils {
 
-    private static final String[] X_AXE = new String[]{"A", "B", "C", "D", "E", "F", "G", "H", "I", "K"};
     private static final int BATTLEFIELD_SIZE = 10;
 
     public static Battle initBattle(final ArrayList<ArrayList<CellDto>> cells) {
@@ -34,19 +34,20 @@ public final class BattleUtils {
     }
 
     /* TODO: move to converter */
-    public static List<List<BattlefieldCell>> convertCells(final ArrayList<ArrayList<CellDto>> cells) {
-        final var ships = collectShips(cells);
+    public static List<List<BattlefieldCell>> convertCells(final ArrayList<ArrayList<CellDto>> playerCells) {
+        final var ships = collectShips(playerCells);
         final List<List<BattlefieldCell>> columns = new ArrayList<>();
         for (int column = 0; column < BATTLEFIELD_SIZE; column++) {
             final var lines = new ArrayList<BattlefieldCell>();
-            final var player1Lines = cells.get(column);
+            final var playerLines = playerCells.get(column);
             for (int line = 0; line < 10; line++) {
                 final BattlefieldCell cell = initCell(column, line);
 
-                final var player1Cell = player1Lines.get(line);
-                final var shipDto = player1Cell.getShip();
-                if (shipDto != null) {
-                    cell.setShip(getShip(shipDto.getId(), ships));
+                final var playerCell = playerLines.get(line);
+                final var playerShip = playerCell.getShip();
+                if (playerShip != null) {
+                    final var ship = getShip(playerShip.getId(), ships);
+                    cell.setShip(ship);
                 }
                 lines.add(cell);
             }
@@ -56,7 +57,7 @@ public final class BattleUtils {
     }
 
     public static String toColumn(final int x) {
-        return X_AXE[x];
+        return Cell.X_AXE[x];
     }
 
     public static List<Ship> collectShips(final ArrayList<ArrayList<CellDto>> cells) {
@@ -98,8 +99,6 @@ public final class BattleUtils {
     }
 
     private static BattlefieldCell initCell(final int column, final int line) {
-        final var xLabel = X_AXE[line];
-        final var yLabel = String.valueOf(column + 1);
-        return new BattlefieldCell(line, column, xLabel, yLabel);
+        return new BattlefieldCell(line, column);
     }
 }
