@@ -90,7 +90,7 @@ public final class BattleUtils {
         for (int column = 0; column < 10; column++) {
             final var lines = new ArrayList<BattlefieldCell>();
             for (int line = 0; line < 10; line++) {
-                lines.add(initCell(line, column));
+                lines.add(initCell(column, line));
             }
             cells.add(lines);
         }
