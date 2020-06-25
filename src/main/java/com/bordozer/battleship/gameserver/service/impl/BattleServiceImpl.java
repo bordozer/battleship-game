@@ -12,7 +12,6 @@ import com.bordozer.battleship.gameserver.dto.battle.PlayerDto;
 import com.bordozer.battleship.gameserver.dto.battle.PlayerType;
 import com.bordozer.battleship.gameserver.dto.battle.ShipDto;
 import com.bordozer.battleship.gameserver.exception.GameNotFoundException;
-import com.bordozer.battleship.gameserver.model.Battle;
 import com.bordozer.battleship.gameserver.model.Battlefield;
 import com.bordozer.battleship.gameserver.model.BattlefieldCell;
 import com.bordozer.battleship.gameserver.model.Game;
@@ -24,7 +23,6 @@ import com.bordozer.battleship.gameserver.service.BattleService;
 import com.bordozer.battleship.gameserver.service.BattlefieldService;
 import com.bordozer.battleship.gameserver.service.GameService;
 import com.bordozer.battleship.gameserver.service.PlayerService;
-import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -54,8 +52,8 @@ public class BattleServiceImpl implements BattleService {
         final var game = getGame(gameId);
         final var battle = game.getBattle();
 
-        final var player = getPlayerDto(game, battle);
-        final var enemy = getOpponentDto(game, battle);
+        final var player = getPlayerDto(game);
+        final var enemy = getOpponentDto(game);
         final var isForPlayer1 = forPlayerId.equals(game.getPlayer1Id());
         final var isForPlayer2 = forPlayerId.equals(game.getPlayer2Id());
 
@@ -76,15 +74,16 @@ public class BattleServiceImpl implements BattleService {
         game.getBattle().addLogs(logs);
     }
 
-    private PlayerDto getPlayerDto(final Game game, final Battle battle) {
-        final var player = playerService.getById(game.getPlayer1Id()).getName();
-        final var playerCells = battle.getBattlefield1().getCells().stream()
+    private PlayerDto getPlayerDto(final Game game) {
+        final var battle = game.getBattle();
+        final var player1 = playerService.getById(game.getPlayer1Id()).getName();
+        final var cells = battle.getBattlefield1().getCells().stream()
                 .map(this::convertCellsToDto)
                 .collect(Collectors.toList());
         return PlayerDto.builder()
                 .playerId(game.getPlayer1Id())
-                .playerName(player)
-                .cells(playerCells)
+                .playerName(player1)
+                .cells(cells)
                 .ships(convertShips(game.getBattle().getBattlefield1().getCells()))
                 .lastShot(null)
                 .damagedShipCells(Collections.emptyList())
@@ -92,15 +91,16 @@ public class BattleServiceImpl implements BattleService {
                 .build();
     }
 
-    private PlayerDto getOpponentDto(final Game game, final Battle battle) {
-        final var opponent = getPlayer2(game);
-        final var opponentCells = battle.getBattlefield2().getCells().stream()
+    private PlayerDto getOpponentDto(final Game game) {
+        final var battle = game.getBattle();
+        final var player2 = getPlayer2(game);
+        final var cells = battle.getBattlefield2().getCells().stream()
                 .map(this::convertCellsToDto)
                 .collect(Collectors.toList());
         return PlayerDto.builder()
-                .playerId(opponent.getId())
-                .playerName(opponent.getName())
-                .cells(opponentCells)
+                .playerId(player2.getId())
+                .playerName(player2.getName())
+                .cells(cells)
                 .ships(convertShips(game.getBattle().getBattlefield2().getCells()))
                 .lastShot(null)
                 .damagedShipCells(Collections.emptyList())
@@ -149,7 +149,9 @@ public class BattleServiceImpl implements BattleService {
     }
 
     private Battlefield getBattlefield(final Game game, final String playerId) {
-        return game.getPlayer1Id().equals(playerId) ? game.getBattle().getBattlefield2() : game.getBattle().getBattlefield1();
+        return game.getPlayer1Id().equals(playerId)
+                ? game.getBattle().getBattlefield2()
+                : game.getBattle().getBattlefield1();
     }
 
     private Game getGame(final String gameId) {

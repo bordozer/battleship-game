@@ -38,6 +38,7 @@ public class BattlefieldServiceImpl implements BattlefieldService {
             damage = isKilled ? " - KILLED" : " - DAMAGED";
             if (isKilled) {
                 // TODO: mark neighbour cells as busy
+                // TODO: check if player has won
             }
         }
 
