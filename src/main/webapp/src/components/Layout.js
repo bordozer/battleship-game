@@ -15,13 +15,13 @@ const STEP_FINAL = 'FINAL';
 
 let stompClient = null;
 
-function connect(onConnectCallback, setStateCallback) {
+function connect(gameId, onConnectCallback, setStateCallback) {
     const socket = new SockJS('/gs-guide-websocket');
     stompClient = Stomp.over(socket);
     stompClient.connect({}, function (frame) {
         console.log('Connected: ' + frame);
         onConnectCallback();
-        stompClient.subscribe('/game-state-changed', function (battle) {
+        stompClient.subscribe('/game-state-changed/' + gameId, function (battle) {
             // console.log("battle", battle.body);
             setStateCallback(JSON.parse(battle.body));
         });
@@ -108,9 +108,10 @@ export default class Layout extends React.Component {
                     }
                 });
                 console.log("Game is created");
-                connect(function () {
+                const onConnectCallback = function () {
                     sendGameEvent(self.state.gameplay.gameId, 'GAME_CREATED');
-                }, self.updateGameState.bind(self));
+                };
+                connect(self.state.gameplay.gameId, onConnectCallback, self.updateGameState.bind(self));
             }
         });
     }
@@ -126,9 +127,10 @@ export default class Layout extends React.Component {
             cache: false,
             success: function (result) {
                 console.log("Joined to game:", result);
-                connect(function () {
+                const onConnectCallback = function () {
                     sendGameEvent(self.state.gameplay.gameId, 'JOIN_GAME');
-                }, self.updateGameState.bind(self));
+                };
+                connect(self.state.gameplay.gameId, onConnectCallback, self.updateGameState.bind(self));
             },
             error: function (request, status, error) {
                 console.error("Cannot join game", request.responseText, error);

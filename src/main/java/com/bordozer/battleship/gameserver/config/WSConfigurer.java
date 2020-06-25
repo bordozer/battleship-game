@@ -8,11 +8,12 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 
 @Configuration
 @EnableWebSocketMessageBroker
-public class WebSocketMBConfigurer implements WebSocketMessageBrokerConfigurer {
+public class WSConfigurer implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void configureMessageBroker(final MessageBrokerRegistry config) {
         config.enableSimpleBroker("/game-state-changed");
+        // config.setApplicationDestinationPrefixes("/app");
     }
 
     @Override
