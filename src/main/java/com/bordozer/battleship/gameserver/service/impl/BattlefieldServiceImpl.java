@@ -50,6 +50,7 @@ public class BattlefieldServiceImpl implements BattlefieldService {
         }
 
         cell.setHit(true);
+        battlefield.setLastShot(move);
 
         var shotResult = " - missed";
         final var ship = cell.getShip();

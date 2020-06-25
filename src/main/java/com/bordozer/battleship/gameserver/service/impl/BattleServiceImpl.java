@@ -4,6 +4,7 @@ import com.bordozer.battleship.gameserver.converter.CellConverter;
 import com.bordozer.battleship.gameserver.converter.LogConverter;
 import com.bordozer.battleship.gameserver.dto.GamePlayerDto;
 import com.bordozer.battleship.gameserver.dto.battle.BattleDto;
+import com.bordozer.battleship.gameserver.dto.battle.CellDto;
 import com.bordozer.battleship.gameserver.dto.battle.GameConfigDto;
 import com.bordozer.battleship.gameserver.dto.battle.GameStep;
 import com.bordozer.battleship.gameserver.dto.battle.GameplayDto;
@@ -18,6 +19,7 @@ import com.bordozer.battleship.gameserver.service.BattleService;
 import com.bordozer.battleship.gameserver.service.BattlefieldService;
 import com.bordozer.battleship.gameserver.service.GameService;
 import com.bordozer.battleship.gameserver.service.PlayerService;
+import com.bordozer.battleship.gameserver.utils.CellUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -25,6 +27,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.CheckForNull;
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -69,8 +72,11 @@ public class BattleServiceImpl implements BattleService {
 
     private PlayerDto getPlayerDto(final Game game) {
         final var battle = game.getBattle();
+        final var battlefield = battle.getBattlefield1();
+        @CheckForNull final var lastShot = battlefield.getLastShot();
+
         final var player1 = playerService.getById(game.getPlayer1Id()).getName();
-        final var cells = battle.getBattlefield1().getCells().stream()
+        final var cells = battlefield.getCells().stream()
                 .map(CellConverter::convertCellsToDto)
                 .collect(Collectors.toList());
         return PlayerDto.builder()
@@ -78,24 +84,34 @@ public class BattleServiceImpl implements BattleService {
                 .playerName(player1)
                 .cells(cells)
                 .ships(extractShips(game.getBattle().getBattlefield1().getCells()))
-                .lastShot(null)
+                .lastShot(convertLastShot(lastShot, cells))
                 .damagedShipCells(Collections.emptyList())
                 .points(0)
                 .build();
     }
 
+    @CheckForNull
+    private CellDto convertLastShot(@CheckForNull final PlayerMove lastShot, final List<List<CellDto>> cells) {
+        return Optional.ofNullable(lastShot)
+                .map(shot -> CellUtils.getCell(shot.getLine(), shot.getColumn(), cells))
+                .orElse(null);
+    }
+
     private PlayerDto getOpponentDto(final Game game) {
         final var battle = game.getBattle();
+        final var battlefield = battle.getBattlefield2();
+        final var lastShot = battlefield.getLastShot();
+
         final var player2 = getPlayer2(game);
-        final var cells = battle.getBattlefield2().getCells().stream()
+        final var cells = battlefield.getCells().stream()
                 .map(CellConverter::convertCellsToDto)
                 .collect(Collectors.toList());
         return PlayerDto.builder()
                 .playerId(player2.getId())
                 .playerName(player2.getName())
                 .cells(cells)
-                .ships(extractShips(game.getBattle().getBattlefield2().getCells()))
-                .lastShot(null)
+                .ships(extractShips(battlefield.getCells()))
+                .lastShot(convertLastShot(lastShot, cells))
                 .damagedShipCells(Collections.emptyList())
                 .points(0)
                 .build();

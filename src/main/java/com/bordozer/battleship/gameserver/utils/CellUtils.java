@@ -60,6 +60,10 @@ public final class CellUtils {
         return cells;
     }
 
+    public static CellDto getCell(final int x, final int y, final List<List<CellDto>> cells) {
+        return cells.get(y).get(x);
+    }
+
     public static List<BattlefieldCell> getShipNeighbourCells(final String shipId, final List<List<BattlefieldCell>> cells) {
         return getShipCells(shipId, cells).stream()
                 .map(cell -> getNeighbourCells(cell, cells))
