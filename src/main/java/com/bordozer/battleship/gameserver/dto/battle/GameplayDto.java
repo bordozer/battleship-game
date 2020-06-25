@@ -24,7 +24,7 @@ public abstract class GameplayDto {
     public abstract PlayerType getCurrentMove();
 
     @CheckForNull
-    public abstract String getWinner();
+    public abstract PlayerType getWinner();
 
     public static ImmutableGameplayDto.Builder builder() {
         return ImmutableGameplayDto.builder();

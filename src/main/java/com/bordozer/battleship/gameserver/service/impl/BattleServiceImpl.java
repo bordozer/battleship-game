@@ -21,6 +21,7 @@ import com.bordozer.battleship.gameserver.service.GameService;
 import com.bordozer.battleship.gameserver.service.PlayerService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.CheckForNull;
@@ -47,7 +48,7 @@ public class BattleServiceImpl implements BattleService {
 
         final var player = getPlayerDto(game);
         final var enemy = getOpponentDto(game);
-        final var isForPlayer1 = forPlayerId.equals(game.getPlayer1Id());
+        final var isForPlayer1 = isForPlayer1(forPlayerId, game);
 
         return BattleDto.builder()
                 .player(isForPlayer1 ? player : enemy)
@@ -62,8 +63,7 @@ public class BattleServiceImpl implements BattleService {
     public void move(final String gameId, final String playerId, final PlayerMove move) {
         final var game = getGame(gameId);
         final var battlefield = getBattlefield(game, playerId);
-        final var logs = battlefieldService.move(game, battlefield, playerId, move);
-        game.getBattle().addLogs(logs);
+        battlefieldService.move(game, battlefield, playerId, move);
     }
 
     private PlayerDto getPlayerDto(final Game game) {
@@ -113,28 +113,57 @@ public class BattleServiceImpl implements BattleService {
                 .gameId(gameId)
                 .step(convertGameStep(game.getState()))
                 .currentMove(calculateCurrentMove(game, forPlayerId))
+                .winner(calculateWinner(game, forPlayerId))
                 .build();
     }
 
     @CheckForNull
     private PlayerType calculateCurrentMove(final Game game, final String forPlayerId) {
-        final var playerId = game.getPlayer1Id();
-        @CheckForNull final var enemyId = game.getPlayer2Id();
-        if (enemyId == null) {
+        final var player1Id = game.getPlayer1Id();
+        @CheckForNull final var player2Id = game.getPlayer2Id();
+        if (player2Id == null) {
             return null;
         }
 
         final var currentMove = game.getBattle().getCurrentMove();
-        if (forPlayerId.equals(playerId) && currentMove == PlayerType.PLAYER1) {
+        if (forPlayerId.equals(player1Id) && currentMove == PlayerType.PLAYER1) {
             return PlayerType.PLAYER1;
         }
-        if (forPlayerId.equals(playerId) && currentMove == PlayerType.PLAYER2) {
+        if (forPlayerId.equals(player1Id) && currentMove == PlayerType.PLAYER2) {
             return PlayerType.PLAYER2;
         }
-        if (forPlayerId.equals(enemyId) && currentMove == PlayerType.PLAYER2) {
+        if (forPlayerId.equals(player2Id) && currentMove == PlayerType.PLAYER2) {
             return PlayerType.PLAYER1;
         }
-        if (forPlayerId.equals(enemyId) && currentMove == PlayerType.PLAYER1) {
+        if (forPlayerId.equals(player2Id) && currentMove == PlayerType.PLAYER1) {
+            return PlayerType.PLAYER2;
+        }
+        return null;
+    }
+
+    @CheckForNull
+    private PlayerType calculateWinner(final Game game, final String forPlayerId) {
+        final var winnerId = game.getWinnerId();
+        if (StringUtils.isEmpty(winnerId)) {
+            return null;
+        }
+
+        final var player1Id = game.getPlayer1Id();
+        final var player2Id = game.getPlayer2Id();
+        if (StringUtils.isEmpty(player2Id)) {
+            return null;
+        }
+
+        if (forPlayerId.equals(player1Id) && winnerId.equals(player1Id)) {
+            return PlayerType.PLAYER1;
+        }
+        if (forPlayerId.equals(player1Id) && winnerId.equals(player2Id)) {
+            return PlayerType.PLAYER2;
+        }
+        if (forPlayerId.equals(player2Id) && winnerId.equals(player2Id)) {
+            return PlayerType.PLAYER1;
+        }
+        if (forPlayerId.equals(player2Id) && winnerId.equals(player1Id)) {
             return PlayerType.PLAYER2;
         }
         return null;
@@ -177,4 +206,7 @@ public class BattleServiceImpl implements BattleService {
                 );
     }
 
+    private boolean isForPlayer1(final String forPlayerId, final Game game) {
+        return forPlayerId.equals(game.getPlayer1Id());
+    }
 }

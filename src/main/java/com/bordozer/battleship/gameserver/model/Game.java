@@ -24,5 +24,5 @@ public class Game {
     @NonNull
     private final Battle battle;
     @CheckForNull
-    private String winner;
+    private String winnerId;
 }

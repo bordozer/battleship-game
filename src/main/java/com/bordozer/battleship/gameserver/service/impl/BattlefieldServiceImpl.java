@@ -1,11 +1,11 @@
 package com.bordozer.battleship.gameserver.service.impl;
 
-import com.bordozer.battleship.gameserver.dto.GamePlayerDto;
 import com.bordozer.battleship.gameserver.model.Battlefield;
 import com.bordozer.battleship.gameserver.model.BattlefieldCell;
 import com.bordozer.battleship.gameserver.model.Game;
 import com.bordozer.battleship.gameserver.model.LogItem;
 import com.bordozer.battleship.gameserver.model.PlayerMove;
+import com.bordozer.battleship.gameserver.model.Ship;
 import com.bordozer.battleship.gameserver.service.BattlefieldService;
 import com.bordozer.battleship.gameserver.service.PlayerService;
 import com.bordozer.battleship.gameserver.utils.CellUtils;
@@ -24,7 +24,7 @@ public class BattlefieldServiceImpl implements BattlefieldService {
     private final PlayerService playerService;
 
     @Override
-    public List<LogItem> move(final Game game, final Battlefield battlefield, final String playerId, final PlayerMove move) {
+    public void move(final Game game, final Battlefield battlefield, final String playerId, final PlayerMove move) {
         final var logs = new ArrayList<LogItem>();
         final var player = playerService.getById(playerId);
 
@@ -40,22 +40,23 @@ public class BattlefieldServiceImpl implements BattlefieldService {
             damage = isKilled ? " - KILLED" : " - DAMAGED";
             if (isKilled) {
                 markNeighbourCells(cells);
-                if (isWin(cells)) {
+                if (!hasAliveShips(cells)) {
+                    game.setWinnerId(playerId);
                 }
             }
         }
 
         logs.add(LogItem.builder().text(String.format("%s: %s%s", player.getName(), cell.humanize(), damage)).build());
 
-        return logs;
+        game.getBattle().addLogs(logs);
     }
 
-    private boolean isWin(final List<List<BattlefieldCell>> cells) {
-        final var ships = CellUtils.collectShips(cells);
-        return false;
+    private boolean hasAliveShips(final List<List<BattlefieldCell>> cells) {
+        final List<Ship> ships = CellUtils.collectShips(cells);
+        return ships.stream().anyMatch(ship -> !ship.isKilled());
     }
 
     private void markNeighbourCells(final List<List<BattlefieldCell>> cells) {
-
+        // TODO
     }
 }
