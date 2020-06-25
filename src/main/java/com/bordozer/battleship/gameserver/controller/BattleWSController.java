@@ -23,15 +23,18 @@ public class BattleWSController {
     @MessageMapping("/player-move-in")
     public void playerMove(final PlayerMoveDto move) {
         battleService.move(move.getGameId(), move.getPlayerId(), PlayerMove.of(move.getLine(), move.getColumn()));
-        sendPlayerNewGameState(move.getGameId(), move.getPlayerId());
-        sendPlayerNewGameState(move.getGameId(), move.getPlayerId());
+        sendNewGameStateToPlayers(move.getGameId());
     }
 
     @MessageMapping("/game-event-in")
     public void onGameEvent(final GameEventDto gameEvent) {
-        final var players = gameService.getGamePlayers(gameEvent.getGameId());
-        sendPlayerNewGameState(gameEvent.getGameId(), players.getPlayer1Id());
-        sendPlayerNewGameState(gameEvent.getGameId(), players.getPlayer12d());
+        sendNewGameStateToPlayers(gameEvent.getGameId());
+    }
+
+    private void sendNewGameStateToPlayers(final String gameId) {
+        final var players = gameService.getGamePlayers(gameId);
+        sendPlayerNewGameState(gameId, players.getPlayer1Id());
+        sendPlayerNewGameState(gameId, players.getPlayer12d());
     }
 
     private void sendPlayerNewGameState(final String gameId, @CheckForNull final String playerId) {
