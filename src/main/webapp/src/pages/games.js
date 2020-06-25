@@ -1,6 +1,6 @@
 /* jshint esversion: 6 */
 import React, {Component} from 'react';
-import { Link } from 'react-router-dom';
+import {Link} from 'react-router-dom';
 
 export default class GamesPage extends Component {
 
@@ -18,19 +18,34 @@ export default class GamesPage extends Component {
                 this.setState({
                     games: data
                 });
-                console.log("Games: ", data);
+                // console.log("Games: ", data);
             });
+    }
+
+    renderGames = () => {
+        const result = [];
+        this.state.games.forEach(game => {
+            result.push(
+                <div key={game.gameId} className="row">
+                    <div className="col-12">
+                        <Link to={"/battle?gameId=" + game.gameId}>{game.gameId}</Link>
+                    </div>
+                </div>
+            )
+        });
+
+        return result;
     }
 
     render() {
         return (
-            <div className="row">
-                <div className="col-12">
-                    <Link to="/battle?gameId=">New game</Link>
+            <div>
+                <div className="row">
+                    <div className="col-12">
+                        <Link to="/battle?gameId=">New game</Link>
+                    </div>
                 </div>
-                <div className="col-12">
-                    <Link to="/battle?gameId=8327de36-5a26-4034-a032-e7bc6b221084">8327de36-5a26-4034-a032-e7bc6b221084</Link>
-                </div>
+                {this.renderGames()}
             </div>
         )
     }
