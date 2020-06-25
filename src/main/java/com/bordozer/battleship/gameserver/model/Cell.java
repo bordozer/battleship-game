@@ -10,7 +10,9 @@ import lombok.ToString;
 @Builder
 @ToString
 public class Cell {
-    public static final String[] X_AXE = new String[]{"A", "B", "C", "D", "E", "F", "G", "H", "I", "K"};
+
+    private static final String[] X_AXE = new String[]{"A", "B", "C", "D", "E", "F", "G", "H", "I", "K"};
+
     private final int line;
     private final int column;
 

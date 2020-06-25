@@ -26,7 +26,7 @@ import static com.bordozer.battleship.gameserver.converter.GameConverter.toDto;
 import static com.bordozer.battleship.gameserver.dto.battle.PlayerType.PLAYER1;
 import static com.bordozer.battleship.gameserver.model.GameState.BATTLE;
 import static com.bordozer.battleship.gameserver.model.GameState.OPEN;
-import static com.bordozer.battleship.gameserver.utils.BattleUtils.convertCells;
+import static com.bordozer.battleship.gameserver.converter.CellConverter.convertCells;
 
 @Slf4j
 @Service
