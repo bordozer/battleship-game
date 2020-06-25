@@ -30,6 +30,10 @@ public class Battle {
         return this;
     }
 
+    public void addLogs(final List<LogItem> logItems) {
+        logs.addAll(logItems);
+    }
+
     public List<LogItem> getLogs() {
         return Collections.unmodifiableList(logs);
     }

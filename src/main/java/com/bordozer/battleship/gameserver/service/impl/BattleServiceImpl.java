@@ -101,10 +101,9 @@ public class BattleServiceImpl implements BattleService {
     @Override
     public void move(final String gameId, final String playerId, final PlayerMove move) {
         final var game = getGame(gameId);
-        final var battle = game.getBattle();
-
         final var battlefield = getBattlefield(game, playerId);
-        battlefieldService.move(battlefield, move);
+        final var logs = battlefieldService.move(battlefield, playerId, move);
+        game.getBattle().addLogs(logs);
     }
 
     private Battlefield getBattlefield(final Game game, final String playerId) {

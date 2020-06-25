@@ -93,3 +93,10 @@ body {
 .looser{
     text-decoration: line-through;
 }
+
+.logs-container {
+    background-color: lightblue;
+    width: 400px;
+    height: 200px;
+    overflow: scroll;
+}

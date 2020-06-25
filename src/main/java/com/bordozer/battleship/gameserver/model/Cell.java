@@ -18,4 +18,8 @@ public class Cell {
     public String getId() {
         return String.format("%s+%s", line, column);
     }
+
+    public String humanize() {
+        return String.format("%s%s", xLabel, yLabel);
+    }
 }

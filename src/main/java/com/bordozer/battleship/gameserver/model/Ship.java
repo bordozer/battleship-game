@@ -21,4 +21,8 @@ public class Ship {
     public void damage() {
         damage++;
     }
+
+    public boolean isKilled() {
+        return size == damage;
+    }
 }

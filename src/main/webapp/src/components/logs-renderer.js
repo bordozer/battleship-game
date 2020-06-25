@@ -6,12 +6,12 @@ function renderLogs(logs) {
     let counter = 0;
     logs
         .sort(function (log1, log2) {
-            return log2.time - log1.time;
+            return log1.time - log2.time;
         })
         .forEach(rec => {
             result.push(
                 <div key={'log-row-' + counter} className="row">
-                    <div key={'log-row-col-' + counter} className="col-sm-12 small text-muted">
+                    <div key={'log-row-col-' + counter} className="col-sm-12 small text-muted logs-container">
                         {rec.text}
                     </div>
                 </div>
