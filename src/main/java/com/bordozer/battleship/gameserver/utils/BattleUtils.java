@@ -28,7 +28,7 @@ public final class BattleUtils {
         return Battle.builder()
                 .battlefield1(new Battlefield(convertCells(cells)))
                 .battlefield2(new Battlefield(emptyCells()))
-                .playerType(null)
+                .currentMove(null)
                 .logs(newArrayList(LogItem.builder().text("Game has been created").build()))
                 .build();
     }

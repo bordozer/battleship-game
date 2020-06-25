@@ -84,7 +84,7 @@ public class GameServiceImpl implements GameService {
                 battle.getBattlefield2().setCells(convertCells(cells));
 
                 final var firstMove = PLAYER1; // TODO: randomizeFirstMove();
-                battle.setPlayerType(firstMove);
+                battle.setCurrentMove(firstMove);
                 battle
                         .addLog(LogItem.builder().text(String.format("Player %s joined the game", getPlayerName(playerId))).build())
                         .addLog(LogItem.builder().text(String.format("First move: %s", firstMove == PLAYER1 ? "Player 1" : "Player 2")).build());

@@ -33,11 +33,11 @@ public class BattleWSController {
 
     private void sendNewGameStateToPlayers(final String gameId) {
         final var players = gameService.getGamePlayers(gameId);
-        sendPlayerNewGameState(gameId, players.getPlayer1Id());
-        sendPlayerNewGameState(gameId, players.getPlayer12d());
+        sendNewGameStateToPlayer(gameId, players.getPlayer1Id());
+        sendNewGameStateToPlayer(gameId, players.getPlayer12d());
     }
 
-    private void sendPlayerNewGameState(final String gameId, @CheckForNull final String playerId) {
+    private void sendNewGameStateToPlayer(final String gameId, @CheckForNull final String playerId) {
         if (playerId == null) {
             return;
         }

@@ -9,6 +9,7 @@ import com.bordozer.battleship.gameserver.dto.battle.GameplayDto;
 import com.bordozer.battleship.gameserver.dto.battle.ImmutableShipDto;
 import com.bordozer.battleship.gameserver.dto.battle.LogDto;
 import com.bordozer.battleship.gameserver.dto.battle.PlayerDto;
+import com.bordozer.battleship.gameserver.dto.battle.PlayerType;
 import com.bordozer.battleship.gameserver.dto.battle.ShipDto;
 import com.bordozer.battleship.gameserver.exception.GameNotFoundException;
 import com.bordozer.battleship.gameserver.model.Battle;
@@ -23,6 +24,7 @@ import com.bordozer.battleship.gameserver.service.BattleService;
 import com.bordozer.battleship.gameserver.service.BattlefieldService;
 import com.bordozer.battleship.gameserver.service.GameService;
 import com.bordozer.battleship.gameserver.service.PlayerService;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -54,11 +56,14 @@ public class BattleServiceImpl implements BattleService {
 
         final var player = getPlayerDto(game, battle);
         final var enemy = getOpponentDto(game, battle);
+        final var isForPlayer1 = forPlayerId.equals(game.getPlayer1Id());
+        final var isForPlayer2 = forPlayerId.equals(game.getPlayer2Id());
+
         return BattleDto.builder()
-                .player(forPlayerId.equals(game.getPlayer1Id()) ? player : enemy)
-                .enemy(forPlayerId.equals(game.getPlayer2Id()) ? enemy : player)
+                .player(isForPlayer1 ? player : enemy)
+                .enemy(isForPlayer2 ? enemy : player)
                 .config(getGameConfig())
-                .gameplay(getGameplay(gameId, game, battle))
+                .gameplay(getGameplay(game, forPlayerId))
                 .logs(getLogs(battle.getLogs()))
                 .build();
     }
@@ -110,12 +115,37 @@ public class BattleServiceImpl implements BattleService {
                 .build();
     }
 
-    private GameplayDto getGameplay(final String gameId, final Game game, final Battle battle) {
+    private GameplayDto getGameplay(final Game game, final String forPlayerId) {
+        final var gameId = game.getGameId();
         return GameplayDto.builder()
                 .gameId(gameId)
                 .step(convertGameStep(game.getState()))
-                .currentMove(battle.getPlayerType())
+                .currentMove(calculateCurrentMove(game, forPlayerId))
                 .build();
+    }
+
+    @CheckForNull
+    private PlayerType calculateCurrentMove(final Game game, final String forPlayerId) {
+        final var playerId = game.getPlayer1Id();
+        @CheckForNull final var enemyId = game.getPlayer2Id();
+        if (enemyId == null) {
+            return null;
+        }
+
+        final var currentMove = game.getBattle().getCurrentMove();
+        if (forPlayerId.equals(playerId) && currentMove == PlayerType.PLAYER1) {
+            return PlayerType.PLAYER1;
+        }
+        if (forPlayerId.equals(playerId) && currentMove == PlayerType.PLAYER2) {
+            return PlayerType.PLAYER2;
+        }
+        if (forPlayerId.equals(enemyId) && currentMove == PlayerType.PLAYER2) {
+            return PlayerType.PLAYER1;
+        }
+        if (forPlayerId.equals(enemyId) && currentMove == PlayerType.PLAYER1) {
+            return PlayerType.PLAYER2;
+        }
+        return null;
     }
 
     private Battlefield getBattlefield(final Game game, final String playerId) {

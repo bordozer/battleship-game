@@ -23,7 +23,7 @@ public class Battle {
     @NonNull
     private final List<LogItem> logs;
     @CheckForNull
-    private PlayerType playerType;
+    private PlayerType currentMove;
 
     public Battle addLog(final LogItem logItem) {
         logs.add(logItem);
