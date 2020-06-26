@@ -26,3 +26,15 @@ management:
 ---
 spring:
   profiles: dev
+
+---
+spring:
+  profiles: aws-dev
+
+---
+spring:
+  profiles: aws-staging
+
+---
+spring:
+  profiles: aws-prod

@@ -3,7 +3,7 @@
 # install software
 sudo yum update -y
 sudo yum install mc -y
-sudo yum install java-1.8.0 -y
+sudo amazon-linux-extras install java-openjdk11 -y
 sudo yum install awscli -y
 sudo yum install -y util-linux-user
 
