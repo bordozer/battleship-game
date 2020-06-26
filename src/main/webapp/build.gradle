@@ -1,0 +1,31 @@
+buildscript {
+    repositories {
+        mavenCentral()
+        maven { url "https://plugins.gradle.org/m2/" }
+    }
+}
+
+plugins {
+    id 'java'
+    id 'com.github.node-gradle.node' version "2.2.4"
+}
+
+node {
+    version = '10.16.3'
+    npmVersion = '6.14.5'
+    distBaseUrl = 'https://nodejs.org/dist'
+    download = true
+    workDir = file("${project.buildDir}/nodejs")
+    npmWorkDir = file("${project.buildDir}/npm")
+    nodeModulesDir = file("${project.projectDir}")
+}
+
+task npm_instal(type: NpmTask) {
+    args = ['install']
+}
+task nmp_run_build(type: NpmTask) {
+    args = ['run', 'build']
+}
+
+build.dependsOn(nmp_run_build)
+nmp_run_build.dependsOn(npm_instal)
