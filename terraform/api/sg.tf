@@ -23,6 +23,8 @@ resource "aws_security_group" "lb_sg" {
   tags = local.common_tags
 }
 
+/* open public access to spring actuator if needed */
+
 resource "aws_security_group" "ec2_sg" {
   name = "tf-${var.service_instance_name}-ec2-sg"
   description = "${var.service_instance_name} EC2 SG"
@@ -30,13 +32,13 @@ resource "aws_security_group" "ec2_sg" {
   vpc_id = var.vpc
 
   # Access within this Security Group via TCP
-//  ingress {
-//    from_port = 0
-//    to_port = 0
-//    protocol = "-1"
-//    self = true
-//  }
-
+  /*ingress {
+    from_port = 0
+    to_port = 0
+    protocol = "-1"
+    self = true
+  }
+*/
   # Egress connections to Internet from Security Group
   egress {
     from_port = 0
@@ -48,7 +50,7 @@ resource "aws_security_group" "ec2_sg" {
   tags = local.common_tags
 }
 
-resource "aws_security_group_rule" "ec2_sg_rule_ssh" {
+resource "aws_security_group_rule" "ec2_ssh" {
   security_group_id = aws_security_group.ec2_sg.id
   type              = "ingress"
   from_port         = 22
@@ -59,7 +61,7 @@ resource "aws_security_group_rule" "ec2_sg_rule_ssh" {
 }
 
 /* HTTP from LB */
-resource "aws_security_group_rule" "ec2_sg_rule_http" {
+resource "aws_security_group_rule" "ec2_webapp" {
   security_group_id = aws_security_group.ec2_sg.id
   type            = "ingress"
   from_port       = var.app_port
@@ -69,22 +71,13 @@ resource "aws_security_group_rule" "ec2_sg_rule_http" {
   description       = "LB access"
 }
 
-/*
-// TODO
-https://github.com/joshuamkite/terraform-aws-ssh-bastion-service/blob/master/security_group.tf
-data "aws_subnet" "lb_subnets" {
-  count = length(var.subnets_lb)
-  id    = var.subnets_lb[count.index]
+/* HTTP from LB */
+resource "aws_security_group_rule" "ec2_spring_actuator" {
+  security_group_id = aws_security_group.ec2_sg.id
+  type            = "ingress"
+  from_port       = var.app_health_port
+  to_port         = var.app_health_port
+  protocol        = "tcp"
+  source_security_group_id = aws_security_group.lb_sg.id
+  description       = "Access to Spring actuator endpoint (health-check)"
 }
-
-resource "aws_security_group_rule" "lb_healthcheck_in" {
-  security_group_id = aws_security_group.bastion_service.id
-  cidr_blocks       = data.aws_subnet.lb_subnets.*.cidr_block
-  from_port         = var.lb_healthcheck_port
-  to_port           = var.lb_healthcheck_port
-  protocol          = "tcp"
-  type              = "ingress"
-  description       = "access from load balancer CIDR ranges for healthchecks"
-}
-
-*/
