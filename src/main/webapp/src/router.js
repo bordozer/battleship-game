@@ -1,6 +1,9 @@
 /* jshint esversion: 6 */
 import React from "react";
-import {BrowserRouter as Router, Link, Route, Switch, useRouteMatch} from "react-router-dom";
+import {BrowserRouter as Router, Link, Route, Switch} from "react-router-dom";
+
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import {faListAlt, faPlusSquare} from '@fortawesome/free-regular-svg-icons';
 
 import GamesPage from 'src/pages/games';
 import BattlePage from 'src/pages/battle';
@@ -10,14 +13,19 @@ export default function AppRouter() {
     return (
         <Router>
             <div>
-
                 <div className="row bg-light">
-                    <div className="col-12">
-                        <OldSchoolMenuLink
-                            activeOnlyWhenExact={true}
-                            to="/"
-                            label="Games"
-                        />
+                    <div className="col-8 fa-2x">
+                        <span className='text-primary'>Battleship game</span> - multiplayer
+                    </div>
+                    <div className="col-4">
+                        <div className="float-right">
+                            <Link to="/battle?gameId=">
+                                <FontAwesomeIcon icon={faPlusSquare} className='fa-2x' title='Create new game'/>
+                            </Link>
+                            <Link to="/">
+                                <FontAwesomeIcon icon={faListAlt} className='fa-2x ml-10' title='Games'/>
+                            </Link>
+                        </div>
                     </div>
                 </div>
 
@@ -33,26 +41,6 @@ export default function AppRouter() {
                 </Switch>
             </div>
         </Router>
-    );
-}
-
-function OldSchoolMenuLink({label, to, activeOnlyWhenExact}) {
-    let match = useRouteMatch({
-        path: to,
-        exact: activeOnlyWhenExact
-    });
-
-    return (
-        <div>
-            <h4>
-            <Link
-                to={to}
-                style={{textDecoration: 'none'}}
-                className={match ? "active text-danger" : "text-dark"}>
-                {label}
-            </Link>
-            </h4>
-        </div>
     );
 }
 
