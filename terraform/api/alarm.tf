@@ -37,3 +37,22 @@ resource "aws_cloudwatch_metric_alarm" "cpu_usage_is_very_low" {
     aws_autoscaling_policy.scale_in_policy.arn
   ]
 }
+
+resource "aws_cloudwatch_metric_alarm" "no_healthy_hosts" {
+  alarm_name          = "tf-${var.service_instance_name}-healthy-hosts-count"
+  comparison_operator = "LessThanThreshold"
+  evaluation_periods  = "2"
+  metric_name         = "HealthyHostCount"
+  namespace           = "AWS/ApplicationELB"
+  period              = "60"
+  statistic           = "Average"
+  threshold           = 1
+  alarm_description   = "Number of instance healthy in Target Group"
+  actions_enabled     = "true"
+  alarm_actions       = [aws_sns_topic.asg_notifications.arn]
+  ok_actions          = [aws_sns_topic.asg_notifications.arn]
+  dimensions = {
+    TargetGroup  = aws_lb_target_group.lb_tg.arn_suffix
+    LoadBalancer = aws_lb.front_end.arn_suffix
+  }
+}

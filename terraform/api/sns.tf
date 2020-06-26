@@ -1,4 +1,5 @@
-// TODO: the issue: nesseccity to confirm email each time after topic creation
+// TODO: the issue: necessity to confirm email each time after topic creation
+// TODO: rename to generic
 resource "aws_sns_topic" "asg_notifications" {
   name = "tf-${var.service_instance_name}-asg-notifications-sns-topic"
 
