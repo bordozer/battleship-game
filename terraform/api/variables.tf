@@ -2,8 +2,7 @@
 variable "service_name" { default = "battleship-game" }
 variable "service_instance_name" {}
 variable "environment_name" {}
-variable "ssh_public_key" {}
-variable "internal_lb_scheme" {}
+variable "ssh_public_key" { default = "battleship-game-key"}
 
 /* Amazon account network parameters */
 variable "vpc" { default = "vpc-74c2c81d" }
@@ -35,8 +34,9 @@ variable "ec2_instance_root_volume_type" { default = "gp2" }
 variable "ec2_instance_root_volume_size" { default = "8" }
 
 /* Application parameters */
-variable "app_port" { default = 8966 }
-variable "app_health_check_uri" { default = "/" }
+variable "app_port" { default = 8036 }
+variable "app_health_port" { default = 9112 }
+variable "app_health_check_uri" { default = "/actuator/health" }
 variable "app_protocol" { default = "HTTP" }
 variable "app_artifacts_s3_bucket" { default = "bordozer-artifacts" }
 

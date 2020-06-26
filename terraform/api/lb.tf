@@ -4,7 +4,7 @@ resource "aws_lb" "front_end" {
   subnets = var.subnets
   security_groups = [ aws_security_group.lb_sg.id ]
 
-  internal = var.internal_lb_scheme
+  internal = false
   enable_cross_zone_load_balancing = true
   idle_timeout = 60
 

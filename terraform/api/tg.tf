@@ -7,7 +7,7 @@ resource "aws_lb_target_group" "lb_tg" {
 
   health_check {
     protocol = var.app_protocol
-    port = var.app_port
+    port = var.app_health_port
     path = var.app_health_check_uri
     healthy_threshold = 2
     unhealthy_threshold = 3

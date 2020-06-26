@@ -14,6 +14,15 @@ logging:
   level:
     root: info
 
+#http://localhost:9112/actuator/health
+management:
+  server:
+    port: 9112
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,env,flyway,heapdump,sessions,httptrace,logfile
+
 ---
 spring:
   profiles: dev
