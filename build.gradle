@@ -33,15 +33,15 @@ bootJar {
 	baseName = 'battleship-game'
 	launchScript()
 }
-bootJar.dependsOn('src:main:webapp:build')
+//bootJar.dependsOn('src:main:webapp:build')
 
-task copyToStatic(type: Copy) {
+task buildUI(type: Copy) {
 	from('src/main/webapp/build/dist') {
 		include "*/**"
 	}
 	into "src/main/resources/static"
 }
-copyToStatic.dependsOn('src:main:webapp:build')
+buildUI.dependsOn('src:main:webapp:build')
 //bootJar.dependsOn(copyToStatic)
 
 configurations {
