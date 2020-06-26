@@ -1,21 +1,10 @@
 [
   {
-    "gameId": "mock game 1 - no player2",
+    "gameId": "game-id-777",
     "player1": {
-      "id": "player-1-id",
-      "name": "Player 1"
+      "id": "player-id-234",
+      "name": "User-27a0"
     },
     "player2": null
-  },
-  {
-    "gameId": "mock game 2",
-    "player1": {
-      "id": "player-2-id",
-      "name": "Player 2"
-    },
-    "player2": {
-      "id": "player-3-id",
-      "name": "Player 3"
-    }
   }
 ]
