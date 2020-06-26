@@ -12,11 +12,11 @@ export default function AppRouter() {
             <div>
 
                 <div className="row bg-light">
-                    <div className="col-sm-12 text-center">
+                    <div className="col-12">
                         <OldSchoolMenuLink
                             activeOnlyWhenExact={true}
                             to="/"
-                            label="Game list"
+                            label="Games"
                         />
                     </div>
                 </div>
@@ -44,13 +44,14 @@ function OldSchoolMenuLink({label, to, activeOnlyWhenExact}) {
 
     return (
         <div>
+            <h4>
             <Link
                 to={to}
                 style={{textDecoration: 'none'}}
-                className={match ? "active text-danger" : "text-dark"}
-            >
+                className={match ? "active text-danger" : "text-dark"}>
                 {label}
             </Link>
+            </h4>
         </div>
     );
 }

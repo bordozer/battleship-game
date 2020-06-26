@@ -1,7 +1,7 @@
 /* jshint esversion: 6 */
 import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faAnchor, faTimes, faCrosshairs, faBullseye, faSkull, faSkullCrossbones } from '@fortawesome/free-solid-svg-icons';
+import { faAnchor, faCrosshairs, faBullseye, faSkull, faSkullCrossbones } from '@fortawesome/free-solid-svg-icons';
 import { faSmile, faCircle, faDotCircle } from '@fortawesome/free-regular-svg-icons';
 import _ from 'underscore';
 

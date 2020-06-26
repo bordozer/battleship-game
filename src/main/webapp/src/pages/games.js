@@ -2,6 +2,9 @@
 import React, {Component} from 'react';
 import {Link} from 'react-router-dom';
 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {faPlusSquare} from '@fortawesome/free-regular-svg-icons';
+
 export default class GamesPage extends Component {
 
     constructor(props) {
@@ -27,9 +30,11 @@ export default class GamesPage extends Component {
         this.state.games.forEach(game => {
             result.push(
                 <div key={game.gameId} className="row">
-                    <div className="col-12">
+                    <div className="col-3" />
+                    <div className="col-6">
                         <Link to={"/battle?gameId=" + game.gameId}>{game.gameId}</Link>
                     </div>
+                    <div className="col-3" />
                 </div>
             )
         });
@@ -40,12 +45,17 @@ export default class GamesPage extends Component {
     render() {
         return (
             <div>
+
                 <div className="row">
                     <div className="col-12">
-                        <Link to="/battle?gameId=">New game</Link>
+                        <Link to="/battle?gameId=">
+                            <FontAwesomeIcon icon={faPlusSquare} className='fa-2x' title='Create new game' />
+                        </Link>
                     </div>
                 </div>
+
                 {this.renderGames()}
+
             </div>
         )
     }
