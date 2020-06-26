@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-    <property name="log.files.path" value="/var/log/bordozer/battleship-game-server"/>
-    <property name="service.name" value="battleship-game-server"/>
+    <property name="log.files.path" value="/var/log/bordozer/battleship-game"/>
+    <property name="service.name" value="battleship-game"/>
     <property name="pattern" value="%-4r, %date{yyyy-MM-dd HH:mm:ss.SSS}, [%thread] %-5level, %logger{5} traceId=%X{traceId}, %m%n"/>
 
     <include resource="org/springframework/boot/logging/logback/base.xml"/>

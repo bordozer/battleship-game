@@ -1,0 +1,33 @@
+#!/bin/bash
+
+# install software
+sudo yum update -y
+sudo yum install mc -y
+sudo yum install java-1.8.0 -y
+sudo yum install awscli -y
+sudo yum install -y util-linux-user
+
+# create app dirs
+mkdir "${t_app_dir}"
+chmod 777 "${t_app_dir}" -R
+
+# create log dirs
+mkdir -p "/var/log/bordozer/${t_service_name}/"
+chmod 777 -R "/var/log/bordozer/${t_service_name}/"
+
+# Get app artefact
+echo "RUN_ARGS='--spring.profiles.active=aws-${t_env}'" >"${t_app_dir}/${t_app_artifact_name}.conf"
+aws s3 cp "s3://${t_app_artifact_s3_bucket}/${t_app_artifact_name}.jar" "${t_app_dir}/"
+
+useradd springboot
+chsh -s /sbin/nologin springboot
+chown springboot:springboot "${t_app_dir}/${t_app_artifact_name}.jar"
+chmod 500 "${t_app_dir}/${t_app_artifact_name}.jar"
+
+ln -s "${t_app_dir}/${t_app_artifact_name}.jar" "/etc/init.d/${t_service_instance_name}"
+
+chkconfig "${t_service_instance_name}" on
+service "${t_service_instance_name}" start
+
+# sudo netstat -tulpn | grep 8966
+# sudo kill -9 <pid>

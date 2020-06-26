@@ -1,6 +1,6 @@
 spring:
   application:
-    name: battleship-game-server
+    name: battleship-game
   profiles:
     active: dev
 
