@@ -2,6 +2,7 @@ const path = require("path");
 const HtmlWebPackPlugin = require("html-webpack-plugin");
 const getFilesFromDir = require("./src/config/files");
 const PAGE_DIR = path.join("./src", "pages", path.sep);
+const apiMocker = require('connect-api-mocker');
 
 const HTML_WEB_PACK_PLUGIN_MINIFY_OPTIONS = {
     collapseWhitespace: true,
@@ -118,8 +119,10 @@ module.exports = (env, options) => {
             contentBase: path.join(__dirname, 'dist'),
             compress: true,
             useLocalIp: false,
-            port: 3101
-        }/*,
-        target: "node"*/
+            port: 3101,
+            before: function (app) {
+                app.use(apiMocker('/api', 'mocks/api'));
+            },
+        }
     }
 };

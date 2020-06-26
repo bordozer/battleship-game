@@ -12,13 +12,13 @@ export default class GamesPage extends Component {
     }
 
     componentDidMount() {
-        fetch('/games')
+        fetch('/api/games')
             .then(response => response.json())
             .then(data => {
                 this.setState({
                     games: data
                 });
-                // console.log("Games: ", data);
+                console.log("Games: ", data);
             });
     }
 
@@ -50,7 +50,7 @@ export default class GamesPage extends Component {
                         </p>
                     </div>
                     <div className="col-6 text-center">
-                        Open games:
+                        {this.renderGames()}
                     </div>
                     <div className="col-3" />
                 </div>

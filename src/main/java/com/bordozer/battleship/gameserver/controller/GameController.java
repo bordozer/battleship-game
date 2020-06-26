@@ -27,7 +27,7 @@ import static com.bordozer.battleship.gameserver.utils.RequestUtils.getPlayerId;
 @Slf4j
 @RequiredArgsConstructor
 @RestController()
-@RequestMapping("/games")
+@RequestMapping("/api/games")
 //@CrossOrigin("*")
 public class GameController {
 

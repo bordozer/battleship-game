@@ -21,7 +21,7 @@ import static com.bordozer.battleship.gameserver.utils.RequestUtils.getPlayerId;
 @Slf4j
 @RequiredArgsConstructor
 @RestController()
-@RequestMapping("/whoami")
+@RequestMapping("/api/whoami")
 public class UserController {
 
     private final PlayerService playerService;

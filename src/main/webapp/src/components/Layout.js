@@ -74,7 +74,7 @@ export default class Layout extends React.Component {
 
     componentDidMount() {
         const gameId = qs.parse(location.search).gameId;
-        fetch('/whoami')
+        fetch('/api/whoami')
             .then(response => response.json())
             .then(data => {
                 this.setState({
@@ -111,7 +111,7 @@ export default class Layout extends React.Component {
         const self = this;
         $.ajax({
             method: 'POST',
-            url: "/games/create",
+            url: "/api/games/create",
             contentType: 'application/json',
             data: JSON.stringify(this.state.player.cells),
             cache: false,
@@ -135,7 +135,7 @@ export default class Layout extends React.Component {
         const self = this;
         $.ajax({
             method: 'PUT',
-            url: "/games/join/" + this.state.gameplay.gameId,
+            url: "/api/games/join/" + this.state.gameplay.gameId,
             contentType: 'application/json',
             data: JSON.stringify(this.state.player.cells),
             cache: false,
@@ -159,7 +159,7 @@ export default class Layout extends React.Component {
         // console.log("About to cancel game");
         $.ajax({
             method: 'DELETE',
-            url: "/games/delete/" + this.state.gameplay.gameId,
+            url: "/api/games/delete/" + this.state.gameplay.gameId,
             contentType: 'application/json',
             cache: false,
             success: function (result) {
