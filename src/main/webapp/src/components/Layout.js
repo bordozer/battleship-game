@@ -178,8 +178,8 @@ export default class Layout extends React.Component {
         const playerData = this.randomizeBattleFieldWithShips();
         return {
             player: {
-                playerId: null,
-                playerName: 'Player',
+                playerId: state ? state.player.playerId : null,
+                playerName: state ? state.player.playerId : 'Player',
                 cells: playerData.cells,
                 ships: playerData.ships,
                 lastShot: null,
@@ -200,8 +200,8 @@ export default class Layout extends React.Component {
                 difficulty: state ? state.config.difficulty : 3, /* 1 - easy, 2 - medium, 3 - hard */
             },
             gameplay: {
-                gameId: '',
-                step: STEP_GAME_INIT,
+                gameId: state ? state.gameplay.gameId : '',
+                step: STEP_GAME_INIT, /* TODO: for player2 is WAITING_FOR_OPPONENT */
                 currentMove: null,
                 winner: null
             },
@@ -258,7 +258,7 @@ export default class Layout extends React.Component {
     }
 
     render() {
-        // console.log("this.state", JSON.stringify(this.state));
+        console.log("this.state", JSON.stringify(this.state));
 
         const step = this.state.gameplay.step;
         const currentMove = this.state.gameplay.currentMove;
@@ -287,6 +287,11 @@ export default class Layout extends React.Component {
             highlightBattleArea: step === STEP_BATTLE && currentMove === 'player',
             currentMove: currentMove,
         };
+
+        const btnShips = this.state.gameplay.step === STEP_GAME_INIT;
+        const btnCreateGame = this.state.gameplay.gameId === '' && this.state.gameplay.step === STEP_GAME_INIT;
+        const btnJoinGame = this.state.gameplay.gameId !== '' && this.state.gameplay.step === STEP_GAME_INIT;
+        const btnCancelGame = this.state.gameplay.step !== STEP_GAME_INIT;
 
         return (
             <div>
@@ -333,27 +338,28 @@ export default class Layout extends React.Component {
                         <button
                             className="bg-light button-rounded"
                             onClick={this.onGenerateShipsClick}
-                            disabled={this.state.gameplay.step !== STEP_GAME_INIT}
+                            disabled={!btnShips}
                             title='Generate random ships'>
                             <FontAwesomeIcon icon={faShip} />
                         </button>
                         <button
                             className="bg-light button-rounded ml-10"
                             onClick={this.onCreateGameClick}
-                            disabled={this.state.gameplay.gameId !== '' && this.state.gameplay.step !== STEP_GAME_INIT}
+                            disabled={!btnCreateGame}
                             title='Create game'>
                             <FontAwesomeIcon icon={faUserCheck} />
                         </button>
                         <button
                             className="bg-light button-rounded ml-10"
                             onClick={this.onJoinGameClick}
-                            disabled={this.state.gameplay.step !== STEP_GAME_INIT}
+                            disabled={!btnJoinGame}
                             title='Join game'>
                             <FontAwesomeIcon icon={faUserPlus} />
                         </button>
                         <button
                             className="bg-light button-rounded ml-10"
                             onClick={this.onCancelGameClick}
+                            disabled={!btnCancelGame}
                             title='Cancel game'>
                             <FontAwesomeIcon icon={faTrashAlt} />
                         </button>
