@@ -34,8 +34,9 @@ public class GameController {
     private final GameService gameService;
 
     @GetMapping(path = "", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<GameDto>> games() {
-        return new ResponseEntity<>(gameService.getOpenGames(), HttpStatus.OK);
+    public ResponseEntity<List<GameDto>> games(final HttpServletRequest request) {
+        final var playerId = getPlayerId(request);
+        return new ResponseEntity<>(gameService.getGames(playerId), HttpStatus.OK);
     }
 
     @PostMapping(path = "/create", produces = MediaType.APPLICATION_JSON_VALUE)

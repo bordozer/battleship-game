@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface GameService {
 
-    List<GameDto> getOpenGames();
+    List<GameDto> getGames(final String playerId);
 
     GameDto create(String player1Id, final ArrayList<ArrayList<CellDto>> cells);
 

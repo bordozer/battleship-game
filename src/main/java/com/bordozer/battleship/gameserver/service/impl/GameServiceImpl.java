@@ -40,14 +40,13 @@ public class GameServiceImpl implements GameService {
     private final IdentityService identityService;
 
     @Override
-    public List<GameDto> getOpenGames() {
+    public List<GameDto> getGames(final String playerId) {
         return GAME_MAP.keySet().stream()
-                .filter(gameId -> GAME_MAP.get(gameId).getState() == OPEN)
-                .map(gameId -> {
-                    synchronized (GAME_MAP.get(gameId)) {
-                        return convertToDto(gameId);
-                    }
+                .filter(gameId -> {
+                    final var game = GAME_MAP.get(gameId);
+                    return game.getState() == OPEN || game.getPlayer1Id().equals(playerId) || game.getPlayer2Id().equals(playerId);
                 })
+                .map(this::convertToDto)
                 .collect(Collectors.toList());
     }
 
