@@ -30,8 +30,6 @@ public abstract class PlayerDto {
 
     public abstract List<CellDto> getDamagedShipCells();
 
-    public abstract int getPoints();
-
     public static ImmutablePlayerDto.Builder builder() {
         return ImmutablePlayerDto.builder();
     }

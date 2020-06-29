@@ -87,7 +87,6 @@ public class BattleServiceImpl implements BattleService {
                 .ships(extractShips(game.getBattle().getBattlefield1().getCells()))
                 .lastShot(convertLastShot(lastShot, cells))
                 .damagedShipCells(Collections.emptyList())
-                .points(0)
                 .build();
     }
 
@@ -107,7 +106,6 @@ public class BattleServiceImpl implements BattleService {
                 .ships(extractShips(battlefield.getCells()))
                 .lastShot(convertLastShot(lastShot, cells))
                 .damagedShipCells(Collections.emptyList())
-                .points(0)
                 .build();
     }
 

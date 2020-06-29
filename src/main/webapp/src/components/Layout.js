@@ -86,8 +86,7 @@ export default class Layout extends React.Component {
                         cells: this.state.player.cells,
                         ships: this.state.player.ships,
                         lastShot: null,
-                        damagedShipCells: [],
-                        points: this.state.player.points
+                        damagedShipCells: []
                     },
                     gameplay: {
                         gameId: gameId,
@@ -183,8 +182,7 @@ export default class Layout extends React.Component {
                 cells: playerData.cells,
                 ships: playerData.ships,
                 lastShot: null,
-                damagedShipCells: [],
-                points: state ? state.player.points : 0
+                damagedShipCells: []
             },
             enemy: {
                 playerId: null,
@@ -192,8 +190,7 @@ export default class Layout extends React.Component {
                 cells: initBattleFieldCells(10),
                 ships: [],
                 lastShot: null,
-                damagedShipCells: [],
-                points: state ? state.enemy.points : 0
+                damagedShipCells: []
             },
             config: {
                 showShotHints: state ? state.config.showShotHints : true,
@@ -302,7 +299,6 @@ export default class Layout extends React.Component {
                             ships={this.state.player.ships}
                             isPlayer={true}
                             winner={this.state.gameplay.winner}
-                            points={this.state.player.points}
                         />
                     </div>
                     <div className={'col-sm-5' + (playerBattleFieldOpts.highlightBattleArea ? '' : ' disabledArea')}
@@ -327,7 +323,6 @@ export default class Layout extends React.Component {
                             ships={this.state.enemy.ships}
                             isPlayer={false}
                             winner={this.state.gameplay.winner}
-                            points={this.state.enemy.points}
                         />
                     </div>
                 </div>
