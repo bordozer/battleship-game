@@ -331,28 +331,28 @@ export default class Layout extends React.Component {
                     <div className="col-sm-4" />
                     <div className="col-sm-4 text-center btn-lg">
                         <button
-                            className="bg-light button-rounded fa-2x"
+                            className="bg-light button-rounded"
                             onClick={this.onGenerateShipsClick}
                             disabled={this.state.gameplay.step !== STEP_GAME_INIT}
                             title='Generate random ships'>
                             <FontAwesomeIcon icon={faShip} />
                         </button>
                         <button
-                            className="bg-light button-rounded fa-2x ml-10"
+                            className="bg-light button-rounded ml-10"
                             onClick={this.onCreateGameClick}
                             disabled={this.state.gameplay.gameId !== '' && this.state.gameplay.step !== STEP_GAME_INIT}
                             title='Create game'>
                             <FontAwesomeIcon icon={faUserCheck} />
                         </button>
                         <button
-                            className="bg-light button-rounded fa-2x ml-10"
+                            className="bg-light button-rounded ml-10"
                             onClick={this.onJoinGameClick}
                             disabled={this.state.gameplay.step !== STEP_GAME_INIT}
                             title='Join game'>
                             <FontAwesomeIcon icon={faUserPlus} />
                         </button>
                         <button
-                            className="bg-light button-rounded fa-2x ml-10"
+                            className="bg-light button-rounded ml-10"
                             onClick={this.onCancelGameClick}
                             title='Cancel game'>
                             <FontAwesomeIcon icon={faTrashAlt} />
