@@ -2,10 +2,12 @@
 import React from "react"
 import $ from "jquery"
 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {faShip, faUserCheck, faUserPlus, faTrashAlt} from '@fortawesome/free-solid-svg-icons';
+
 import {initBattleFieldCells} from 'src/utils/battle-field-utils';
 import {generateShips} from 'src/utils/ships-generator';
 import BattleFieldRenderer from 'components/battle-field-renderer';
-import GameConfigRenderer from 'components/game-config-renderer';
 import ShipsStateRenderer from 'components/ships-state';
 import LogsRenderer from 'components/logs-renderer';
 import {getUserIdFromCookie} from 'src/utils/cookies-utils';
@@ -220,25 +222,6 @@ export default class Layout extends React.Component {
         sendMove(this.state.gameplay.gameId, this.state.player.playerId, cell.y, cell.x);
     }
 
-    onDifficultyChange = (difficulty) => {
-        this.setState({
-            config: {
-                showShotHints: this.state.config.showShotHints,
-                difficulty: difficulty
-            }
-        });
-    }
-
-    onShowShotHintsChange = (e) => {
-        const isShowHints = e.target.checked;
-        this.setState({
-            config: {
-                showShotHints: isShowHints,
-                difficulty: this.state.config.difficulty
-            }
-        });
-    }
-
     updateGameState = (newState) => {
         // console.log("Game state is updated", newState);
         this.setState(newState, () => this.stateUpdateCallback());
@@ -345,39 +328,34 @@ export default class Layout extends React.Component {
                 </div>
 
                 <div className="row mt-10">
-                    <div className="col-sm-4">
-
-                        <GameConfigRenderer
-                            difficulty={difficulty}
-                            showShotHints={this.state.config.showShotHints}
-                            onDifficultyChange={this.onDifficultyChange}
-                            onShowShotHintsChange={this.onShowShotHintsChange}
-                        />
-
-                    </div>
+                    <div className="col-sm-4" />
                     <div className="col-sm-4 text-center btn-lg">
                         <button
-                            className="bg-primary button-rounded"
+                            className="bg-light button-rounded fa-2x"
                             onClick={this.onGenerateShipsClick}
-                            disabled={this.state.gameplay.step !== STEP_GAME_INIT}>
-                            Ships
+                            disabled={this.state.gameplay.step !== STEP_GAME_INIT}
+                            title='Generate random ships'>
+                            <FontAwesomeIcon icon={faShip} />
                         </button>
                         <button
-                            className="bg-primary button-rounded"
+                            className="bg-light button-rounded fa-2x ml-10"
                             onClick={this.onCreateGameClick}
-                            disabled={this.state.gameplay.gameId !== '' && this.state.gameplay.step !== STEP_GAME_INIT}>
-                            Create game
+                            disabled={this.state.gameplay.gameId !== '' && this.state.gameplay.step !== STEP_GAME_INIT}
+                            title='Create game'>
+                            <FontAwesomeIcon icon={faUserCheck} />
                         </button>
                         <button
-                            className="bg-primary button-rounded"
+                            className="bg-light button-rounded fa-2x ml-10"
                             onClick={this.onJoinGameClick}
-                            disabled={this.state.gameplay.step !== STEP_GAME_INIT}>
-                            Join game
+                            disabled={this.state.gameplay.step !== STEP_GAME_INIT}
+                            title='Join game'>
+                            <FontAwesomeIcon icon={faUserPlus} />
                         </button>
                         <button
-                            className="bg-primary button-rounded"
-                            onClick={this.onCancelGameClick}>
-                            Cancel game
+                            className="bg-light button-rounded fa-2x ml-10"
+                            onClick={this.onCancelGameClick}
+                            title='Cancel game'>
+                            <FontAwesomeIcon icon={faTrashAlt} />
                         </button>
                     </div>
                     <div className="col-sm-4"/>

@@ -91,7 +91,8 @@ body {
 
 .button-rounded {
     border-radius: 7px;
-    width: 150px;
+    width: 70px;
+    height: 70px;
 }
 
 .looser{
