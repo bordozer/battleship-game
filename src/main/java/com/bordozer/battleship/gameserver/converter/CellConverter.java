@@ -3,6 +3,7 @@ package com.bordozer.battleship.gameserver.converter;
 import com.bordozer.battleship.gameserver.dto.battle.CellDto;
 import com.bordozer.battleship.gameserver.dto.battle.ShipDto;
 import com.bordozer.battleship.gameserver.model.BattlefieldCell;
+import com.bordozer.battleship.gameserver.model.GameState;
 import com.bordozer.battleship.gameserver.model.Ship;
 import com.bordozer.battleship.gameserver.utils.BattleUtils;
 import com.bordozer.battleship.gameserver.utils.CellUtils;
@@ -12,6 +13,8 @@ import lombok.NoArgsConstructor;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static com.bordozer.battleship.gameserver.converter.ShipConverter.convertShip;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class CellConverter {
@@ -70,11 +73,11 @@ public final class CellConverter {
 
     private static ShipDto getShip(final BattlefieldCell cell, final boolean showShips) {
         final var ship = cell.getShip();
-        if (showShips){
-            return ShipConverter.convertShip(ship);
+        if (showShips) {
+            return convertShip(ship);
         }
-        if (ship != null && cell.isHit()) {
-            return ShipConverter.convertShip(ship);
+        if (cell.isHit() && ship != null) {
+            return convertShip(ship);
         }
         return null;
     }

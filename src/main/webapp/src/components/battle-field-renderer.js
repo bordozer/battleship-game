@@ -30,12 +30,12 @@ function cellCss(cell, options) {
 
     const isLastShot = lastShot && (cell.x === lastShot.x) && (cell.y === lastShot.y);
 
-    if (options.stage === null || (isEnemy && stage === 'STEP_READY_TO_START')) {
+    if (options.stage === null || (isEnemy && stage === 'GAME_INIT')) {
         result.push('cell-disabled');
     }
 
     // show enemy's healthy ships at the end
-    if (isEnemy && stage === 'STEP_FINAL' && cell.ship && !cell.isHit) {
+    if (isEnemy && stage === 'FINISHED' && cell.ship && !cell.isHit) {
         result.push('cell-ship');
     }
 
@@ -80,12 +80,12 @@ function getIcon(cell, options) {
     const lastShot = options.lastShot;
     const isLastShot = lastShot && (cell.x === lastShot.x) && (cell.y === lastShot.y);
 
-    if (options.stage === null || (isEnemy && stage === 'STEP_READY_TO_START')) {
+    if (options.stage === null || (isEnemy && stage === 'GAME_INIT')) {
         return (
             <FontAwesomeIcon icon={faAnchor} />
         );
     }
-    if (isEnemy && stage === 'STEP_FINAL' && cell.ship && !cell.isHit) {
+    if (isEnemy && stage === 'FINISHED' && cell.ship && !cell.isHit) {
         return (
             <FontAwesomeIcon icon={faSmile} />
         );
