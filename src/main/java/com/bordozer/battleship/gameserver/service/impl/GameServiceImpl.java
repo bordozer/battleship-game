@@ -25,6 +25,7 @@ import static com.bordozer.battleship.gameserver.converter.CellConverter.convert
 import static com.bordozer.battleship.gameserver.converter.GameConverter.toDto;
 import static com.bordozer.battleship.gameserver.dto.battle.PlayerType.PLAYER1;
 import static com.bordozer.battleship.gameserver.model.GameState.BATTLE;
+import static com.bordozer.battleship.gameserver.model.GameState.FINISHED;
 import static com.bordozer.battleship.gameserver.model.GameState.OPEN;
 import static com.bordozer.battleship.gameserver.utils.RandomUtils.randomizeFirstMove;
 import static com.bordozer.battleship.gameserver.utils.SecurityUtils.assertAccess;
@@ -44,7 +45,14 @@ public class GameServiceImpl implements GameService {
         return GAME_MAP.keySet().stream()
                 .filter(gameId -> {
                     final var game = GAME_MAP.get(gameId);
-                    return game.getState() == OPEN || game.getPlayer1Id().equals(playerId) || game.getPlayer2Id().equals(playerId);
+                    final var state = game.getState();
+                    if (state == FINISHED) {
+                        return false;
+                    }
+                    if (state == OPEN) {
+                        return true;
+                    }
+                    return game.getPlayer1Id().equals(playerId) || (game.getPlayer2Id() != null && game.getPlayer2Id().equals(playerId));
                 })
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
