@@ -5,7 +5,6 @@ import com.bordozer.battleship.gameserver.dto.GamePlayerDto;
 import com.bordozer.battleship.gameserver.dto.battle.BattleDto;
 import com.bordozer.battleship.gameserver.dto.battle.CellDto;
 import com.bordozer.battleship.gameserver.dto.battle.GameConfigDto;
-import com.bordozer.battleship.gameserver.dto.battle.GameStep;
 import com.bordozer.battleship.gameserver.dto.battle.GameplayDto;
 import com.bordozer.battleship.gameserver.dto.battle.PlayerDto;
 import com.bordozer.battleship.gameserver.dto.battle.PlayerType;
@@ -30,6 +29,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static com.bordozer.battleship.gameserver.converter.CellConverter.convertCellsToDto;
+import static com.bordozer.battleship.gameserver.converter.GameConverter.convertGameState;
 import static com.bordozer.battleship.gameserver.utils.SecurityUtils.assertAccess;
 import static com.bordozer.battleship.gameserver.utils.ShipUtils.extractShips;
 
@@ -128,7 +128,7 @@ public class BattleServiceImpl implements BattleService {
         final var gameId = game.getGameId();
         return GameplayDto.builder()
                 .gameId(gameId)
-                .step(convertGameStep(game.getState()))
+                .step(convertGameState(game.getState()))
                 .currentMove(calculateCurrentMove(game, forPlayerId))
                 .winner(calculateWinner(game, forPlayerId))
                 .build();
@@ -194,21 +194,6 @@ public class BattleServiceImpl implements BattleService {
 
     private Game getGame(final String gameId) {
         return gameService.getGame(gameId);
-    }
-
-    private GameStep convertGameStep(final GameState state) {
-        switch (state) {
-            case OPEN:
-                return GameStep.WAITING_FOR_OPPONENT;
-            case BATTLE:
-                return GameStep.BATTLE;
-            case FINISHED:
-                return GameStep.FINISHED;
-            case CANCELLED:
-                return GameStep.CANCELLED;
-            default:
-                throw new IllegalArgumentException(String.format("Unsupported game state: '%s'", state));
-        }
     }
 
     private GamePlayerDto getPlayer2(final Game game) {

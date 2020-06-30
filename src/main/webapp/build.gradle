@@ -20,6 +20,12 @@ node {
     nodeModulesDir = file("${project.projectDir}")
 }
 
+task buildUI(type: Copy) {
+    from('build/dist') {
+        include "*/**"
+    }
+    into "../../../src/main/resources/static"
+}
 task npm_instal(type: NpmTask) {
     args = ['install']
 }
@@ -27,5 +33,5 @@ task nmp_run_build(type: NpmTask) {
     args = ['run', 'build']
 }
 
-build.dependsOn(nmp_run_build)
 nmp_run_build.dependsOn(npm_instal)
+buildUI.dependsOn(nmp_run_build)

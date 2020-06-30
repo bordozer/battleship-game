@@ -1,5 +1,6 @@
 package com.bordozer.battleship.gameserver.dto;
 
+import com.bordozer.battleship.gameserver.dto.battle.GameStep;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import lombok.ToString;
@@ -22,6 +23,8 @@ public abstract class GameDto {
 
     @CheckForNull
     public abstract GamePlayerDto getPlayer2();
+
+    public abstract GameStep getGameStep();
 
     public static ImmutableGameDto.Builder builder() {
         return ImmutableGameDto.builder();

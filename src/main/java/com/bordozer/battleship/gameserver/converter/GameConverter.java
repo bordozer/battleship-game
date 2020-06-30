@@ -2,7 +2,9 @@ package com.bordozer.battleship.gameserver.converter;
 
 import com.bordozer.battleship.gameserver.dto.GameDto;
 import com.bordozer.battleship.gameserver.dto.GamePlayerDto;
+import com.bordozer.battleship.gameserver.dto.battle.GameStep;
 import com.bordozer.battleship.gameserver.model.Game;
+import com.bordozer.battleship.gameserver.model.GameState;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
@@ -16,6 +18,22 @@ public final class GameConverter {
                 .gameId(game.getGameId())
                 .player1(player1)
                 .player2(player2)
+                .gameStep(convertGameState(game.getState()))
                 .build();
+    }
+
+    public static GameStep convertGameState(final GameState state) {
+        switch (state) {
+            case OPEN:
+                return GameStep.WAITING_FOR_OPPONENT;
+            case BATTLE:
+                return GameStep.BATTLE;
+            case FINISHED:
+                return GameStep.FINISHED;
+            case CANCELLED:
+                return GameStep.CANCELLED;
+            default:
+                throw new IllegalArgumentException(String.format("Unsupported game state: '%s'", state));
+        }
     }
 }
