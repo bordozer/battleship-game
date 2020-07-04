@@ -5,13 +5,16 @@ import com.bordozer.battleship.gameserver.dto.PlayerMoveDto;
 import com.bordozer.battleship.gameserver.model.PlayerMove;
 import com.bordozer.battleship.gameserver.service.BattleService;
 import com.bordozer.battleship.gameserver.service.GameService;
+import com.bordozer.commons.utils.LoggableJson;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 
 import javax.annotation.CheckForNull;
 
+@Slf4j
 @Controller
 @RequiredArgsConstructor
 public class BattleWSController {
@@ -22,12 +25,14 @@ public class BattleWSController {
 
     @MessageMapping("/player-move-in")
     public void playerMove(final PlayerMoveDto move) {
+        LOGGER.info("WS/player-move-in \"{}\"", LoggableJson.of(move));
         battleService.move(move.getGameId(), move.getPlayerId(), PlayerMove.of(move.getLine(), move.getColumn()));
         sendNewGameStateToPlayers(move.getGameId());
     }
 
     @MessageMapping("/game-event-in")
     public void onGameEvent(final GameEventDto gameEvent) {
+        LOGGER.info("WS/game-event-in \"{}\"", LoggableJson.of(gameEvent));
         sendNewGameStateToPlayers(gameEvent.getGameId());
     }
 

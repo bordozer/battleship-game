@@ -28,7 +28,6 @@ import static com.bordozer.battleship.gameserver.utils.RequestUtils.getPlayerId;
 @RequiredArgsConstructor
 @RestController()
 @RequestMapping("/api/games")
-//@CrossOrigin("*")
 public class GameController {
 
     private final GameService gameService;
@@ -36,6 +35,7 @@ public class GameController {
     @GetMapping(path = "", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<GameDto>> games(final HttpServletRequest request) {
         final var playerId = getPlayerId(request);
+        LOGGER.info("Player \"{}\" listed games", playerId);
         return new ResponseEntity<>(gameService.getGames(playerId), HttpStatus.OK);
     }
 
@@ -43,6 +43,7 @@ public class GameController {
     public ResponseEntity<GameDto> createNewGame(@RequestBody final ArrayList<ArrayList<CellDto>> cells,
                                                  final HttpServletRequest request) {
         final var playerId = getPlayerId(request);
+        LOGGER.info("Player \"{}\" created a game", playerId);
         final var game = gameService.create(playerId, cells);
         return new ResponseEntity<>(game, HttpStatus.OK);
     }
@@ -52,15 +53,15 @@ public class GameController {
                                            @RequestBody final ArrayList<ArrayList<CellDto>> cells,
                                            final HttpServletRequest request) {
         final var playerId = getPlayerId(request);
-
+        LOGGER.info("Player \"{}\" joined a game \"{}\"", playerId, gameId);
         gameService.joinGame(gameId, playerId, cells);
-
         return new ResponseEntity<>(Ok.of(), HttpStatus.OK);
     }
 
     @DeleteMapping(path = "/delete/{gameId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Ok> joinGame(@PathVariable("gameId") final String gameId, final HttpServletRequest request) {
+    public ResponseEntity<Ok> deleteGame(@PathVariable("gameId") final String gameId, final HttpServletRequest request) {
         final var playerId = getPlayerId(request);
+        LOGGER.info("Player \"{}\" deleted a game \"{}\"", playerId, gameId);
         gameService.delete(gameId, playerId);
         return new ResponseEntity<>(Ok.of(), HttpStatus.OK);
     }

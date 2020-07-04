@@ -29,6 +29,7 @@ public class UserController {
     @GetMapping(path = "", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<WhoAmIDto> games(final HttpServletRequest request, final HttpServletResponse response) {
         final var playerId = getPlayerId(request);
+        LOGGER.info("Player \"{}\" called whoami", playerId);
         addPlayerCookies(response, playerId);
 
         final var whoAmIDto = ImmutableWhoAmIDto.builder()

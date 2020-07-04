@@ -12,5 +12,6 @@ data "template_file" "ec2_userdata" {
     t_app_dir = "/opt/${var.service_instance_name}"
     t_app_artifact_s3_bucket = var.app_artifacts_s3_bucket
     t_app_artifact_name = local.s3_app_artifact_name
+    t_region = var.aws_region
   }
 }

@@ -30,11 +30,22 @@ ln -s "${t_app_dir}/${t_app_artifact_name}.jar" "/etc/init.d/${t_service_instanc
 chkconfig "${t_service_instance_name}" on
 service "${t_service_instance_name}" start
 
-# /etc/awslogs/awslogs.conf
-# TODO: set region in /etc/awslogs/awscli.conf
+# awslogs -->
+echo "[/var/log/messages]
+datetime_format = %b %d %H:%M:%S
+file = /var/log/bordozer/${t_service_name}/${t_service_name}.log
+buffer_duration = 5000
+log_stream_name = {instance_id}
+initial_position = start_of_file
+log_group_name = /${t_service_instance_name}/logs" > /etc/awslogs/awslogs.conf
+
+echo "[plugins]
+cwlogs = cwlogs
+[default]
+region = ${t_region}" > /etc/awslogs/awscli.conf
+
 sudo systemctl start awslogsd
+# awslogs <--
 
 # sudo netstat -tulpn | grep 8966
 # sudo kill -9 <pid>
-
-# /var/log/messages
