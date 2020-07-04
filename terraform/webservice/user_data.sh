@@ -30,9 +30,12 @@ ln -s "${t_app_dir}/${t_app_artifact_name}.jar" "/etc/init.d/${t_service_instanc
 chkconfig "${t_service_instance_name}" on
 service "${t_service_instance_name}" start
 
-# awslogs -->
+# awslogs (the service log: /var/log/awslogs.log) -->
 sudo rm /etc/awslogs/awslogs.conf
-cat <<EOT >> /etc/awslogs/awslogs.conf
+cat <<EOT > /etc/awslogs/awslogs.conf
+[general]
+state_file = /var/lib/awslogs/agent-state
+
 [/var/log/messages]
 datetime_format = %b %d %H:%M:%S
 file = /var/log/bordozer/${t_service_name}/${t_service_name}.log
@@ -43,7 +46,7 @@ log_group_name = /${t_service_instance_name}/logs
 EOT
 
 sudo rm /etc/awslogs/awscli.conf
-cat <<EOT >> /etc/awslogs/awscli.conf
+cat <<EOT > /etc/awslogs/awscli.conf
 [plugins]
 cwlogs = cwlogs
 [default]
