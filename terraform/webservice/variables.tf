@@ -39,6 +39,7 @@ variable "app_health_port" { default = 9112 }
 variable "app_health_check_uri" { default = "/actuator/health" }
 variable "app_protocol" { default = "HTTP" }
 variable "app_artifacts_s3_bucket" { default = "bordozer-artifacts" }
+variable "keep_logs_days" {}
 
 locals {
   common_tags = {
