@@ -31,20 +31,26 @@ chkconfig "${t_service_instance_name}" on
 service "${t_service_instance_name}" start
 
 # awslogs -->
-echo "[/var/log/messages]
+sudo rm /etc/awslogs/awslogs.conf
+cat <<EOT >> /etc/awslogs/awslogs.conf
+[/var/log/messages]
 datetime_format = %b %d %H:%M:%S
 file = /var/log/bordozer/${t_service_name}/${t_service_name}.log
 buffer_duration = 5000
 log_stream_name = {instance_id}
 initial_position = start_of_file
-log_group_name = /${t_service_instance_name}/logs" > /etc/awslogs/awslogs.conf
+log_group_name = /${t_service_instance_name}/logs
+EOT
 
-echo "[plugins]
+sudo rm /etc/awslogs/awscli.conf
+cat <<EOT >> /etc/awslogs/awscli.conf
+[plugins]
 cwlogs = cwlogs
 [default]
-region = ${t_region}" > /etc/awslogs/awscli.conf
+region = ${t_region}
+EOT
 
-sudo systemctl start awslogsd
+sudo service awslogsd start
 # awslogs <--
 
 # sudo netstat -tulpn | grep 8966
