@@ -1,4 +1,4 @@
-# Battleship game server [WIP]
+# Battleship game multiplayer [WIP]
 
 ## How to run
 ```console

@@ -82,7 +82,7 @@ pipeline {
                         string(credentialsId: 'AWS_STAGE_SECRET_ACCESS_KEY', variable: 'AWS_SECRET_ACCESS_KEY'),
                         string(credentialsId: 'AWS_STAGE_DEFAULT_REGION', variable: 'AWS_DEFAULT_REGION')
                 ]) {
-                    dir('terraform/webservice') {
+                    dir('terraform/webapp') {
                         sh "chmod +x tf_apply.sh"
                         sh './tf_apply.sh staging'
                     }
