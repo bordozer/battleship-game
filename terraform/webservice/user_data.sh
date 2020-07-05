@@ -56,5 +56,3 @@ EOT
 sudo service awslogsd start
 # awslogs <--
 
-# sudo netstat -tulpn | grep 8966
-# sudo kill -9 <pid>

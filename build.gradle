@@ -5,9 +5,6 @@ buildscript {
 			url "https://plugins.gradle.org/m2/"
 		}
 	}
-	dependencies {
-		classpath "net.ltgt.gradle:gradle-apt-plugin:0.21"
-	}
 }
 
 plugins {
@@ -22,7 +19,6 @@ plugins {
 }
 
 group 'com.bordozer'
-//version '1.00'
 archivesBaseName = 'battleship-game'
 
 sourceCompatibility = JavaVersion.VERSION_11

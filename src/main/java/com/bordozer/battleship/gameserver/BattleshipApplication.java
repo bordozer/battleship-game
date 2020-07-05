@@ -8,7 +8,7 @@ import org.springframework.boot.web.servlet.support.SpringBootServletInitializer
 import org.springframework.context.annotation.Import;
 
 @SpringBootApplication
-@Import({WSConfigurer.class})
+@Import(WSConfigurer.class)
 public class BattleshipApplication extends SpringBootServletInitializer {
 
     public static void main(String[] args) {
