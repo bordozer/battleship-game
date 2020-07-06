@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 
 SERVICE_NAME="battleship-game"
-# env: `staging` or `prod`
+
 ENV=$1
 if [ -z "$ENV" ]
 then
-      echo "ENV is empty. Provide 'dev' or 'staging' or 'prod'"
+      echo "ENV is empty. Provide 'dev' or 'prod'"
       exit 1;
 fi
 
