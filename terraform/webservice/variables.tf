@@ -2,6 +2,7 @@
 variable "service_name" { default = "battleship-game" }
 variable "service_instance_name" {}
 variable "environment_name" {}
+variable "route53_record" {}
 variable "ssh_public_key" { default = "battleship-game-key"}
 
 /* Amazon account network parameters */
