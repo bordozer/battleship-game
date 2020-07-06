@@ -53,6 +53,7 @@ dependencies {
 
 	compile group: 'org.springframework.boot', name: 'spring-boot-starter-actuator'
 	compile group: 'org.springframework.boot', name: 'spring-boot-starter-web'
+	compile group: 'org.springframework.boot', name: 'spring-boot-starter-validation'
 	compile 'org.springframework.boot:spring-boot-starter-websocket'
 	compile group: 'org.springframework', name: 'spring-messaging'
 
