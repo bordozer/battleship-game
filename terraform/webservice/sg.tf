@@ -24,8 +24,6 @@ resource "aws_security_group" "lb_sg" {
   tags = local.common_tags
 }
 
-/* open public access to spring actuator if needed */
-
 resource "aws_security_group" "ec2_sg" {
   name = "tf-${var.service_instance_name}-ec2-sg"
   description = "${var.service_instance_name} EC2 SG"
@@ -65,7 +63,7 @@ resource "aws_security_group_rule" "ec2_webapp" {
 }
 
 /* HTTP from LB */
-resource "aws_security_group_rule" "ec2_spring_actuator" {
+/*resource "aws_security_group_rule" "ec2_spring_actuator" {
   security_group_id = aws_security_group.ec2_sg.id
   type            = "ingress"
   from_port       = var.app_health_port
@@ -73,4 +71,4 @@ resource "aws_security_group_rule" "ec2_spring_actuator" {
   protocol        = "tcp"
   source_security_group_id = aws_security_group.lb_sg.id
   description       = "Access to Spring actuator endpoint (health-check)"
-}
+}*/
