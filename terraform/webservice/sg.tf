@@ -6,9 +6,10 @@ resource "aws_security_group" "lb_sg" {
 
   # Regular HTTP access for sitecore instance
   ingress {
-    from_port   = 80
-    to_port     = 80
+    from_port   = 443
+    to_port     = 443
     protocol    = "tcp"
+    description = "TLS from VPC"
     cidr_blocks = [ "0.0.0.0/0" ]
   }
 
@@ -31,14 +32,6 @@ resource "aws_security_group" "ec2_sg" {
 
   vpc_id = var.vpc
 
-  # Access within this Security Group via TCP
-  /*ingress {
-    from_port = 0
-    to_port = 0
-    protocol = "-1"
-    self = true
-  }
-*/
   # Egress connections to Internet from Security Group
   egress {
     from_port = 0

@@ -38,9 +38,9 @@ variable "ec2_instance_root_volume_size" { default = "8" }
 variable "app_port" { default = 8036 }
 variable "app_health_port" { default = 9112 }
 variable "app_health_check_uri" { default = "/actuator/health" }
-variable "app_protocol" { default = "HTTP" }
 variable "app_artifacts_s3_bucket" { default = "bordozer-artifacts" }
 variable "keep_logs_days" {}
+variable "certificate_arn" { default = "arn:aws:acm:eu-west-3:899415655760:certificate/443e4bee-2470-4b79-aed0-895aaedbb2ed" }
 
 locals {
   common_tags = {

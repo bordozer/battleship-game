@@ -42,7 +42,7 @@ file = /var/log/bordozer/${t_service_name}/${t_service_name}.log
 buffer_duration = 5000
 log_stream_name = {instance_id}
 initial_position = start_of_file
-log_group_name = /${t_service_instance_name}/logs
+log_group_name = ${t_log_group}
 EOT
 
 sudo rm /etc/awslogs/awscli.conf

@@ -6,7 +6,7 @@ resource "aws_lb_target_group" "lb_tg" {
   vpc_id   = var.vpc
 
   health_check {
-    protocol = var.app_protocol
+    protocol = "HTTP"
     port = var.app_health_port
     path = var.app_health_check_uri
     healthy_threshold = 2

@@ -8,21 +8,15 @@ resource "aws_lb" "front_end" {
   enable_cross_zone_load_balancing = true
   idle_timeout = 60
 
-//  enable_deletion_protection = true
-
-  /*access_logs {
-    bucket = aws_s3_bucket.app_log_bucket.bucket
-    prefix = ""
-    enabled = true
-  }*/
-
   tags = local.common_tags
 }
 
 resource "aws_lb_listener" "front_end" {
   load_balancer_arn = aws_lb.front_end.arn
-  port              = 80
-  protocol          = "HTTP"
+  port              = "443"
+  protocol          = "HTTPS"
+  ssl_policy        = "ELBSecurityPolicy-2016-08"
+  certificate_arn   = var.certificate_arn
 
   default_action {
     type             = "forward"
