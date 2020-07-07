@@ -15,7 +15,7 @@ import javax.annotation.CheckForNull;
 public class GamePlayers {
     private final String player1Id;
     @CheckForNull
-    private final String player12d;
+    private final String player2Id;
 
     public static GamePlayers of(final String player1Id, @CheckForNull final String player2Id) {
         return new GamePlayers(player1Id, player2Id);

@@ -11,6 +11,7 @@ import com.bordozer.battleship.multiplayer.dto.battle.PlayerType;
 import com.bordozer.battleship.multiplayer.model.Battlefield;
 import com.bordozer.battleship.multiplayer.model.Game;
 import com.bordozer.battleship.multiplayer.model.GameState;
+import com.bordozer.battleship.multiplayer.model.LogItem;
 import com.bordozer.battleship.multiplayer.model.PlayerMove;
 import com.bordozer.battleship.multiplayer.service.BattleService;
 import com.bordozer.battleship.multiplayer.service.BattlefieldService;
@@ -65,11 +66,11 @@ public class BattleServiceImpl implements BattleService {
     }
 
     @Override
-    public void move(final String gameId, final String playerId, final PlayerMove move) {
+    public List<LogItem> move(final String gameId, final String playerId, final PlayerMove move) {
         final var game = getGame(gameId);
         assertAccess(game, playerId);
         final var battlefield = getBattlefield(game, playerId);
-        battlefieldService.move(game, battlefield, playerId, move);
+        return battlefieldService.move(game, battlefield, playerId, move);
     }
 
     private PlayerDto getPlayerDto(final Game game, final boolean showShips) {

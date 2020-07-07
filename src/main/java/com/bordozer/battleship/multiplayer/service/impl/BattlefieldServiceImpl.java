@@ -29,7 +29,7 @@ public class BattlefieldServiceImpl implements BattlefieldService {
     private final PlayerService playerService;
 
     @Override
-    public void move(final Game game, final Battlefield battlefield, final String playerId, final PlayerMove move) {
+    public List<LogItem> move(final Game game, final Battlefield battlefield, final String playerId, final PlayerMove move) {
         final var battle = game.getBattle();
         final var logs = new ArrayList<LogItem>();
         final var player = playerService.getById(playerId);
@@ -40,12 +40,12 @@ public class BattlefieldServiceImpl implements BattlefieldService {
         if (cell.isHit()) {
             logs.add(LogItem.builder().text(String.format("%s: %s - cell has already been hit. Try another one", player.getName(), cell.humanize())).build());
             battle.addLogs(logs);
-            return;
+            return logs;
         }
         if (cell.isKilledShipNeighbor()) {
             logs.add(LogItem.builder().text(String.format("%s: %s - cell is killed ship neighbor and cannot contains a ship. Try another cell", player.getName(), cell.humanize())).build());
             battle.addLogs(logs);
-            return;
+            return logs;
         }
 
         cell.setHit(true);
@@ -76,6 +76,8 @@ public class BattlefieldServiceImpl implements BattlefieldService {
         }
 
         battle.addLogs(logs);
+
+        return logs;
     }
 
     private boolean hasAliveShips(final List<List<BattlefieldCell>> cells) {

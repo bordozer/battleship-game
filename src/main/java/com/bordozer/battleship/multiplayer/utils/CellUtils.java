@@ -4,6 +4,7 @@ import com.bordozer.battleship.multiplayer.converter.CellConverter;
 import com.bordozer.battleship.multiplayer.converter.ShipConverter;
 import com.bordozer.battleship.multiplayer.dto.battle.CellDto;
 import com.bordozer.battleship.multiplayer.model.BattlefieldCell;
+import com.bordozer.battleship.multiplayer.model.Cell;
 import com.bordozer.battleship.multiplayer.model.PlayerMove;
 import com.bordozer.battleship.multiplayer.model.Ship;
 import lombok.AccessLevel;
@@ -99,5 +100,13 @@ public final class CellUtils {
             }
         }
         return result;
+    }
+
+    public static String getCellAddress(final int column, final int line) {
+        return Cell.builder()
+                .line(line)
+                .column(column)
+                .build()
+                .humanize();
     }
 }

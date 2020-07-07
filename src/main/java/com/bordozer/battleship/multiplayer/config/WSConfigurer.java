@@ -12,7 +12,7 @@ public class WSConfigurer implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void configureMessageBroker(final MessageBrokerRegistry config) {
-        config.enableSimpleBroker("/game-state-changed");
+        config.enableSimpleBroker("/game-state-changed", "/game-notification");
         // config.setApplicationDestinationPrefixes("/app");
     }
 
