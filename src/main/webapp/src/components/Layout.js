@@ -1,6 +1,7 @@
 /* jshint esversion: 6 */
 import React from 'react';
 import $ from 'jquery';
+import _ from 'underscore';
 
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faShip, faTrashAlt, faUserCheck, faUserPlus} from '@fortawesome/free-solid-svg-icons';
@@ -39,7 +40,7 @@ function connect(gameId, playerId, eventType, setStateCallback, notificationCall
         });
 
         const notificationSubscription = '/game-notification/' + gameId + '/' + playerId;
-        console.log("notificationSubscription", notificationSubscription);
+        console.log('notificationSubscription', notificationSubscription);
         stompClient.subscribe(notificationSubscription, function (notification) {
             notificationCallback(JSON.parse(notification.body));
         });
@@ -229,7 +230,6 @@ export default class Layout extends React.Component {
     };
 
     notification = (notification) => {
-        console.log("notification", notification);
         if (!('Notification' in window)) {
             return;
         }
@@ -242,7 +242,10 @@ export default class Layout extends React.Component {
         }
         if (eventType === 'PLAYER_DID_MOVE') {
             const moveLogs = notification.notification.moveLogs;
-            notificationText = moveLogs.join('\n');
+            notificationText = _.map(moveLogs, function (log) {
+                return log.text;
+            })
+                .join('\n');
         }
         // new Notification(notificationText);
         if (Notification.permission === 'granted') {
@@ -253,7 +256,7 @@ export default class Layout extends React.Component {
             Notification.requestPermission()
                 .then(function (permission) {
                     if (permission === 'granted') {
-                        console.log("444444");
+                        console.log('444444');
                         new Notification(notificationText);
                     }
                 });
