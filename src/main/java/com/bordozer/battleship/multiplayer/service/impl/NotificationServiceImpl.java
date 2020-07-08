@@ -36,6 +36,7 @@ public class NotificationServiceImpl implements NotificationService {
         if (notifiablePlayerId == null) {
             return null;
         }
+        final var eventProducerPlayer = playerService.getById(eventProducerPlayerId);
         final var notifiablePlayer = playerService.getById(notifiablePlayerId);
 
         final var notification = GameEventNotificationDto.builder()
@@ -44,7 +45,7 @@ public class NotificationServiceImpl implements NotificationService {
         return GameNotificationDto.builder()
                 .gameId(gameId)
                 .playerId(notifiablePlayer.getId())
-                .playerName(notifiablePlayer.getName())
+                .playerName(eventProducerPlayer.getName())
                 .eventType(eventType)
                 .notification(notification)
                 .build();
