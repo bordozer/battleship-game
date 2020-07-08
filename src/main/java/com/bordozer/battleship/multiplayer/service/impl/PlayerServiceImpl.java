@@ -25,6 +25,10 @@ public class PlayerServiceImpl implements PlayerService {
                 .id("2b6d4c74-aae0-4a57-95a3-43f4cb8d9527")
                 .name("Edward Russell")
                 .build());
+        PLAYERS.put("e4e79d80-5df7-4e6a-b8ac-cfd974623685", GamePlayerDto.builder()
+                .id("e4e79d80-5df7-4e6a-b8ac-cfd974623685")
+                .name("Sir John Norris")
+                .build());
     }
 
     @Override
