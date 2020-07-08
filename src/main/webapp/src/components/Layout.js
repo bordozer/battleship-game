@@ -1,7 +1,6 @@
 /* jshint esversion: 6 */
 import React from 'react';
 import $ from 'jquery';
-import _ from 'underscore';
 
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faShip, faTrashAlt, faUserCheck, faUserPlus} from '@fortawesome/free-solid-svg-icons';
@@ -245,8 +244,10 @@ export default class Layout extends React.Component {
             Notification.requestPermission()
                 .then(function (permission) {
                     if (permission === 'granted') {
-                        console.log('444444');
-                        new Notification(notificationText);
+                        const options = {
+                            body: 'Would you like to get notifications about opponent moves?'
+                        };
+                        new Notification(notificationText, options);
                     }
                 });
         }
