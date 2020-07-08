@@ -26,6 +26,19 @@ management:
 ---
 spring:
   profiles: dev
+  security:
+    user:
+      name: admin
+      password: admin
+
+server:
+  ssl:
+    key-store-type: PKCS12
+    key-store: classpath:keystore/battleship.p12
+    key-store-password: battle
+    key-password: battle
+    key-alias: battleship
+    enabled: true
 
 ---
 spring:
