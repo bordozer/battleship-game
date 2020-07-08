@@ -234,19 +234,8 @@ export default class Layout extends React.Component {
             return;
         }
 
-        let notificationText = '';
-        const eventType = notification.eventType;
-        const playerName = notification.playerName;
-        if (eventType === 'PLAYER_JOINED_GAME') {
-            notificationText = playerName + ' has joined the game';
-        }
-        if (eventType === 'PLAYER_DID_MOVE') {
-            const moveLogs = notification.notification.moveLogs;
-            notificationText = _.map(moveLogs, function (log) {
-                return log.text;
-            })
-                .join('\n');
-        }
+        const notificationText = notification.messages.join('\n');
+
         // new Notification(notificationText);
         if (Notification.permission === 'granted') {
             new Notification(notificationText);

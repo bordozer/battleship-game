@@ -1,12 +1,11 @@
 package com.bordozer.battleship.multiplayer.dto;
 
-import com.bordozer.battleship.multiplayer.dto.notification.Notifiable;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import lombok.ToString;
 import org.immutables.value.Value;
 
-import javax.annotation.CheckForNull;
+import java.util.List;
 
 @JsonDeserialize(
         builder = ImmutableGameNotificationDto.Builder.class
@@ -21,11 +20,7 @@ public abstract class GameNotificationDto {
 
     public abstract String getPlayerId();
 
-    public abstract String getPlayerName();
-
-    public abstract EventType getEventType();
-
-    public abstract Notifiable getNotification();
+    public abstract List<String> getMessages();
 
     public static ImmutableGameNotificationDto.Builder builder() {
         return ImmutableGameNotificationDto.builder();

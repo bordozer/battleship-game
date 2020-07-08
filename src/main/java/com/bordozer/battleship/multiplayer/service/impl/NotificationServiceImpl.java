@@ -2,24 +2,20 @@ package com.bordozer.battleship.multiplayer.service.impl;
 
 import com.bordozer.battleship.multiplayer.dto.EventType;
 import com.bordozer.battleship.multiplayer.dto.GameNotificationDto;
-import com.bordozer.battleship.multiplayer.dto.GamePlayerDto;
-import com.bordozer.battleship.multiplayer.dto.notification.GameEventNotificationDto;
-import com.bordozer.battleship.multiplayer.dto.notification.Notifiable;
-import com.bordozer.battleship.multiplayer.dto.notification.PlayerMoveNotificationDto;
-import com.bordozer.battleship.multiplayer.model.Game;
-import com.bordozer.battleship.multiplayer.model.GamePlayers;
 import com.bordozer.battleship.multiplayer.model.LogItem;
 import com.bordozer.battleship.multiplayer.model.PlayerMove;
 import com.bordozer.battleship.multiplayer.service.GameService;
 import com.bordozer.battleship.multiplayer.service.NotificationService;
 import com.bordozer.battleship.multiplayer.service.PlayerService;
-import com.bordozer.battleship.multiplayer.utils.CellUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.CheckForNull;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import static com.google.common.collect.Lists.newArrayList;
 
 @Slf4j
 @Service
@@ -36,18 +32,11 @@ public class NotificationServiceImpl implements NotificationService {
         if (notifiablePlayerId == null) {
             return null;
         }
-        final var eventProducerPlayer = playerService.getById(eventProducerPlayerId);
         final var notifiablePlayer = playerService.getById(notifiablePlayerId);
-
-        final var notification = GameEventNotificationDto.builder()
-                .build();
-
         return GameNotificationDto.builder()
                 .gameId(gameId)
                 .playerId(notifiablePlayer.getId())
-                .playerName(eventProducerPlayer.getName())
-                .eventType(eventType)
-                .notification(notification)
+                .messages(getMessages(eventType, eventProducerPlayerId))
                 .build();
     }
 
@@ -59,18 +48,27 @@ public class NotificationServiceImpl implements NotificationService {
             return null;
         }
         final var notifiablePlayer = playerService.getById(notifiablePlayerId);
-
-        final var notification = PlayerMoveNotificationDto.builder()
-                .moveLogs(moveLogs)
-                .build();
-
         return GameNotificationDto.builder()
                 .gameId(gameId)
                 .playerId(notifiablePlayer.getId())
-                .playerName(notifiablePlayer.getName())
-                .eventType(EventType.PLAYER_DID_MOVE)
-                .notification(notification)
+                .messages(getMoveMessages(moveLogs))
                 .build();
+    }
+
+    private List<String> getMessages(final EventType eventType, final String eventProducerPlayerId) {
+        final var eventProducerPlayer = playerService.getById(eventProducerPlayerId);
+        switch (eventType) {
+            case PLAYER_JOINED_GAME:
+                return newArrayList(String.format("%s joined the game", eventProducerPlayer.getName()));
+            default:
+                throw new IllegalStateException(String.format("Unsupported game event type: '%s'", eventType));
+        }
+    }
+
+    private List<String> getMoveMessages(final List<LogItem> moveLogs) {
+        return moveLogs.stream()
+                .map(LogItem::getText)
+                .collect(Collectors.toList());
     }
 
     @CheckForNull
