@@ -39,7 +39,6 @@ function connect(gameId, playerId, eventType, setStateCallback, notificationCall
         });
 
         const notificationSubscription = '/game-notification/' + gameId + '/' + playerId;
-        console.log('notificationSubscription', notificationSubscription);
         stompClient.subscribe(notificationSubscription, function (notification) {
             notificationCallback(JSON.parse(notification.body));
         });
@@ -232,25 +231,34 @@ export default class Layout extends React.Component {
         if (!('Notification' in window)) {
             return;
         }
+        const self = this;
 
         const notificationText = notification.messages.join('\n');
 
         // new Notification(notificationText);
         if (Notification.permission === 'granted') {
-            new Notification(notificationText);
+            self.spawnNotification(notificationText);
             return;
         }
         if (Notification.permission !== 'denied') {
             Notification.requestPermission()
                 .then(function (permission) {
                     if (permission === 'granted') {
-                        const options = {
-                            body: 'Would you like to get notifications about opponent moves?'
-                        };
-                        new Notification(notificationText, options);
+                        self.spawnNotification(notificationText);
                     }
                 });
         }
+    };
+
+    spawnNotification = (notificationText) => {
+        const options = {
+            body: 'Battleship game',
+            tag: "battle"
+        };
+        const n = new Notification(notificationText, options);
+        setTimeout(() => {
+            n.close();
+        }, 2000);
     };
 
     stateUpdateCallback = () => {
