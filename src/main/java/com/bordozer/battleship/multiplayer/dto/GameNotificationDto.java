@@ -20,6 +20,8 @@ public abstract class GameNotificationDto {
 
     public abstract String getPlayerId();
 
+    public abstract EventType getEventType();
+
     public abstract List<String> getMessages();
 
     public static ImmutableGameNotificationDto.Builder builder() {

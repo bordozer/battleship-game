@@ -31,7 +31,7 @@ export const joinGame = (gameId, cells, callback) => {
     });
 };
 
-export const cancelGame = (gameId, beforeDeleteCallback, afterDeleteCallback) => {
+export const cancelGame = (gameId, callback) => {
     Swal.fire({
         title: 'Cancel the game?',
         text: 'It will look like you gave up!',
@@ -45,14 +45,13 @@ export const cancelGame = (gameId, beforeDeleteCallback, afterDeleteCallback) =>
             if (!result.value) {
                 return;
             }
-            beforeDeleteCallback();
             $.ajax({
                 method: 'DELETE',
-                url: '/api/games/delete/' + gameId,
+                url: '/api/games/cancel/' + gameId,
                 contentType: 'application/json',
                 cache: false,
                 success: function (result) {
-                    afterDeleteCallback();
+                    callback();
                 },
                 error: function (request, status, error) {
                     console.error('Cannot delete game', request.responseText, error);

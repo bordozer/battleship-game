@@ -22,6 +22,8 @@ const qs = require('query-string');
 const STEP_GAME_INIT = 'GAME_INIT';
 const STEP_WAITING_FOR_OPPONENT = 'WAITING_FOR_OPPONENT';
 const STEP_BATTLE = 'BATTLE';
+const STEP_FINISHED = 'FINISHED';
+const STEP_CANCELLED = 'CANCELLED';
 
 const NO_EVENT = 'NO_EVENT';
 
@@ -140,20 +142,18 @@ class Layout extends React.Component {
     onCancelGameClick = () => {
         const gameId = this.state.gameplay.gameId;
         const playerId = this.state.player.playerId;
-        const beforeDeleteCallback = function () {
+        const callback = function () {
             notifyAboutGameEvent(gameId, playerId, 'PLAYER_CANCELLED_GAME');
-        }.bind(this);
-        const afterDeleteCallback = function () {
             disconnect();
             this.props.history.push("/");
         }.bind(this);
-        cancelGame(gameId, beforeDeleteCallback, afterDeleteCallback);
+        cancelGame(gameId, callback);
     };
 
     connect = (eventType) => {
         const gameId = this.state.gameplay.gameId;
         const playerId = this.state.player.playerId;
-        connect(gameId, playerId, eventType, this.updateGameState.bind(self), this.notification.bind(self));
+        connect(gameId, playerId, eventType, this.updateGameState.bind(this), this.notification.bind(this));
     };
 
     getInitialState = (state) => {
@@ -211,7 +211,16 @@ class Layout extends React.Component {
     };
 
     stateUpdateCallback = () => {
+        const gameState = this.state.gameplay.step;
         const winner = this.state.gameplay.winner;
+        if (gameState === STEP_CANCELLED) {
+            Swal.fire(
+                'You have won',
+                'Your opponent has cancelled the game (gave up)',
+                'success'
+            );
+            disconnect();
+        }
         if (winner === 'player') {
             Swal.fire(
                 'You have won',

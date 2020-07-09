@@ -25,6 +25,7 @@ import static com.bordozer.battleship.multiplayer.converter.CellConverter.conver
 import static com.bordozer.battleship.multiplayer.converter.GameConverter.toDto;
 import static com.bordozer.battleship.multiplayer.dto.battle.PlayerType.PLAYER1;
 import static com.bordozer.battleship.multiplayer.model.GameState.BATTLE;
+import static com.bordozer.battleship.multiplayer.model.GameState.CANCELLED;
 import static com.bordozer.battleship.multiplayer.model.GameState.FINISHED;
 import static com.bordozer.battleship.multiplayer.model.GameState.OPEN;
 import static com.bordozer.battleship.multiplayer.utils.RandomUtils.randomizeFirstMove;
@@ -49,9 +50,13 @@ public class GameServiceImpl implements GameService {
                     if (state == FINISHED) {
                         return false;
                     }
+                    if (state == CANCELLED) {
+                        return false;
+                    }
                     if (state == OPEN) {
                         return true;
                     }
+                    // state is BATTLE
                     return game.getPlayer1Id().equals(playerId) || (game.getPlayer2Id() != null && game.getPlayer2Id().equals(playerId));
                 })
                 .map(this::convertToDto)
@@ -59,7 +64,7 @@ public class GameServiceImpl implements GameService {
     }
 
     @Override
-    public GameDto create(final String playerId, final ArrayList<ArrayList<CellDto>> cells) {
+    public GameDto createGame(final String playerId, final ArrayList<ArrayList<CellDto>> cells) {
         final var gameId = identityService.generateForGame();
         final var game = Game.builder()
                 .gameId(gameId)
@@ -104,19 +109,6 @@ public class GameServiceImpl implements GameService {
         return playerService.getById(playerId).getName();
     }
 
-    private boolean canJoin(final String gameId, final String playerId) {
-        final var aGame = GAME_MAP.get(gameId);
-        return isJoinNewOpenGame(aGame) || isRejoinPlayer2(playerId, aGame);
-    }
-
-    private boolean isJoinNewOpenGame(final Game aGame) {
-        return aGame.getState() == OPEN && aGame.getPlayer2Id() == null;
-    }
-
-    private boolean isRejoinPlayer2(final String playerId, final Game aGame) {
-        return aGame.getState() == BATTLE && playerId.equals(aGame.getPlayer2Id());
-    }
-
     @Override
     public Game getGame(final String gameId) {
         if (!GAME_MAP.containsKey(gameId)) {
@@ -132,10 +124,23 @@ public class GameServiceImpl implements GameService {
     }
 
     @Override
-    public void delete(final String gameId, final String playerId) {
+    public void cancelGame(final String gameId, final String playerId) {
         final var game = getGame(gameId);
         assertAccess(game, playerId);
-        GAME_MAP.remove(gameId);
+        game.setState(CANCELLED);
+    }
+
+    private boolean canJoin(final String gameId, final String playerId) {
+        final var aGame = GAME_MAP.get(gameId);
+        return isJoinNewOpenGame(aGame) || isRejoinPlayer2(playerId, aGame);
+    }
+
+    private boolean isJoinNewOpenGame(final Game aGame) {
+        return aGame.getState() == OPEN && aGame.getPlayer2Id() == null;
+    }
+
+    private boolean isRejoinPlayer2(final String playerId, final Game aGame) {
+        return aGame.getState() == BATTLE && playerId.equals(aGame.getPlayer2Id());
     }
 
     private GameDto convertToDto(final String gameId) {

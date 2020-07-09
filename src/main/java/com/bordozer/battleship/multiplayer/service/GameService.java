@@ -12,7 +12,7 @@ public interface GameService {
 
     List<GameDto> getGames(final String playerId);
 
-    GameDto create(String player1Id, final ArrayList<ArrayList<CellDto>> cells);
+    GameDto createGame(String player1Id, final ArrayList<ArrayList<CellDto>> cells);
 
     void joinGame(String gameId, String player2Id, final ArrayList<ArrayList<CellDto>> cells);
 
@@ -20,5 +20,5 @@ public interface GameService {
 
     GamePlayers getGamePlayers(String gameId);
 
-    void delete(String gameId, final String playerId);
+    void cancelGame(String gameId, final String playerId);
 }

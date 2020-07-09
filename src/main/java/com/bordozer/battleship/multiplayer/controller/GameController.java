@@ -44,7 +44,7 @@ public class GameController {
                                                  final HttpServletRequest request) {
         final var playerId = getPlayerId(request);
         LOGGER.info("Player \"{}\" created a game", playerId);
-        final var game = gameService.create(playerId, cells);
+        final var game = gameService.createGame(playerId, cells);
         return new ResponseEntity<>(game, HttpStatus.OK);
     }
 
@@ -58,11 +58,11 @@ public class GameController {
         return new ResponseEntity<>(Ok.of(), HttpStatus.OK);
     }
 
-    @DeleteMapping(path = "/delete/{gameId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Ok> deleteGame(@PathVariable("gameId") final String gameId, final HttpServletRequest request) {
+    @DeleteMapping(path = "/cancel/{gameId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Ok> cancelGame(@PathVariable("gameId") final String gameId, final HttpServletRequest request) {
         final var playerId = getPlayerId(request);
         LOGGER.info("Player \"{}\" deleted a game \"{}\"", playerId, gameId);
-        gameService.delete(gameId, playerId);
+        gameService.cancelGame(gameId, playerId);
         return new ResponseEntity<>(Ok.of(), HttpStatus.OK);
     }
 

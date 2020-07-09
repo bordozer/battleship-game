@@ -52,9 +52,9 @@ public class BattleServiceImpl implements BattleService {
         final var battle = game.getBattle();
 
         final var isForPlayer1 = isForPlayer1(forPlayerId, game);
-        final var isGameFinished = game.getState() == GameState.FINISHED;
-        final var player = getPlayerDto(game, isForPlayer1 || isGameFinished);
-        final var enemy = getEnemyDto(game, !isForPlayer1 || isGameFinished);
+        final var showEnemyShips = (game.getState() == GameState.FINISHED || game.getState() == GameState.CANCELLED);
+        final var player = getPlayerDto(game, isForPlayer1 || showEnemyShips);
+        final var enemy = getEnemyDto(game, !isForPlayer1 || showEnemyShips);
 
         return BattleDto.builder()
                 .player(isForPlayer1 ? player : enemy)

@@ -35,7 +35,7 @@ function cellCss(cell, options) {
     }
 
     // show enemy's healthy ships at the end
-    if (isEnemy && stage === 'FINISHED' && cell.ship && !cell.isHit) {
+    if (isEnemy && (stage === 'FINISHED' || stage === 'CANCELLED') && cell.ship && !cell.isHit) {
         result.push('cell-ship');
     }
 
@@ -85,7 +85,7 @@ function getIcon(cell, options) {
             <FontAwesomeIcon icon={faHourglass} />
         );
     }
-    if (isEnemy && stage === 'FINISHED' && cell.ship && !cell.isHit) {
+    if (isEnemy && (stage === 'FINISHED' || stage === 'CANCELLED') && cell.ship && !cell.isHit) {
         return (
             <FontAwesomeIcon icon={faSmile} />
         );

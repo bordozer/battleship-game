@@ -15,6 +15,7 @@ import javax.annotation.CheckForNull;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.bordozer.battleship.multiplayer.dto.EventType.PLAYER_DID_MOVE;
 import static com.google.common.collect.Lists.newArrayList;
 
 @Slf4j
@@ -36,6 +37,7 @@ public class NotificationServiceImpl implements NotificationService {
         return GameNotificationDto.builder()
                 .gameId(gameId)
                 .playerId(notifiablePlayer.getId())
+                .eventType(eventType)
                 .messages(getMessages(eventType, eventProducerPlayerId))
                 .build();
     }
@@ -51,6 +53,7 @@ public class NotificationServiceImpl implements NotificationService {
         return GameNotificationDto.builder()
                 .gameId(gameId)
                 .playerId(notifiablePlayer.getId())
+                .eventType(PLAYER_DID_MOVE)
                 .messages(getMoveMessages(moveLogs))
                 .build();
     }
