@@ -244,7 +244,7 @@ class Layout extends React.Component {
         if (winner === 'enemy') {
             Swal.fire(
                 'You lose',
-                'Congratulations, ' + this.state.enemy.playerName,
+                'Congratulations to ' + this.state.enemy.playerName,
                 'error'
             );
             disconnect();
