@@ -13,6 +13,7 @@ import ShipsStateRenderer from 'components/ships-state';
 import LogsRenderer from 'components/logs-renderer';
 import {getUserIdFromCookie} from 'src/utils/cookies-utils';
 import {createGame, joinGame, cancelGame} from 'src/utils/game-flow';
+import {showNotification} from 'src/utils/notification';
 
 import Swal from 'sweetalert2';
 
@@ -201,36 +202,7 @@ class Layout extends React.Component {
     };
 
     notification = (notification) => {
-        if (!('Notification' in window)) {
-            return;
-        }
-        const self = this;
-
-        const notificationText = notification.messages.join('\n');
-
-        if (Notification.permission === 'granted') {
-            self.spawnNotification(notificationText);
-            return;
-        }
-        if (Notification.permission !== 'denied') {
-            Notification.requestPermission()
-                .then(function (permission) {
-                    if (permission === 'granted') {
-                        self.spawnNotification(notificationText);
-                    }
-                });
-        }
-    };
-
-    spawnNotification = (notificationText) => {
-        const options = {
-            body: 'Battleship game',
-            tag: "battle"
-        };
-        const n = new Notification(notificationText, options);
-        setTimeout(() => {
-            n.close();
-        }, 3000);
+        showNotification(notification);
     };
 
     stateUpdateCallback = () => {
