@@ -1,7 +1,7 @@
 /* jshint esversion: 6 */
 import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faAnchor, faCrosshairs, faBullseye, faSkull, faSkullCrossbones } from '@fortawesome/free-solid-svg-icons';
+import { faAnchor, faHourglass, faCrosshairs, faBullseye, faSkull, faSkullCrossbones } from '@fortawesome/free-solid-svg-icons';
 import { faSmile, faCircle, faDotCircle } from '@fortawesome/free-regular-svg-icons';
 import _ from 'underscore';
 
@@ -82,7 +82,7 @@ function getIcon(cell, options) {
 
     if (options.stage === null || (isEnemy && (stage === 'GAME_INIT' || stage === 'WAITING_FOR_OPPONENT'))) {
         return (
-            <FontAwesomeIcon icon={faAnchor} />
+            <FontAwesomeIcon icon={faHourglass} />
         );
     }
     if (isEnemy && stage === 'FINISHED' && cell.ship && !cell.isHit) {
