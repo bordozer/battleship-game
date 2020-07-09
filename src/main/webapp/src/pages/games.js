@@ -26,11 +26,13 @@ export default class GamesPage extends Component {
         this.state.games.forEach(game => {
             result.push(
                 <div key={game.gameId} className="row">
-                    <div className="col-2" />
-                    <div className="col-8">
-                        <Link to={"/battle?gameId=" + game.gameId}>{game.gameId}</Link>
+                    <div className="col-1" />
+                    <div className="col-9">
+                        <h4>
+                            <Link to={"/battle?gameId=" + game.gameId}>{game.player1.name + ' vs ' + (game.player2 ? game.player2.name : '???')}</Link>
+                        </h4>
                     </div>
-                    <div className="col-2" />
+                    <div className="col-1" />
                 </div>
             )
         });
@@ -48,7 +50,7 @@ export default class GamesPage extends Component {
                             <a href="https://bordozer.github.io/" title="Play solo">bordozer.github.io</a>
                         </p>
                     </div>
-                    <div className="col-6 text-center">
+                    <div className="col-6">
                         {this.renderGames()}
                     </div>
                     <div className="col-3" />
