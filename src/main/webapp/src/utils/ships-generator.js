@@ -100,8 +100,5 @@ export const generateShips = (cells) => {
             setNeighborCellsProperty(cells, cell, 'isShipNeighbor');
         });
     });
-    return {
-        cells: cells,
-        ships: ships
-    };
+    return ships;
 };

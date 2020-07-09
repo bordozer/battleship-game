@@ -1,10 +1,15 @@
 /* jshint esversion: 6 */
 import React from 'react';
-import { withRouter } from "react-router-dom";
-import $ from 'jquery';
+import {withRouter} from 'react-router-dom';
 
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {faShip, faTrashAlt, faUserCheck, faUserPlus} from '@fortawesome/free-solid-svg-icons';
+import {
+    faShip,
+    faSpinner,
+    faTrashAlt,
+    faUserCheck,
+    faUserPlus
+} from '@fortawesome/free-solid-svg-icons';
 
 import {initBattleFieldCells} from 'src/utils/battle-field-utils';
 import {generateShips} from 'src/utils/ships-generator';
@@ -12,7 +17,7 @@ import BattleFieldRenderer from 'components/battle-field-renderer';
 import ShipsStateRenderer from 'components/ships-state';
 import LogsRenderer from 'components/logs-renderer';
 import {getUserIdFromCookie} from 'src/utils/cookies-utils';
-import {createGame, joinGame, cancelGame} from 'src/utils/game-flow';
+import {cancelGame, createGame, getGameState, joinGame} from 'src/utils/game-flow';
 import {showNotification} from 'src/utils/notification';
 
 import Swal from 'sweetalert2';
@@ -73,42 +78,42 @@ function disconnect() {
     if (stompClient !== null) {
         stompClient.disconnect();
     }
-    // console.log("Disconnected");
 }
 
 class Layout extends React.Component {
 
-    constructor(props) {
+    /*constructor(props) {
         super(props);
-        this.state = this.getInitialState(null);
-    }
+    }*/
 
     componentDidMount() {
         const gameId = qs.parse(location.search).gameId;
-        fetch('/api/whoami')
-            .then(response => response.json())
-            .then(data => {
-                this.setState({
-                    player: {
-                        playerId: data.player.id,
-                        playerName: data.player.name,
-                        cells: this.state.player.cells,
-                        ships: this.state.player.ships,
-                        lastShot: null,
-                        damagedShipCells: []
-                    },
-                    gameplay: {
-                        gameId: gameId,
-                        step: STEP_GAME_INIT,
-                        currentMove: null,
-                        winner: null
-                    }
+        if (!gameId) {
+            // No game on server yet - local state init
+            fetch('/api/whoami')
+                .then(response => response.json())
+                .then(data => {
+                    const player = data.player;
+                    this.setState(this.getInitialState(null));
                 });
-                if (gameId !== '' && data.player.id === getUserIdFromCookie()) {
-                    this.connect(NO_EVENT);
-                }
-                // console.log("PlayerId: ", data.player.id, 'Player name: ', data.player.name);
-            });
+            return;
+        }
+
+        const self = this;
+        const callback = function (state) {
+            if (state.player.ships.length === 0) {
+                // Player2 entered the game, but no his state on server yet
+                const cells = initBattleFieldCells(10);
+                const ships = generateShips(cells);
+                state.player.cells = cells;
+                state.player.ships = ships;
+            }
+            self.setState(state);
+            if (state.player.playerId === getUserIdFromCookie()) {
+                this.connect(NO_EVENT);
+            }
+        }.bind(this);
+        getGameState(gameId, callback);
     }
 
     onGenerateShipsClick = () => {
@@ -145,7 +150,7 @@ class Layout extends React.Component {
         const callback = function () {
             notifyAboutGameEvent(gameId, playerId, 'PLAYER_CANCELLED_GAME');
             disconnect();
-            this.props.history.push("/");
+            this.props.history.push('/');
         }.bind(this);
         cancelGame(gameId, callback);
     };
@@ -157,13 +162,16 @@ class Layout extends React.Component {
     };
 
     getInitialState = (state) => {
-        const playerData = this.randomizeBattleFieldWithShips();
+        const cells = initBattleFieldCells(10);
+        const ships = generateShips(cells);
+        const playerId = state ? state.player.playerId : null;
+
         return {
             player: {
-                playerId: state ? state.player.playerId : null,
+                playerId: playerId,
                 playerName: state ? state.player.playerId : 'Player',
-                cells: playerData.cells,
-                ships: playerData.ships,
+                cells: cells,
+                ships: ships,
                 lastShot: null,
                 damagedShipCells: []
             },
@@ -181,17 +189,13 @@ class Layout extends React.Component {
             },
             gameplay: {
                 gameId: state ? state.gameplay.gameId : '',
-                step: STEP_GAME_INIT, /* TODO: for player2 is WAITING_FOR_OPPONENT */
+                creatorPlayerId: playerId,
+                step: STEP_GAME_INIT,
                 currentMove: null,
                 winner: null
             },
             logs: []
         };
-    };
-
-    randomizeBattleFieldWithShips = () => {
-        const cells = initBattleFieldCells(10);
-        return generateShips(cells);
     };
 
     playerCellSetup = (cell) => {
@@ -240,18 +244,32 @@ class Layout extends React.Component {
     };
 
     render() {
-        // console.log('this.state', JSON.stringify(this.state));
+        if (!this.state) {
+            return (
+                <div>
+                    <div className='row'>
+                        <div className='col-12 fa-10x text-muted text-center'>
+                            <FontAwesomeIcon icon={faSpinner} className='fa-spin'/>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+        console.log('this.state', JSON.stringify(this.state));
 
-        const step = this.state.gameplay.step;
-        const currentMove = this.state.gameplay.currentMove;
-        const difficulty = this.state.config.difficulty;
+        const gameplay = this.state.gameplay;
+        const currentMove = gameplay.currentMove;
+        const gameId = gameplay.gameId;
+        const player = this.state.player;
+        const enemy = this.state.enemy;
+        const gameStep = gameplay.step;
 
         const playerBattleFieldOpts = {
             isPlayer: true,
-            stage: step,
-            lastShot: this.state.enemy.lastShot,
+            stage: gameStep,
+            lastShot: enemy.lastShot,
             currentMove: currentMove,
-            highlightBattleArea: step === STEP_BATTLE && currentMove === 'enemy',
+            highlightBattleArea: gameStep === STEP_BATTLE && currentMove === 'enemy',
             recommendedShots: {
                 shots: [],
                 strategy: null
@@ -260,37 +278,39 @@ class Layout extends React.Component {
 
         const enemyBattleFieldOpts = {
             isPlayer: false,
-            stage: step,
-            lastShot: this.state.player.lastShot,
+            stage: gameStep,
+            lastShot: player.lastShot,
             recommendedShots: {
                 shots: [],
                 strategy: null
             },
-            highlightBattleArea: step === STEP_BATTLE && currentMove === 'player',
+            highlightBattleArea: gameStep === STEP_BATTLE && currentMove === 'player',
             currentMove: currentMove,
         };
 
-        const btnShips = this.state.gameplay.step === STEP_GAME_INIT;
-        const btnCreateGame = this.state.gameplay.gameId === '' && this.state.gameplay.step === STEP_GAME_INIT;
-        const btnJoinGame = this.state.gameplay.gameId !== '' && this.state.gameplay.step === STEP_GAME_INIT;
-        const btnCancelGame = this.state.gameplay.step !== STEP_GAME_INIT;
+        const isGameCreator = player.playerId === gameplay.creatorPlayerId;
+        const btnShips = (gameStep === STEP_GAME_INIT)
+            || (gameStep === STEP_WAITING_FOR_OPPONENT && !isGameCreator);
+        const btnCreateGame = gameId === '' && gameStep === STEP_GAME_INIT;
+        const btnJoinGame = gameId !== '' && gameStep === STEP_WAITING_FOR_OPPONENT && !isGameCreator;
+        const btnCancelGame = (gameStep === STEP_WAITING_FOR_OPPONENT) || (gameStep === STEP_BATTLE);
 
         return (
             <div>
                 <div className="row mt-10">
                     <div className="col-sm-1">
                         <ShipsStateRenderer
-                            playerName={this.state.player.playerName}
-                            ships={this.state.player.ships}
+                            playerName={player.playerName}
+                            ships={player.ships}
                             isPlayer={true}
-                            winner={this.state.gameplay.winner}
+                            winner={gameplay.winner}
                         />
                     </div>
                     <div
                         className={'col-sm-5' + (playerBattleFieldOpts.highlightBattleArea ? '' : ' disabledArea')}
                         disabled={playerBattleFieldOpts.highlightBattleArea}>
                         <BattleFieldRenderer
-                            cells={this.state.player.cells}
+                            cells={player.cells}
                             options={playerBattleFieldOpts}
                             onCellClick={this.playerCellSetup}
                         />
@@ -299,17 +319,17 @@ class Layout extends React.Component {
                         className={'col-sm-5' + (enemyBattleFieldOpts.highlightBattleArea ? '' : ' disabledArea')}
                         disabled={enemyBattleFieldOpts.highlightBattleArea}>
                         <BattleFieldRenderer
-                            cells={this.state.enemy.cells}
+                            cells={enemy.cells}
                             options={enemyBattleFieldOpts}
                             onCellClick={this.playerShot}
                         />
                     </div>
                     <div className="col-sm-1">
                         <ShipsStateRenderer
-                            playerName={this.state.enemy.playerName}
-                            ships={this.state.enemy.ships}
+                            playerName={enemy.playerName}
+                            ships={enemy.ships}
                             isPlayer={false}
-                            winner={this.state.gameplay.winner}
+                            winner={gameplay.winner}
                         />
                     </div>
                 </div>

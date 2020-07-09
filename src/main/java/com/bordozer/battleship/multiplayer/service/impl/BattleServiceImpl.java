@@ -18,6 +18,7 @@ import com.bordozer.battleship.multiplayer.service.BattlefieldService;
 import com.bordozer.battleship.multiplayer.service.GameService;
 import com.bordozer.battleship.multiplayer.service.PlayerService;
 import com.bordozer.battleship.multiplayer.utils.CellUtils;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -55,12 +56,13 @@ public class BattleServiceImpl implements BattleService {
         final var showEnemyShips = (game.getState() == GameState.FINISHED || game.getState() == GameState.CANCELLED);
         final var player = getPlayerDto(game, isForPlayer1 || showEnemyShips);
         final var enemy = getEnemyDto(game, !isForPlayer1 || showEnemyShips);
+        final var creatorPlayerId = game.getPlayer1Id();
 
         return BattleDto.builder()
                 .player(isForPlayer1 ? player : enemy)
                 .enemy(isForPlayer1 ? enemy : player)
                 .config(getGameConfig())
-                .gameplay(getGameplay(game, forPlayerId))
+                .gameplay(getGameplay(game, creatorPlayerId, forPlayerId))
                 .logs(LogConverter.getLogs(battle.getLogs()))
                 .build();
     }
@@ -125,10 +127,11 @@ public class BattleServiceImpl implements BattleService {
                 .build();
     }
 
-    private GameplayDto getGameplay(final Game game, final String forPlayerId) {
+    private GameplayDto getGameplay(final Game game, final String creatorPlayerId, final String forPlayerId) {
         final var gameId = game.getGameId();
         return GameplayDto.builder()
                 .gameId(gameId)
+                .creatorPlayerId(creatorPlayerId)
                 .step(convertGameState(game.getState()))
                 .currentMove(calculateCurrentMove(game, forPlayerId))
                 .winner(calculateWinner(game, forPlayerId))

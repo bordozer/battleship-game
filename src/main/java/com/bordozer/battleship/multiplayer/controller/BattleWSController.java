@@ -31,8 +31,8 @@ public class BattleWSController {
     public void onGameEvent(final GameEventDto gameEvent) {
         LOGGER.info("WS/game-event-in \"{}\"", LoggableJson.of(gameEvent));
 
-        final var notification = notificationService.gameEvent(gameEvent.getGameId(), gameEvent.getPlayerId(), gameEvent.getEventType());
         sendGameStateToPlayers(gameEvent.getGameId(), gameEvent.getPlayerId());
+        final var notification = notificationService.gameEvent(gameEvent.getGameId(), gameEvent.getPlayerId(), gameEvent.getEventType());
         sendNotification(notification);
     }
 

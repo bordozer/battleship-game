@@ -18,6 +18,8 @@ public abstract class GameplayDto {
 
     public abstract String getGameId();
 
+    public abstract String getCreatorPlayerId();
+
     public abstract GameStep getStep();
 
     @CheckForNull

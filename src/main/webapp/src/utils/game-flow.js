@@ -2,6 +2,18 @@
 import Swal from 'sweetalert2';
 import $ from 'jquery';
 
+export const getGameState = (gameId, callback) => {
+    $.ajax({
+        method: 'GET',
+        url: '/api/battle/' + gameId,
+        contentType: 'application/json',
+        cache: false,
+        success: function (result) {
+            callback(result);
+        }
+    });
+}
+
 export const createGame = (cells, callback) => {
     $.ajax({
         method: 'POST',
