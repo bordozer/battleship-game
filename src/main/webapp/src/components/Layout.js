@@ -79,40 +79,17 @@ class Layout extends React.Component {
 
     componentDidMount() {
         const gameId = qs.parse(location.search).gameId;
-        const self = this;
 
         fetch('/api/whoami')
             .then(response => response.json())
             .then(data => {
-                // console.log('====== data1', data);
-                if (!gameId) {
-                    this.setState(this.getInitialState(data.player));
-                }
-                return data;
-            })
-            .then(data => {
-                console.log('====== data2', data);
                 if (gameId) {
-                    const callback = function (serverState) {
-                        if (serverState.player.ships.length === 0) {
-                            // Player2 entered the game, but no his state on server yet
-                            const cells = initBattleFieldCells(10);
-                            const ships = generateShips(cells);
-                            serverState.player.playerId = data.player.id;
-                            serverState.player.playerName = data.player.name;
-                            serverState.player.cells = cells;
-                            serverState.player.ships = ships;
-                        }
-                        self.setState(serverState);
-                        if (serverState.player.playerId === getUserIdFromCookie()) {
-                            this.connect(NO_EVENT);
-                        }
-                    }.bind(this);
-
-                    getGameState(gameId, callback);
+                    this.setGameStateFromServer(gameId, data.player);
+                    return;
                 }
+                this.setState(this.getInitialState(data.player));
             });
-    }
+    };
 
     onGenerateShipsClick = () => {
         const cells = initBattleFieldCells(10);
@@ -208,6 +185,25 @@ class Layout extends React.Component {
             },
             logs: []
         };
+    };
+
+    setGameStateFromServer = (gameId, player) => {
+        const callback = function (serverState) {
+            if (serverState.player.ships.length === 0) {
+                const cells = initBattleFieldCells(10);
+                const ships = generateShips(cells);
+                serverState.player.playerId = player ? player.id : serverState.player.playerId;
+                serverState.player.playerName = player ? player.name : serverState.player.playerName;
+                serverState.player.cells = cells;
+                serverState.player.ships = ships;
+            }
+            this.setState(serverState);
+            if (serverState.player.playerId === getUserIdFromCookie()) {
+                this.connect(NO_EVENT);
+            }
+        }.bind(this);
+
+        getGameState(gameId, callback);
     };
 
     playerCellSetup = (cell) => {
