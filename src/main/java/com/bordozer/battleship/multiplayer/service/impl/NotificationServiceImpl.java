@@ -60,6 +60,8 @@ public class NotificationServiceImpl implements NotificationService {
         switch (eventType) {
             case PLAYER_JOINED_GAME:
                 return newArrayList(String.format("%s joined the game", eventProducerPlayer.getName()));
+            case PLAYER_CANCELLED_GAME:
+                return newArrayList(String.format("%s cancelled the game", eventProducerPlayer.getName()));
             default:
                 throw new IllegalStateException(String.format("Unsupported game event type: '%s'", eventType));
         }

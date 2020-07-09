@@ -138,11 +138,16 @@ class Layout extends React.Component {
     };
 
     onCancelGameClick = () => {
-        const callback = function () {
+        const gameId = this.state.gameplay.gameId;
+        const playerId = this.state.player.playerId;
+        const beforeDeleteCallback = function () {
+            notifyAboutGameEvent(gameId, playerId, 'PLAYER_CANCELLED_GAME');
+        }.bind(this);
+        const afterDeleteCallback = function () {
             disconnect();
             this.props.history.push("/");
         }.bind(this);
-        cancelGame(this.state.gameplay.gameId, callback);
+        cancelGame(gameId, beforeDeleteCallback, afterDeleteCallback);
     };
 
     connect = (eventType) => {
