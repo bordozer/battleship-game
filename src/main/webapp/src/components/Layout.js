@@ -12,7 +12,7 @@ import BattleFieldRenderer from 'components/battle-field-renderer';
 import ShipsStateRenderer from 'components/ships-state';
 import LogsRenderer from 'components/logs-renderer';
 import {getUserIdFromCookie} from 'src/utils/cookies-utils';
-import {cancelGame} from 'src/utils/game-flow';
+import {createGame, joinGame, cancelGame} from 'src/utils/game-flow';
 
 import Swal from 'sweetalert2';
 
@@ -115,51 +115,25 @@ class Layout extends React.Component {
     };
 
     onCreateGameClick = () => {
-        const self = this;
-        $.ajax({
-            method: 'POST',
-            url: '/api/games/create',
-            contentType: 'application/json',
-            data: JSON.stringify(this.state.player.cells),
-            cache: false,
-            success: function (result) {
-                self.setState({
-                    gameplay: {
-                        gameId: result.gameId,
-                        step: STEP_WAITING_FOR_OPPONENT,
-                        currentMove: null,
-                        winner: null
-                    }
-                });
-                // console.log("Game is created");
-                self.connect(NO_EVENT);
-            }
-        });
+        const callback = function (gameId) {
+            this.setState({
+                gameplay: {
+                    gameId: gameId,
+                    step: STEP_WAITING_FOR_OPPONENT,
+                    currentMove: null,
+                    winner: null
+                }
+            });
+            this.connect(NO_EVENT);
+        }.bind(this);
+        createGame(this.state.player.cells, callback);
     };
 
     onJoinGameClick = () => {
-        // console.log("About to join a game");
-        const self = this;
-        $.ajax({
-            method: 'PUT',
-            url: '/api/games/join/' + this.state.gameplay.gameId,
-            contentType: 'application/json',
-            data: JSON.stringify(this.state.player.cells),
-            cache: false,
-            success: function (result) {
-                // console.log("Joined to game:", result);
-                self.connect('PLAYER_JOINED_GAME');
-            },
-            error: function (request, status, error) {
-                console.error('Cannot join game', request.responseText, error);
-            }
-        });
-    };
-
-    connect = (eventType) => {
-        const gameId = this.state.gameplay.gameId;
-        const playerId = this.state.player.playerId;
-        connect(gameId, playerId, eventType, this.updateGameState.bind(self), this.notification.bind(self));
+        const callback = function (result) {
+            this.connect('PLAYER_JOINED_GAME');
+        }.bind(this);
+        joinGame(this.state.gameplay.gameId, this.state.player.cells, callback);
     };
 
     onCancelGameClick = () => {
@@ -168,20 +142,12 @@ class Layout extends React.Component {
             this.props.history.push("/");
         }.bind(this);
         cancelGame(this.state.gameplay.gameId, callback);
-        /*const self = this;
-        $.ajax({
-            method: 'DELETE',
-            url: '/api/games/delete/' + self.state.gameplay.gameId,
-            contentType: 'application/json',
-            cache: false,
-            success: function (result) {
-                disconnect();
-                self.props.history.push("/");
-            },
-            error: function (request, status, error) {
-                console.error('Cannot delete game', request.responseText, error);
-            }
-        });*/
+    };
+
+    connect = (eventType) => {
+        const gameId = this.state.gameplay.gameId;
+        const playerId = this.state.player.playerId;
+        connect(gameId, playerId, eventType, this.updateGameState.bind(self), this.notification.bind(self));
     };
 
     getInitialState = (state) => {
@@ -242,7 +208,6 @@ class Layout extends React.Component {
 
         const notificationText = notification.messages.join('\n');
 
-        // new Notification(notificationText);
         if (Notification.permission === 'granted') {
             self.spawnNotification(notificationText);
             return;
@@ -265,20 +230,10 @@ class Layout extends React.Component {
         const n = new Notification(notificationText, options);
         setTimeout(() => {
             n.close();
-        }, 2000);
+        }, 3000);
     };
 
     stateUpdateCallback = () => {
-        /*const step = this.state.gameplay.step;
-        if (step === STEP_CANCELLED) {
-            Swal.fire(
-                'Game has been cancelled',
-                "Congratulations",
-                'success'
-            );
-            disconnect();
-        }*/
-
         const winner = this.state.gameplay.winner;
         if (winner === 'player') {
             Swal.fire(
