@@ -1,6 +1,7 @@
 package com.bordozer.battleship.multiplayer;
 
 import com.bordozer.battleship.multiplayer.config.DevConfig;
+import com.bordozer.battleship.multiplayer.config.SinglePageAppConfig;
 import com.bordozer.battleship.multiplayer.config.WSConfigurer;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -9,7 +10,7 @@ import org.springframework.boot.web.servlet.support.SpringBootServletInitializer
 import org.springframework.context.annotation.Import;
 
 @SpringBootApplication
-@Import({WSConfigurer.class, DevConfig.class})
+@Import({SinglePageAppConfig.class, WSConfigurer.class, DevConfig.class})
 public class BattleshipApplication extends SpringBootServletInitializer {
 
     public static void main(String[] args) {

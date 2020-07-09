@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.annotation.CheckForNull;
 import javax.servlet.http.HttpServletRequest;
 
 import static com.bordozer.battleship.multiplayer.utils.RequestUtils.getPlayerId;
@@ -26,7 +25,7 @@ public class BattleController {
     private final BattleService battleService;
 
     @GetMapping(path = "{gameId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<BattleDto> games(@PathVariable(value = "gameId", required = false) @CheckForNull final String gameId, final HttpServletRequest request) {
+    public ResponseEntity<BattleDto> games(@PathVariable(value = "gameId") final String gameId, final HttpServletRequest request) {
         final var playerId = getPlayerId(request);
         LOGGER.info("Player \"{}\" requested game \"{}\" state", playerId, gameId);
         return new ResponseEntity<>(battleService.getGameState(gameId, playerId), HttpStatus.OK);
