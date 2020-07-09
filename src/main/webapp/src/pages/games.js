@@ -44,16 +44,11 @@ export default class GamesPage extends Component {
         return (
             <div>
                 <div className="row">
-                    <div className="col-3">
-                        <p>
-                            To play solo against AI visit<br />
-                            <a href="https://bordozer.github.io/" title="Play solo">bordozer.github.io</a>
-                        </p>
-                    </div>
-                    <div className="col-6">
+                    <div className="col-1" />
+                    <div className="col-10">
                         {this.renderGames()}
                     </div>
-                    <div className="col-3" />
+                    <div className="col-1" />
                 </div>
             </div>
         )
