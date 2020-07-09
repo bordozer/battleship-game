@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -110,6 +111,7 @@ public class GameServiceImpl implements GameService {
         final var gameId = identityService.generateForGame();
         final var game = Game.builder()
                 .gameId(gameId)
+                .created(LocalDateTime.now())
                 .player1Id(playerId)
                 .state(OPEN)
                 .battle(BattleUtils.initBattle(cells))

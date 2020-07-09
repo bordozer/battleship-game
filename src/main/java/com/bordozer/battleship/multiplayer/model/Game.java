@@ -7,6 +7,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import javax.annotation.CheckForNull;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -15,6 +16,8 @@ import javax.annotation.CheckForNull;
 public class Game {
     @NonNull
     private final String gameId;
+    @NonNull
+    private final LocalDateTime created;
     @NonNull
     private GameState state;
     @NonNull

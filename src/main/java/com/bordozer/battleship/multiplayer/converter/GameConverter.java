@@ -9,13 +9,17 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 import javax.annotation.CheckForNull;
+import java.time.format.DateTimeFormatter;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class GameConverter {
 
+    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
     public static GameDto toDto(final Game game, final GamePlayerDto player1, @CheckForNull final GamePlayerDto player2) {
         return GameDto.builder()
                 .gameId(game.getGameId())
+                .created(game.getCreated().format(FORMATTER))
                 .player1(player1)
                 .player2(player2)
                 .gameStep(convertGameState(game.getState()))

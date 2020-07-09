@@ -25,10 +25,11 @@ export default class GamesPage extends Component {
                 <div key={game.gameId} className="row">
                     <div className="col-1"/>
                     <div className="col-9">
-                        <h5>
-                            <Link
-                                to={'/battle?gameId=' + game.gameId}>{game.player1.name + ' vs ' + (game.player2 ? game.player2.name : '???')}</Link>
-                        </h5>
+                        <Link
+                            to={'/battle?gameId=' + game.gameId}>{game.player1.name + ' vs ' + (game.player2 ? game.player2.name : '???')}
+                        </Link>
+                        < br />
+                        <span className='small text-muted'>{game.created}</span>
                     </div>
                     <div className="col-1"/>
                 </div>
