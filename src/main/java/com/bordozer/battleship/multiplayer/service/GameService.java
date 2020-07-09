@@ -12,6 +12,10 @@ public interface GameService {
 
     List<GameDto> getGames(final String playerId);
 
+    List<GameDto> getPlayerGames(final String playerId);
+
+    List<GameDto> getOpenGames(final String playerId);
+
     GameDto createGame(String player1Id, final ArrayList<ArrayList<CellDto>> cells);
 
     void joinGame(String gameId, String player2Id, final ArrayList<ArrayList<CellDto>> cells);

@@ -64,6 +64,48 @@ public class GameServiceImpl implements GameService {
     }
 
     @Override
+    public List<GameDto> getPlayerGames(final String playerId) {
+        return GAME_MAP.keySet().stream()
+                .filter(gameId -> {
+                    final var game = GAME_MAP.get(gameId);
+                    final var state = game.getState();
+                    if (state == FINISHED) {
+                        return false;
+                    }
+                    if (state == CANCELLED) {
+                        return false;
+                    }
+                    return game.getPlayer1Id().equals(playerId) || (game.getPlayer2Id() != null && game.getPlayer2Id().equals(playerId));
+                })
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<GameDto> getOpenGames(final String playerId) {
+        return GAME_MAP.keySet().stream()
+                .filter(gameId -> {
+                    final var game = GAME_MAP.get(gameId);
+                    final var state = game.getState();
+                    if (state == FINISHED) {
+                        return false;
+                    }
+                    if (state == CANCELLED) {
+                        return false;
+                    }
+                    if (game.getPlayer1Id().equals(playerId)) {
+                        return false;
+                    }
+                    if (game.getPlayer2Id() != null && game.getPlayer2Id().equals(playerId)) {
+                        return false;
+                    }
+                    return state == OPEN;
+                })
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public GameDto createGame(final String playerId, final ArrayList<ArrayList<CellDto>> cells) {
         final var gameId = identityService.generateForGame();
         final var game = Game.builder()

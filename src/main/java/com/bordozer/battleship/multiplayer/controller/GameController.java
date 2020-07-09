@@ -1,6 +1,8 @@
 package com.bordozer.battleship.multiplayer.controller;
 
 import com.bordozer.battleship.multiplayer.dto.GameDto;
+import com.bordozer.battleship.multiplayer.dto.GamesForPlayerDto;
+import com.bordozer.battleship.multiplayer.dto.ImmutableGamesForPlayerDto;
 import com.bordozer.battleship.multiplayer.dto.battle.CellDto;
 import com.bordozer.battleship.multiplayer.service.GameService;
 import lombok.Getter;
@@ -33,10 +35,14 @@ public class GameController {
     private final GameService gameService;
 
     @GetMapping(path = "", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<GameDto>> games(final HttpServletRequest request) {
+    public ResponseEntity<GamesForPlayerDto> games(final HttpServletRequest request) {
         final var playerId = getPlayerId(request);
         LOGGER.info("Player \"{}\" listed games", playerId);
-        return new ResponseEntity<>(gameService.getGames(playerId), HttpStatus.OK);
+        final var result = GamesForPlayerDto.builder()
+                .playerGames(gameService.getPlayerGames(playerId))
+                .openGames(gameService.getOpenGames(playerId))
+                .build();
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @PostMapping(path = "/create", produces = MediaType.APPLICATION_JSON_VALUE)

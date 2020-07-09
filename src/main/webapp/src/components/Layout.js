@@ -19,6 +19,7 @@ import LogsRenderer from 'components/logs-renderer';
 import {getUserIdFromCookie} from 'src/utils/cookies-utils';
 import {cancelGame, createGame, getGameState, joinGame} from 'src/utils/game-flow';
 import {showNotification} from 'src/utils/notification';
+import Spinner from 'src/utils/spinner';
 
 import Swal from 'sweetalert2';
 
@@ -260,13 +261,7 @@ class Layout extends React.Component {
     render() {
         if (!this.state) {
             return (
-                <div>
-                    <div className='row'>
-                        <div className='col-12 fa-10x text-muted text-center'>
-                            <FontAwesomeIcon icon={faSpinner} className='fa-spin'/>
-                        </div>
-                    </div>
-                </div>
+                <Spinner />
             );
         }
         console.log('this.state', JSON.stringify(this.state));
