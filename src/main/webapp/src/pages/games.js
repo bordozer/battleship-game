@@ -18,7 +18,6 @@ export default class GamesPage extends Component {
                 this.setState({
                     games: data
                 });
-                console.log("Games: ", data);
             });
     }
 
@@ -27,11 +26,11 @@ export default class GamesPage extends Component {
         this.state.games.forEach(game => {
             result.push(
                 <div key={game.gameId} className="row">
-                    <div className="col-3" />
-                    <div className="col-6">
+                    <div className="col-2" />
+                    <div className="col-8">
                         <Link to={"/battle?gameId=" + game.gameId}>{game.gameId}</Link>
                     </div>
-                    <div className="col-3" />
+                    <div className="col-2" />
                 </div>
             )
         });

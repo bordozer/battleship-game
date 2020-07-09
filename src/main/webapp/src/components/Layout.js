@@ -1,5 +1,6 @@
 /* jshint esversion: 6 */
 import React from 'react';
+import { withRouter } from "react-router-dom";
 import $ from 'jquery';
 
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
@@ -71,7 +72,7 @@ function disconnect() {
     // console.log("Disconnected");
 }
 
-export default class Layout extends React.Component {
+class Layout extends React.Component {
 
     constructor(props) {
         super(props);
@@ -161,15 +162,15 @@ export default class Layout extends React.Component {
     };
 
     onCancelGameClick = () => {
-        // console.log("About to cancel game");
+        const self = this;
         $.ajax({
             method: 'DELETE',
             url: '/api/games/delete/' + this.state.gameplay.gameId,
             contentType: 'application/json',
             cache: false,
             success: function (result) {
-                // console.log("Game cancelled:", result);
                 disconnect();
+                self.props.history.push("/");
             },
             error: function (request, status, error) {
                 console.error('Cannot delete game', request.responseText, error);
@@ -411,3 +412,5 @@ export default class Layout extends React.Component {
         );
     }
 }
+
+export default withRouter(Layout);
