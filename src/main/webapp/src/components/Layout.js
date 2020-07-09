@@ -3,13 +3,7 @@ import React from 'react';
 import {withRouter} from 'react-router-dom';
 
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {
-    faShip,
-    faSpinner,
-    faTrashAlt,
-    faUserCheck,
-    faUserPlus
-} from '@fortawesome/free-solid-svg-icons';
+import {faShip, faTrashAlt, faUserCheck, faUserPlus} from '@fortawesome/free-solid-svg-icons';
 
 import {initBattleFieldCells} from 'src/utils/battle-field-utils';
 import {generateShips} from 'src/utils/ships-generator';
@@ -83,38 +77,41 @@ function disconnect() {
 
 class Layout extends React.Component {
 
-    /*constructor(props) {
-        super(props);
-    }*/
-
     componentDidMount() {
         const gameId = qs.parse(location.search).gameId;
-        if (!gameId) {
-            // No game on server yet - local state init
-            fetch('/api/whoami')
-                .then(response => response.json())
-                .then(data => {
-                    console.log("====== data", data);
-                    this.setState(this.getInitialState(data.player));
-                });
-            return;
-        }
-
         const self = this;
-        const callback = function (state) {
-            if (state.player.ships.length === 0) {
-                // Player2 entered the game, but no his state on server yet
-                const cells = initBattleFieldCells(10);
-                const ships = generateShips(cells);
-                state.player.cells = cells;
-                state.player.ships = ships;
-            }
-            self.setState(state);
-            if (state.player.playerId === getUserIdFromCookie()) {
-                this.connect(NO_EVENT);
-            }
-        }.bind(this);
-        getGameState(gameId, callback);
+
+        fetch('/api/whoami')
+            .then(response => response.json())
+            .then(data => {
+                // console.log('====== data1', data);
+                if (!gameId) {
+                    this.setState(this.getInitialState(data.player));
+                }
+                return data;
+            })
+            .then(data => {
+                console.log('====== data2', data);
+                if (gameId) {
+                    const callback = function (serverState) {
+                        if (serverState.player.ships.length === 0) {
+                            // Player2 entered the game, but no his state on server yet
+                            const cells = initBattleFieldCells(10);
+                            const ships = generateShips(cells);
+                            serverState.player.playerId = data.player.id;
+                            serverState.player.playerName = data.player.name;
+                            serverState.player.cells = cells;
+                            serverState.player.ships = ships;
+                        }
+                        self.setState(serverState);
+                        if (serverState.player.playerId === getUserIdFromCookie()) {
+                            this.connect(NO_EVENT);
+                        }
+                    }.bind(this);
+
+                    getGameState(gameId, callback);
+                }
+            });
     }
 
     onGenerateShipsClick = () => {
@@ -176,7 +173,7 @@ class Layout extends React.Component {
     };
 
     getInitialState = (player) => {
-        console.log("====== player", player);
+        // console.log('====== player', player);
         const cells = initBattleFieldCells(10);
         const ships = generateShips(cells);
 
@@ -261,7 +258,7 @@ class Layout extends React.Component {
     render() {
         if (!this.state) {
             return (
-                <Spinner />
+                <Spinner/>
             );
         }
         console.log('this.state', JSON.stringify(this.state));
