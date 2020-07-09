@@ -22,12 +22,12 @@ import static com.bordozer.battleship.multiplayer.utils.RequestUtils.getPlayerId
 @RequiredArgsConstructor
 @RestController()
 @RequestMapping("/api/whoami")
-public class UserController {
+public class PlayerController {
 
     private final PlayerService playerService;
 
     @GetMapping(path = "", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<WhoAmIDto> games(final HttpServletRequest request, final HttpServletResponse response) {
+    public ResponseEntity<WhoAmIDto> whoami(final HttpServletRequest request, final HttpServletResponse response) {
         final var playerId = getPlayerId(request);
         LOGGER.info("Player \"{}\" called whoami", playerId);
         addPlayerCookies(response, playerId);

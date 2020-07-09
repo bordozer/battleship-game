@@ -93,8 +93,8 @@ class Layout extends React.Component {
             fetch('/api/whoami')
                 .then(response => response.json())
                 .then(data => {
-                    const player = data.player;
-                    this.setState(this.getInitialState(null));
+                    console.log("====== data", data);
+                    this.setState(this.getInitialState(data.player));
                 });
             return;
         }
@@ -117,8 +117,20 @@ class Layout extends React.Component {
     }
 
     onGenerateShipsClick = () => {
+        const cells = initBattleFieldCells(10);
+        const ships = generateShips(cells);
+
         this.setState((state) => {
-            return this.getInitialState(state);
+            return {
+                player: {
+                    playerId: state.player.playerId,
+                    playerName: state.player.playerName,
+                    cells: cells,
+                    ships: ships,
+                    lastShot: null,
+                    damagedShipCells: []
+                },
+            };
         });
     };
 
@@ -127,6 +139,7 @@ class Layout extends React.Component {
             this.setState({
                 gameplay: {
                     gameId: gameId,
+                    creatorPlayerId: this.state.gameplay.creatorPlayerId,
                     step: STEP_WAITING_FOR_OPPONENT,
                     currentMove: null,
                     winner: null
@@ -161,15 +174,15 @@ class Layout extends React.Component {
         connect(gameId, playerId, eventType, this.updateGameState.bind(this), this.notification.bind(this));
     };
 
-    getInitialState = (state) => {
+    getInitialState = (player) => {
+        console.log("====== player", player);
         const cells = initBattleFieldCells(10);
         const ships = generateShips(cells);
-        const playerId = state ? state.player.playerId : null;
 
         return {
             player: {
-                playerId: playerId,
-                playerName: state ? state.player.playerId : 'Player',
+                playerId: player.id,
+                playerName: player.name,
                 cells: cells,
                 ships: ships,
                 lastShot: null,
@@ -177,19 +190,20 @@ class Layout extends React.Component {
             },
             enemy: {
                 playerId: null,
-                playerName: 'unknown yet',
+                playerName: '???',
                 cells: initBattleFieldCells(10),
                 ships: [],
                 lastShot: null,
                 damagedShipCells: []
             },
+            // TODO: delete 'config' section - is not used any more
             config: {
-                showShotHints: state ? state.config.showShotHints : true,
-                difficulty: state ? state.config.difficulty : 3, /* 1 - easy, 2 - medium, 3 - hard */
+                showShotHints: false,
+                difficulty: 3,
             },
             gameplay: {
-                gameId: state ? state.gameplay.gameId : '',
-                creatorPlayerId: playerId,
+                gameId: '',
+                creatorPlayerId: player.id,
                 step: STEP_GAME_INIT,
                 currentMove: null,
                 winner: null
