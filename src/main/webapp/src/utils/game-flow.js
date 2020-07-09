@@ -10,6 +10,13 @@ export const getGameState = (gameId, callback) => {
         cache: false,
         success: function (result) {
             callback(result);
+        },
+        error: function (request, status, error) {
+            Swal.fire(
+                'Error',
+                'The game not found. It might have been deleted by game creator',
+                'error'
+            );
         }
     });
 }
