@@ -14,7 +14,7 @@ function _renderShip(ship, size, isPlayer) {
                 className={'stat-cell' + (isShip ? ' stat-cell-ship' : '') + (isShip && isKilled ? ' stat-cell-ship-killed' : '') + (isPlayer ? ' float-right' : '')}
                 title={ship.name}
             >
-                &nbsp;
+
             </div>
         );
     }

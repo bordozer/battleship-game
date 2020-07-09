@@ -45,7 +45,7 @@ function connect(gameId, playerId, eventType, setStateCallback, notificationCall
 
         const notificationSubscription = '/game-notification/' + gameId + '/' + playerId;
         stompClient.subscribe(notificationSubscription, function (notification) {
-            notificationCallback(JSON.parse(notification.body));
+            notificationCallback(gameId, JSON.parse(notification.body));
         });
     });
 }
@@ -218,8 +218,8 @@ class Layout extends React.Component {
         this.setState(newState, () => this.stateUpdateCallback());
     };
 
-    notification = (notification) => {
-        showNotification(notification);
+    notification = (gameId, notification) => {
+        showNotification(gameId, notification);
     };
 
     stateUpdateCallback = () => {
