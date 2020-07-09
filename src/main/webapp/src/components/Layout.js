@@ -12,6 +12,7 @@ import BattleFieldRenderer from 'components/battle-field-renderer';
 import ShipsStateRenderer from 'components/ships-state';
 import LogsRenderer from 'components/logs-renderer';
 import {getUserIdFromCookie} from 'src/utils/cookies-utils';
+import {cancelGame} from 'src/utils/game-flow';
 
 import Swal from 'sweetalert2';
 
@@ -162,10 +163,15 @@ class Layout extends React.Component {
     };
 
     onCancelGameClick = () => {
-        const self = this;
+        const callback = function () {
+            disconnect();
+            this.props.history.push("/");
+        }.bind(this);
+        cancelGame(this.state.gameplay.gameId, callback);
+        /*const self = this;
         $.ajax({
             method: 'DELETE',
-            url: '/api/games/delete/' + this.state.gameplay.gameId,
+            url: '/api/games/delete/' + self.state.gameplay.gameId,
             contentType: 'application/json',
             cache: false,
             success: function (result) {
@@ -175,7 +181,7 @@ class Layout extends React.Component {
             error: function (request, status, error) {
                 console.error('Cannot delete game', request.responseText, error);
             }
-        });
+        });*/
     };
 
     getInitialState = (state) => {
