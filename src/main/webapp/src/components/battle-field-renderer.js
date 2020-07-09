@@ -30,7 +30,7 @@ function cellCss(cell, options) {
 
     const isLastShot = lastShot && (cell.x === lastShot.x) && (cell.y === lastShot.y);
 
-    if (options.stage === null || (isEnemy && stage === 'GAME_INIT')) {
+    if (options.stage === null || (isEnemy && (stage === 'GAME_INIT' || stage === 'WAITING_FOR_OPPONENT'))) {
         result.push('cell-disabled');
     }
 
@@ -80,7 +80,7 @@ function getIcon(cell, options) {
     const lastShot = options.lastShot;
     const isLastShot = lastShot && (cell.x === lastShot.x) && (cell.y === lastShot.y);
 
-    if (options.stage === null || (isEnemy && stage === 'GAME_INIT')) {
+    if (options.stage === null || (isEnemy && (stage === 'GAME_INIT' || stage === 'WAITING_FOR_OPPONENT'))) {
         return (
             <FontAwesomeIcon icon={faAnchor} />
         );
