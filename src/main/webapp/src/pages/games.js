@@ -39,11 +39,11 @@ export default class GamesPage extends Component {
         const me = this.state.player;
         if (player.id === me.id) {
             result.push(
-                <span className='text-muted'><strong><u>{player.name}</u></strong></span>
+                <span className='text-dark'><strong>You</strong></span>
             );
         } else {
             result.push(
-                <span className='text-muted'>{player.name}</span>
+                <span className='text-dark'>{player.name}</span>
             );
         }
 
