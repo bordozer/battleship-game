@@ -1,10 +1,32 @@
-[
-  {
-    "gameId": "game-id-777",
-    "player1": {
-      "id": "player-id-234",
-      "name": "User-27a0"
-    },
-    "player2": null
-  }
-]
+{
+  "playerGames": [
+    {
+      "gameId": "051a4d66-78ee-44cc-9a70-f4ae222c8900",
+      "player1": {
+        "id": "e4e79d80-5df7-4e6a-b8ac-cfd974623685",
+        "name": "Sir John Norris"
+      },
+      "created": "2020-07-10 19:04:03",
+      "player2": {
+        "id": "ea287b6a-15d1-424c-986f-612d68f9da02",
+        "name": "Arthur Herbert"
+      },
+      "gameStep": "BATTLE"
+    }
+  ],
+  "openGames": [
+    {
+      "gameId": "051a4d66-78ee-44cc-9a70-f4aeerr543ty",
+      "player1": {
+        "id": "e4e79d80-5df7-4e6a-b8ac-fjghty574839ey",
+        "name": "Sir John Norris"
+      },
+      "created": "2020-06-09 18:20:45",
+      "player2": {
+        "id": null,
+        "name": null
+      },
+      "gameStep": "WAITING_FOR_OPPONENT"
+    }
+  ]
+}
