@@ -3,7 +3,7 @@ import React, {Component} from 'react';
 import {Link} from 'react-router-dom';
 
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {faUserPlus} from '@fortawesome/free-solid-svg-icons';
+import {faShip} from '@fortawesome/free-solid-svg-icons';
 
 import Spinner from 'src/utils/spinner';
 
@@ -39,7 +39,7 @@ export default class GamesPage extends Component {
         const me = this.state.player;
         if (player.id === me.id) {
             result.push(
-                <span className='text-muted'><strong>{player.name}</strong></span>
+                <span className='text-muted'><strong><u>{player.name}</u></strong></span>
             );
         } else {
             result.push(
@@ -58,7 +58,7 @@ export default class GamesPage extends Component {
                     <div className="col-1"/>
                     <div className="col-9">
                         <Link to={'/battle?gameId=' + game.gameId}>
-                            <FontAwesomeIcon icon={faUserPlus} title='Join the game'/>
+                            <FontAwesomeIcon icon={faShip} title='Enter the game'/>
                         </Link>
                         &nbsp;
                         {this.renderPlayer(game.player1)}
