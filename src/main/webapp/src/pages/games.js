@@ -58,7 +58,7 @@ export default class GamesPage extends Component {
                     <div className="col-1"/>
                     <div className="col-9">
                         <Link to={'/battle?gameId=' + game.gameId}>
-                            <FontAwesomeIcon icon={faUserPlus}/>
+                            <FontAwesomeIcon icon={faUserPlus} title='Join the game'/>
                         </Link>
                         &nbsp;
                         {this.renderPlayer(game.player1)}
