@@ -2,21 +2,53 @@
 import React, {Component} from 'react';
 import {Link} from 'react-router-dom';
 
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import {faUserPlus} from '@fortawesome/free-solid-svg-icons';
+
 import Spinner from 'src/utils/spinner';
 
 export default class GamesPage extends Component {
 
     componentDidMount() {
-        fetch('/api/games')
+        fetch('/api/whoami')
             .then(response => response.json())
             .then(data => {
-                console.log('data', data);
-                this.setState({
-                    playerGames: data.playerGames,
-                    openGames: data.openGames
-                });
+                const player = data.player;
+
+                fetch('/api/games')
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log('data', data);
+                        this.setState({
+                            player: player,
+                            playerGames: data.playerGames,
+                            openGames: data.openGames
+                        });
+                    });
             });
     }
+
+    renderPlayer = (player) => {
+        const result = [];
+        if (!player) {
+            result.push(
+                <span className='text-muted'>???</span>
+            );
+            return result;
+        }
+        const me = this.state.player;
+        if (player.id === me.id) {
+            result.push(
+                <span className='text-muted'><strong>{player.name}</strong></span>
+            );
+        } else {
+            result.push(
+                <span className='text-muted'>{player.name}</span>
+            );
+        }
+
+        return result;
+    };
 
     renderGames = (games) => {
         const result = [];
@@ -25,10 +57,16 @@ export default class GamesPage extends Component {
                 <div key={game.gameId} className="row">
                     <div className="col-1"/>
                     <div className="col-9">
-                        <Link
-                            to={'/battle?gameId=' + game.gameId}>{game.player1.name + ' vs ' + (game.player2 ? game.player2.name : '???')}
+                        <Link to={'/battle?gameId=' + game.gameId}>
+                            <FontAwesomeIcon icon={faUserPlus}/>
                         </Link>
-                        < br />
+                        &nbsp;
+                        {this.renderPlayer(game.player1)}
+                        &nbsp;
+                        <span className='text-success'>vs</span>
+                        &nbsp;
+                        {this.renderPlayer(game.player2)}
+                        < br/>
                         <span className='small text-muted'>{game.created}</span>
                     </div>
                     <div className="col-1"/>
