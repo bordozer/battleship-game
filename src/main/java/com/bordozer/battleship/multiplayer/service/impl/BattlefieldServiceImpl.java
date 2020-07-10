@@ -38,12 +38,18 @@ public class BattlefieldServiceImpl implements BattlefieldService {
         final var cell = CellUtils.getCell(cells, move);
 
         if (cell.isHit()) {
-            logs.add(LogItem.builder().text(String.format("%s: %s - cell has already been hit. Try another one", player.getName(), cell.humanize())).build());
+            logs.add(LogItem.builder()
+                    .text(String.format("%s: %s - cell has already been hit. Try another one", player.getName(), cell.humanize()))
+                    .notifiable(Boolean.FALSE)
+                    .build());
             battle.addLogs(logs);
             return logs;
         }
         if (cell.isKilledShipNeighbor()) {
-            logs.add(LogItem.builder().text(String.format("%s: %s - cell is killed ship neighbor and cannot contains a ship. Try another cell", player.getName(), cell.humanize())).build());
+            logs.add(LogItem.builder()
+                    .text(String.format("%s: %s - cell is killed ship neighbor and cannot contains a ship. Try another cell", player.getName(), cell.humanize()))
+                    .notifiable(Boolean.FALSE)
+                    .build());
             battle.addLogs(logs);
             return logs;
         }

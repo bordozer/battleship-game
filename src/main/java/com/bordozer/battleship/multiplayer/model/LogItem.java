@@ -17,4 +17,7 @@ public class LogItem {
     private final LocalDateTime time = LocalDateTime.now();
     @NonNull
     private final String text;
+    @NonNull
+    @Builder.Default
+    private Boolean notifiable = Boolean.TRUE;
 }

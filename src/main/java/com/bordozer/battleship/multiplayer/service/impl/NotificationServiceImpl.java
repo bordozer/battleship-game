@@ -10,6 +10,7 @@ import com.bordozer.battleship.multiplayer.service.PlayerService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.CheckForNull;
 import java.util.List;
@@ -50,11 +51,15 @@ public class NotificationServiceImpl implements NotificationService {
             return null;
         }
         final var notifiablePlayer = playerService.getById(notifiablePlayerId);
+        final var notifiableLogItems = getNotifiablePlayerMoveLogItems(moveLogs);
+        if (CollectionUtils.isEmpty(notifiableLogItems)) {
+            return null;
+        }
         return GameNotificationDto.builder()
                 .gameId(gameId)
                 .playerId(notifiablePlayer.getId())
                 .eventType(PLAYER_DID_MOVE)
-                .messages(getMoveMessages(moveLogs))
+                .messages(convertToNotificationMessage(notifiableLogItems))
                 .build();
     }
 
@@ -70,7 +75,11 @@ public class NotificationServiceImpl implements NotificationService {
         }
     }
 
-    private List<String> getMoveMessages(final List<LogItem> moveLogs) {
+    private List<LogItem> getNotifiablePlayerMoveLogItems(final List<LogItem> moveLogs) {
+        return moveLogs.stream().filter(LogItem::getNotifiable).collect(Collectors.toList());
+    }
+
+    private List<String> convertToNotificationMessage(final List<LogItem> moveLogs) {
         return moveLogs.stream()
                 .map(LogItem::getText)
                 .collect(Collectors.toList());
