@@ -25,7 +25,6 @@ import java.util.stream.Collectors;
 import static com.bordozer.battleship.multiplayer.converter.CellConverter.convertCells;
 import static com.bordozer.battleship.multiplayer.converter.GameConverter.toDto;
 import static com.bordozer.battleship.multiplayer.dto.battle.PlayerType.PLAYER1;
-import static com.bordozer.battleship.multiplayer.model.GameState.BATTLE;
 import static com.bordozer.battleship.multiplayer.model.GameState.CANCELLED;
 import static com.bordozer.battleship.multiplayer.model.GameState.FINISHED;
 import static com.bordozer.battleship.multiplayer.model.GameState.OPEN;
@@ -125,27 +124,26 @@ public class GameServiceImpl implements GameService {
 
     @Override
     public void joinGame(final String gameId, final String playerId, final ArrayList<ArrayList<CellDto>> cells) {
-        if (!canJoin(gameId, playerId)) {
+        if (!isOpenGame(gameId)) {
             throw new IllegalStateException("Wrong game state");
         }
         synchronized (GAME_MAP.get(gameId)) {
             final var game = GAME_MAP.get(gameId);
-            if (!canJoin(gameId, playerId)) {
+            if (!isOpenGame(gameId)) {
                 throw new IllegalStateException("Wrong game state");
             }
-            if (!isRejoinPlayer2(playerId, game)) {
-                game.setPlayer2Id(playerId);
-                game.setState(GameState.BATTLE);
 
-                final var battle = game.getBattle();
-                battle.getBattlefield2().setCells(convertCells(cells));
+            game.setPlayer2Id(playerId);
+            game.setState(GameState.BATTLE);
 
-                final var firstMove = randomizeFirstMove();
-                battle.setCurrentMove(firstMove);
-                battle
-                        .addLog(LogItem.builder().text(String.format("Player %s joined the game", getPlayerName(playerId))).build())
-                        .addLog(LogItem.builder().text(String.format("First move: %s", firstMove == PLAYER1 ? "Player 1" : "Player 2")).build());
-            }
+            final var battle = game.getBattle();
+            battle.getBattlefield2().setCells(convertCells(cells));
+
+            final var firstMove = randomizeFirstMove();
+            battle.setCurrentMove(firstMove);
+            battle
+                    .addLog(LogItem.builder().text(String.format("Player %s joined the game", getPlayerName(playerId))).build())
+                    .addLog(LogItem.builder().text(String.format("First move: %s", firstMove == PLAYER1 ? "Player 1" : "Player 2")).build());
         }
     }
 
@@ -174,17 +172,9 @@ public class GameServiceImpl implements GameService {
         game.setState(CANCELLED);
     }
 
-    private boolean canJoin(final String gameId, final String playerId) {
+    private boolean isOpenGame(final String gameId) {
         final var aGame = GAME_MAP.get(gameId);
-        return isJoinNewOpenGame(aGame) || isRejoinPlayer2(playerId, aGame);
-    }
-
-    private boolean isJoinNewOpenGame(final Game aGame) {
-        return aGame.getState() == OPEN && aGame.getPlayer2Id() == null;
-    }
-
-    private boolean isRejoinPlayer2(final String playerId, final Game aGame) {
-        return aGame.getState() == BATTLE && playerId.equals(aGame.getPlayer2Id());
+        return aGame.getState() == OPEN;
     }
 
     private GameDto convertToDto(final String gameId) {
