@@ -17,7 +17,7 @@ import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 
 @Configuration
-@Profile(value = "dev")
+@Profile(value = "dev-https")
 public class DevConfig {
 
     @Bean

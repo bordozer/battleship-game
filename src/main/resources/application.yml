@@ -2,7 +2,7 @@ spring:
   application:
     name: battleship-game
   profiles:
-    active: dev
+    active: dev-https
 
 server:
   port: 8036
@@ -26,6 +26,10 @@ management:
 ---
 spring:
   profiles: dev
+
+---
+spring:
+  profiles: dev-https
   security:
     user:
       name: admin
