@@ -7,6 +7,8 @@ import '../css/app.css';
 
 import AppRouter from 'src/router';
 
+require('./../../favicon.ico');
+
 ReactDOM.render(
     <AppRouter />,
     document.getElementById('js-app-context')
