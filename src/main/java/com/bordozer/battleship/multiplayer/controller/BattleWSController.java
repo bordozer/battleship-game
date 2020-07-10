@@ -43,8 +43,11 @@ public class BattleWSController {
         final var playerMove = PlayerMove.of(move.getLine(), move.getColumn());
         final var logs = battleService.move(move.getGameId(), move.getPlayerId(), playerMove);
         final var notification = notificationService.playerMove(move.getGameId(), move.getPlayerId(), playerMove, logs);
-        sendGameStateToPlayers(move.getGameId(), move.getPlayerId());
+        // sending notification should be before game state.
+        // If a player won or cancelled a game the notification will have a chance to be shown before 'game state update' does disconnect()
         sendNotification(notification);
+
+        sendGameStateToPlayers(move.getGameId(), move.getPlayerId());
     }
 
     private void sendGameStateToPlayers(final String gameId, final String eventSourcePlayerId) {

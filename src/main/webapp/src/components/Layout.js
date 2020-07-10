@@ -225,13 +225,21 @@ class Layout extends React.Component {
     stateUpdateCallback = () => {
         const gameState = this.state.gameplay.step;
         const winner = this.state.gameplay.winner;
-        if (gameState === STEP_CANCELLED) {
+
+        const isGameCancelled = gameState === STEP_CANCELLED;
+
+        if (isGameCancelled || !!winner) {
+            setTimeout(() => {
+                disconnect()
+            }, 5000)
+        }
+
+        if (isGameCancelled) {
             Swal.fire(
                 'You have won',
                 'Your opponent has cancelled the game (gave up)',
                 'success'
             );
-            disconnect();
         }
         if (winner === 'player') {
             Swal.fire(
@@ -239,7 +247,6 @@ class Layout extends React.Component {
                 'Congratulations, ' + this.state.player.playerName,
                 'success'
             );
-            disconnect();
         }
         if (winner === 'enemy') {
             Swal.fire(
@@ -247,7 +254,6 @@ class Layout extends React.Component {
                 'Congratulations to ' + this.state.enemy.playerName,
                 'error'
             );
-            disconnect();
         }
     };
 
