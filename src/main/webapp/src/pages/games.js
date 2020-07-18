@@ -39,7 +39,7 @@ export default class GamesPage extends Component {
         const me = this.state.player;
         if (player.id === me.id) {
             result.push(
-                <span className='text-dark'><strong>You</strong></span>
+                <span className='text-dark'><strong>{player.name}</strong></span>
             );
         } else {
             result.push(
@@ -58,7 +58,7 @@ export default class GamesPage extends Component {
                     <div className="col-1"/>
                     <div className="col-9">
 
-                        <div className='row'>
+                        <div className='row game-box'>
                             <div className="col-2">
                                 <Link to={'/battle?gameId=' + game.gameId}>
                                     <FontAwesomeIcon icon={faSignInAlt} className='fa-3x' title='Enter the game'/>
@@ -66,13 +66,10 @@ export default class GamesPage extends Component {
                             </div>
                             <div className="col-10">
                                 <div className='row'>
-                                    <div className="col-5">
+                                    <div className="col-6">
                                         {this.renderPlayer(game.player1)}
                                     </div>
-                                    <div className="col-2">
-                                        vs
-                                    </div>
-                                    <div className="col-5">
+                                    <div className="col-6">
                                         {this.renderPlayer(game.player2)}
                                     </div>
                                 </div>
