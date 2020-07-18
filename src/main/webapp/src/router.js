@@ -17,7 +17,11 @@ export default function AppRouter() {
                 <div className="row bg-light">
 
                     <div className="col-6 site-title">
-                        <h3>Battleship game - multiplayer</h3>
+                        <h3>
+                            <Link to="/" style={{textDecoration: 'none'}}>
+                                Battleship game - multiplayer
+                            </Link>
+                        </h3>
                     </div>
 
                     <div className="col-6">
@@ -35,14 +39,6 @@ export default function AppRouter() {
                                     icon={faPlusSquare}
                                     className='fa-2x'
                                     title='Create new multiplayer game'/>
-                            </Link>
-                        </div>
-                        <div className='ml-10 toolbar-buttons'>
-                            <Link to="/" style={{textDecoration: 'none'}}>
-                                <FontAwesomeIcon
-                                    icon={faList}
-                                    className='fa-2x'
-                                    title='Multiplayer games'/>
                             </Link>
                         </div>
                     </div>
