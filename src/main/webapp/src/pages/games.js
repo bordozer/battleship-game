@@ -15,7 +15,7 @@ export default class GamesPage extends Component {
                 fetch('/api/games')
                     .then(response => response.json())
                     .then(data => {
-                        console.log('data', data);
+                        // console.log('data', data);
                         this.setState({
                             player: player,
                             playerGames: data.playerGames,
@@ -51,7 +51,7 @@ export default class GamesPage extends Component {
         const result = [];
         games.forEach(game => {
             result.push(
-                <div key={game.gameId} className="row">
+                <div key={game.gameId} className="row mb-10">
                     <div className="col-1"/>
                     <div className="col-9">
                         <Link to={'/battle?gameId=' + game.gameId} style={{textDecoration: 'none'}}>
