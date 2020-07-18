@@ -22,10 +22,7 @@
         "name": "Sir John Norris"
       },
       "created": "2020-06-09 18:20:45",
-      "player2": {
-        "id": null,
-        "name": null
-      },
+      "player2": null,
       "gameStep": "WAITING_FOR_OPPONENT"
     }
   ]
