@@ -14,14 +14,14 @@
       "gameStep": "BATTLE"
     },
     {
-      "gameId": "051a4d66-78ee-44cc-9a70-f4ae222c8900",
+      "gameId": "94e603a6-8c13-4075-b78c-a9951e941ef9",
       "player1": {
         "id": "ea287b6a-15d1-424c-986f-612d68f9da02",
         "name": "Arthur Herbert"
       },
       "created": "2020-07-10 19:04:03",
       "player2": null,
-      "gameStep": "BATTLE"
+      "gameStep": "WAITING_FOR_OPPONENT"
     }
   ],
   "openGames": [

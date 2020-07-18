@@ -55,7 +55,7 @@ export default class GamesPage extends Component {
                     <div className="col-1"/>
                     <div className="col-9">
                         <Link to={'/battle?gameId=' + game.gameId} style={{textDecoration: 'none'}}>
-                            <div className='row game-box'>
+                            <div className={'row ' + (game.gameStep === 'BATTLE' ? 'game-box-battle' : 'game-box-waiting')}>
                                 <div className="col-12">
                                     <div className='row'>
                                         <div className="col-6">

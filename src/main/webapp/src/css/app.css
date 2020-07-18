@@ -106,9 +106,14 @@ body {
     overflow: scroll;
 }
 
-.game-box {
+.game-box-waiting {
     border: 1px solid gray;
-    box-shadow: 6px 6px 2px 1px rgba(0, 0, 255, .2);
+    box-shadow: 4px 4px 2px 1px rgba(0, 0, 255, .2);
+}
+
+.game-box-battle {
+    border: 1px solid gray;
+    box-shadow: 4px 4px 2px 1px rgba(239, 60, 96, 0.2);
 }
 
 .toolbar-buttons {
