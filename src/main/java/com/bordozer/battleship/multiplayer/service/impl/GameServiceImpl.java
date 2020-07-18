@@ -2,6 +2,7 @@ package com.bordozer.battleship.multiplayer.service.impl;
 
 import com.bordozer.battleship.multiplayer.dto.GameDto;
 import com.bordozer.battleship.multiplayer.dto.battle.CellDto;
+import com.bordozer.battleship.multiplayer.exception.IncopatibleGameStatusException;
 import com.bordozer.battleship.multiplayer.exception.GameNotFoundException;
 import com.bordozer.battleship.multiplayer.model.Game;
 import com.bordozer.battleship.multiplayer.model.GamePlayers;
@@ -125,12 +126,12 @@ public class GameServiceImpl implements GameService {
     @Override
     public void joinGame(final String gameId, final String playerId, final ArrayList<ArrayList<CellDto>> cells) {
         if (!isOpenGame(gameId)) {
-            throw new IllegalStateException("Wrong game state");
+            throw new IncopatibleGameStatusException(gameId);
         }
         synchronized (GAME_MAP.get(gameId)) {
             final var game = GAME_MAP.get(gameId);
             if (!isOpenGame(gameId)) {
-                throw new IllegalStateException("Wrong game state");
+                throw new IncopatibleGameStatusException(gameId);
             }
 
             game.setPlayer2Id(playerId);

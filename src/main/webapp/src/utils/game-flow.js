@@ -14,7 +14,7 @@ export const getGameState = (gameId, callback) => {
         error: function (request, status, error) {
             Swal.fire(
                 'Error',
-                'The game not found. It might have been deleted by game creator',
+                'The game not found. It must have been cancelled.',
                 'error'
             );
         }

@@ -1,5 +1,6 @@
 package com.bordozer.battleship.multiplayer.controller;
 
+import com.bordozer.battleship.multiplayer.exception.IncopatibleGameStatusException;
 import com.bordozer.battleship.multiplayer.exception.GameNotFoundException;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +21,16 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(value = GameNotFoundException.class)
     protected ResponseEntity<Object> handleInternalError(final GameNotFoundException ex, final WebRequest request) {
-        return handleExceptionInternal(ex, ErrorResponse.of("gameId", ex.getGameId()), new HttpHeaders(), HttpStatus.UNPROCESSABLE_ENTITY, request);
+        return handleExceptionInternal(ex, getGameError(ex.getGameId()), new HttpHeaders(), HttpStatus.UNPROCESSABLE_ENTITY, request);
+    }
+
+    @ExceptionHandler(value = IncopatibleGameStatusException.class)
+    protected ResponseEntity<Object> handleInternalError(final IncopatibleGameStatusException ex, final WebRequest request) {
+        return handleExceptionInternal(ex, getGameError(ex.getGameId()), new HttpHeaders(), HttpStatus.EXPECTATION_FAILED, request);
+    }
+
+    private ExceptionHandlerController.ErrorResponse getGameError(final String gameId) {
+        return ErrorResponse.of("gameId", gameId);
     }
 
     @Getter
