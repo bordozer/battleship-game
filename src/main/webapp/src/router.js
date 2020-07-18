@@ -25,7 +25,7 @@ export default function AppRouter() {
                             </div>
                             <div className="col-10">
                                 <Link to="/" style={{textDecoration: 'none'}}>
-                                    Multiplayer games (human vs human)
+                                    Multiplayer games
                                 </Link>
                             </div>
                         </div>
@@ -39,7 +39,7 @@ export default function AppRouter() {
                     <div className="col-4 text-center">
                         <div className="row">
                             <div className="col-10">
-                                Single player (human vs computer AI)
+                                Single player
                             </div>
                             <div className="col-2">
                                 <a href="https://bordozer.github.io/" target="_">

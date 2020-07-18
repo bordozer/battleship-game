@@ -2,9 +2,6 @@
 import React, {Component} from 'react';
 import {Link} from 'react-router-dom';
 
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {faSignInAlt} from '@fortawesome/free-solid-svg-icons';
-
 import Spinner from 'src/utils/spinner';
 
 export default class GamesPage extends Component {
@@ -57,29 +54,25 @@ export default class GamesPage extends Component {
                 <div key={game.gameId} className="row">
                     <div className="col-1"/>
                     <div className="col-9">
-
-                        <div className='row game-box'>
-                            <div className="col-2">
-                                <Link to={'/battle?gameId=' + game.gameId}>
-                                    <FontAwesomeIcon icon={faSignInAlt} className='fa-3x' title='Enter the game'/>
-                                </Link>
-                            </div>
-                            <div className="col-10">
-                                <div className='row'>
-                                    <div className="col-6">
-                                        {this.renderPlayer(game.player1)}
+                        <Link to={'/battle?gameId=' + game.gameId} style={{textDecoration: 'none'}}>
+                            <div className='row game-box'>
+                                <div className="col-12">
+                                    <div className='row'>
+                                        <div className="col-6">
+                                            {this.renderPlayer(game.player1)}
+                                        </div>
+                                        <div className="col-6 text-right">
+                                            {this.renderPlayer(game.player2)}
+                                        </div>
                                     </div>
-                                    <div className="col-6">
-                                        {this.renderPlayer(game.player2)}
-                                    </div>
-                                </div>
-                                <div className='row'>
-                                    <div className="col-12">
-                                        <span className='small text-muted'>{game.created}</span>
+                                    <div className='row'>
+                                        <div className="col-12 text-center">
+                                            <span className='small text-muted'>{game.created}</span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </Link>
                     </div>
                     <div className="col-1"/>
                 </div>
