@@ -66,13 +66,13 @@ export default class GamesPage extends Component {
                             </div>
                             <div className="col-10">
                                 <div className='row'>
-                                    <div className="col-4">
+                                    <div className="col-5">
                                         {this.renderPlayer(game.player1)}
                                     </div>
-                                    <div className="col-4">
+                                    <div className="col-2">
                                         vs
                                     </div>
-                                    <div className="col-4">
+                                    <div className="col-5">
                                         {this.renderPlayer(game.player2)}
                                     </div>
                                 </div>
