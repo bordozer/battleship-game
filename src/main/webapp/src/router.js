@@ -16,8 +16,8 @@ export default function AppRouter() {
             <div>
                 <div className="row bg-light">
 
-                    <div className="col-6">
-                        <h4>Battleship game</h4>
+                    <div className="col-6 site-title">
+                        <h3>Battleship game - multiplayer</h3>
                     </div>
 
                     <div className="col-6">

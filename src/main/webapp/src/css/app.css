@@ -114,3 +114,7 @@ body {
 .toolbar-buttons {
     float: right;
 }
+
+.site-title {
+    text-shadow: 0 0 3px #3a76a5;
+}
