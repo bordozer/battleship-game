@@ -3,7 +3,7 @@ import React, {Component} from 'react';
 import {Link} from 'react-router-dom';
 
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {faShip} from '@fortawesome/free-solid-svg-icons';
+import {faSignInAlt} from '@fortawesome/free-solid-svg-icons';
 
 import Spinner from 'src/utils/spinner';
 
@@ -57,17 +57,32 @@ export default class GamesPage extends Component {
                 <div key={game.gameId} className="row">
                     <div className="col-1"/>
                     <div className="col-9">
-                        <Link to={'/battle?gameId=' + game.gameId}>
-                            <FontAwesomeIcon icon={faShip} title='Enter the game'/>
-                        </Link>
-                        &nbsp;
-                        {this.renderPlayer(game.player1)}
-                        &nbsp;
-                        <span className='text-success'>vs</span>
-                        &nbsp;
-                        {this.renderPlayer(game.player2)}
-                        < br/>
-                        <span className='small text-muted'>{game.created}</span>
+
+                        <div className='row'>
+                            <div className="col-2">
+                                <Link to={'/battle?gameId=' + game.gameId}>
+                                    <FontAwesomeIcon icon={faSignInAlt} className='fa-3x' title='Enter the game'/>
+                                </Link>
+                            </div>
+                            <div className="col-10">
+                                <div className='row'>
+                                    <div className="col-4">
+                                        {this.renderPlayer(game.player1)}
+                                    </div>
+                                    <div className="col-4">
+                                        vs
+                                    </div>
+                                    <div className="col-4">
+                                        {this.renderPlayer(game.player2)}
+                                    </div>
+                                </div>
+                                <div className='row'>
+                                    <div className="col-12">
+                                        <span className='small text-muted'>{game.created}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div className="col-1"/>
                 </div>
