@@ -13,6 +13,7 @@ import com.bordozer.battleship.multiplayer.utils.CellUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -27,6 +28,9 @@ import static com.bordozer.battleship.multiplayer.utils.CellUtils.getShipNeighbo
 public class BattlefieldServiceImpl implements BattlefieldService {
 
     private final PlayerService playerService;
+
+    @Value("${application.battlefield.size}")
+    private int battlefieldSize;
 
     @Override
     public List<LogItem> move(final Game game, final Battlefield battlefield, final String playerId, final PlayerMove move) {
@@ -92,7 +96,7 @@ public class BattlefieldServiceImpl implements BattlefieldService {
     }
 
     private void markNeighbourCells(final String shipId, final List<List<BattlefieldCell>> cells) {
-        getShipNeighbourCells(shipId, cells)
+        getShipNeighbourCells(shipId, cells, battlefieldSize)
                 .forEach(cell -> cell.setKilledShipNeighbor(true));
     }
 }

@@ -15,11 +15,9 @@ import static com.google.common.collect.Lists.newArrayList;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class BattleUtils {
 
-    public static final int BATTLEFIELD_SIZE = 10;
-
-    public static Battle initBattle(final ArrayList<ArrayList<CellDto>> cells) {
+    public static Battle initBattle(final ArrayList<ArrayList<CellDto>> cells, final int battlefieldSize) {
         return Battle.builder()
-                .battlefield1(new Battlefield(CellConverter.convertCells(cells)))
+                .battlefield1(new Battlefield(CellConverter.convertCells(cells, battlefieldSize)))
                 .battlefield2(new Battlefield(CellUtils.initCells()))
                 .currentMove(null)
                 .logs(newArrayList(LogItem.builder().text("Game has been created").build()))

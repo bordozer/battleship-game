@@ -4,7 +4,6 @@ import com.bordozer.battleship.multiplayer.dto.battle.CellDto;
 import com.bordozer.battleship.multiplayer.dto.battle.ShipDto;
 import com.bordozer.battleship.multiplayer.model.BattlefieldCell;
 import com.bordozer.battleship.multiplayer.model.Ship;
-import com.bordozer.battleship.multiplayer.utils.BattleUtils;
 import com.bordozer.battleship.multiplayer.utils.CellUtils;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -18,10 +17,10 @@ import static com.bordozer.battleship.multiplayer.converter.ShipConverter.conver
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class CellConverter {
 
-    public static List<List<BattlefieldCell>> convertCells(final ArrayList<ArrayList<CellDto>> playerCells) {
+    public static List<List<BattlefieldCell>> convertCells(final ArrayList<ArrayList<CellDto>> playerCells, final int battlefieldSize) {
         final var ships = CellUtils.collectShips(playerCells);
         final List<List<BattlefieldCell>> columns = new ArrayList<>();
-        for (int column = 0; column < BattleUtils.BATTLEFIELD_SIZE; column++) {
+        for (int column = 0; column < battlefieldSize; column++) {
             final var lines = new ArrayList<BattlefieldCell>();
             final var playerLines = playerCells.get(column);
             for (int line = 0; line < 10; line++) {

@@ -2,9 +2,9 @@ package com.bordozer.battleship.multiplayer.controller;
 
 import com.bordozer.battleship.multiplayer.dto.GameDto;
 import com.bordozer.battleship.multiplayer.dto.GamesForPlayerDto;
-import com.bordozer.battleship.multiplayer.dto.ImmutableGamesForPlayerDto;
 import com.bordozer.battleship.multiplayer.dto.battle.CellDto;
 import com.bordozer.battleship.multiplayer.service.GameService;
+import com.bordozer.battleship.multiplayer.service.RequestHelper;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,9 +22,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
-import java.util.List;
-
-import static com.bordozer.battleship.multiplayer.utils.RequestUtils.getPlayerId;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -32,11 +29,12 @@ import static com.bordozer.battleship.multiplayer.utils.RequestUtils.getPlayerId
 @RequestMapping("/api/games")
 public class GameController {
 
+    private final RequestHelper requestHelper;
     private final GameService gameService;
 
     @GetMapping(path = "", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<GamesForPlayerDto> games(final HttpServletRequest request) {
-        final var playerId = getPlayerId(request);
+        final var playerId = requestHelper.getPlayerId(request);
         LOGGER.info("Player \"{}\" listed games", playerId);
         final var result = GamesForPlayerDto.builder()
                 .playerGames(gameService.getPlayerGames(playerId))
@@ -48,7 +46,7 @@ public class GameController {
     @PostMapping(path = "/create", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<GameDto> createNewGame(@RequestBody final ArrayList<ArrayList<CellDto>> cells,
                                                  final HttpServletRequest request) {
-        final var playerId = getPlayerId(request);
+        final var playerId = requestHelper.getPlayerId(request);
         LOGGER.info("Player \"{}\" created a game", playerId);
         final var game = gameService.createGame(playerId, cells);
         return new ResponseEntity<>(game, HttpStatus.OK);
@@ -56,9 +54,9 @@ public class GameController {
 
     @PutMapping(path = "/join/{gameId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Ok> joinGame(@PathVariable("gameId") final String gameId,
-                                           @RequestBody final ArrayList<ArrayList<CellDto>> cells,
-                                           final HttpServletRequest request) {
-        final var playerId = getPlayerId(request);
+                                       @RequestBody final ArrayList<ArrayList<CellDto>> cells,
+                                       final HttpServletRequest request) {
+        final var playerId = requestHelper.getPlayerId(request);
         LOGGER.info("Player \"{}\" joined a game \"{}\"", playerId, gameId);
         gameService.joinGame(gameId, playerId, cells);
         return new ResponseEntity<>(Ok.of(), HttpStatus.OK);
@@ -66,8 +64,8 @@ public class GameController {
 
     @DeleteMapping(path = "/cancel/{gameId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Ok> cancelGame(@PathVariable("gameId") final String gameId, final HttpServletRequest request) {
-        final var playerId = getPlayerId(request);
-        LOGGER.info("Player \"{}\" deleted a game \"{}\"", playerId, gameId);
+        final var playerId = requestHelper.getPlayerId(request);
+        LOGGER.info("Player \"{}\" cancelled a game \"{}\"", playerId, gameId);
         gameService.cancelGame(gameId, playerId);
         return new ResponseEntity<>(Ok.of(), HttpStatus.OK);
     }

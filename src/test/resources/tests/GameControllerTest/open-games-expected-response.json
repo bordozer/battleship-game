@@ -1,0 +1,29 @@
+{
+  "playerGames": [
+    {
+      "gameId": "051a4d66-78ee-44cc-9a70-f4ae222c8900",
+      "player1": {
+        "id": "ea287b6a-15d1-424c-986f-612d68f9da02",
+        "name": "Arthur Herbert"
+      },
+      "created": "2020-07-10 19:04:03",
+      "player2": {
+        "id": "2b6d4c74-aae0-4a57-95a3-43f4cb8d9527",
+        "name": "Sir John Norris"
+      },
+      "gameStep": "BATTLE"
+    }
+  ],
+  "openGames": [
+    {
+      "gameId": "9567eba4-4bd8-4708-b123-6a7a9ed1029d",
+      "player1": {
+        "id": "ea287b6a-15d1-424c-986f-612d68f9da02",
+        "name": "Arthur Herbert"
+      },
+      "created": "2020-06-09 18:20:45",
+      "player2": null,
+      "gameStep": "WAITING_FOR_OPPONENT"
+    }
+  ]
+}

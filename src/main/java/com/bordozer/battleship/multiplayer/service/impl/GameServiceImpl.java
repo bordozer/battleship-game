@@ -2,21 +2,22 @@ package com.bordozer.battleship.multiplayer.service.impl;
 
 import com.bordozer.battleship.multiplayer.dto.GameDto;
 import com.bordozer.battleship.multiplayer.dto.battle.CellDto;
-import com.bordozer.battleship.multiplayer.exception.IncopatibleGameStatusException;
 import com.bordozer.battleship.multiplayer.exception.GameNotFoundException;
+import com.bordozer.battleship.multiplayer.exception.IncopatibleGameStatusException;
 import com.bordozer.battleship.multiplayer.model.Game;
 import com.bordozer.battleship.multiplayer.model.GamePlayers;
 import com.bordozer.battleship.multiplayer.model.GameState;
 import com.bordozer.battleship.multiplayer.model.LogItem;
+import com.bordozer.battleship.multiplayer.service.ClockService;
 import com.bordozer.battleship.multiplayer.service.GameService;
 import com.bordozer.battleship.multiplayer.service.IdentityService;
 import com.bordozer.battleship.multiplayer.service.PlayerService;
 import com.bordozer.battleship.multiplayer.utils.BattleUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -41,6 +42,10 @@ public class GameServiceImpl implements GameService {
 
     private final PlayerService playerService;
     private final IdentityService identityService;
+    private final ClockService clockService;
+
+    @Value("${application.battlefield.size}")
+    private int battlefieldSize;
 
     @Override
     public List<GameDto> getGames(final String playerId) {
@@ -111,10 +116,10 @@ public class GameServiceImpl implements GameService {
         final var gameId = identityService.generateForGame();
         final var game = Game.builder()
                 .gameId(gameId)
-                .created(LocalDateTime.now())
+                .created(clockService.now())
                 .player1Id(playerId)
                 .state(OPEN)
-                .battle(BattleUtils.initBattle(cells))
+                .battle(BattleUtils.initBattle(cells, battlefieldSize))
                 .build();
 
         GAME_MAP.put(gameId, game);
@@ -138,7 +143,7 @@ public class GameServiceImpl implements GameService {
             game.setState(GameState.BATTLE);
 
             final var battle = game.getBattle();
-            battle.getBattlefield2().setCells(convertCells(cells));
+            battle.getBattlefield2().setCells(convertCells(cells, battlefieldSize));
 
             final var firstMove = randomizeFirstMove();
             battle.setCurrentMove(firstMove);
@@ -174,12 +179,12 @@ public class GameServiceImpl implements GameService {
     }
 
     private boolean isOpenGame(final String gameId) {
-        final var aGame = GAME_MAP.get(gameId);
+        final var aGame = getGame(gameId);
         return aGame.getState() == OPEN;
     }
 
     private GameDto convertToDto(final String gameId) {
-        final var game = GAME_MAP.get(gameId);
+        final var game = getGame(gameId);
         final var player1 = playerService.getById(game.getPlayer1Id());
         final var player2 = game.getPlayer2Id() != null ? playerService.getById(game.getPlayer2Id()) : null;
         return toDto(game, player1, player2);

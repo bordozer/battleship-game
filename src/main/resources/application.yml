@@ -23,6 +23,10 @@ management:
       exposure:
         include: health,info,metrics,env,flyway,heapdump,sessions,httptrace,logfile
 
+application:
+  battlefield:
+    size: 10
+
 ---
 spring:
   profiles: dev

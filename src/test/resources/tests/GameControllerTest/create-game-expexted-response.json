@@ -1,0 +1,10 @@
+{
+  "gameId": "051a4d66-78ee-44cc-9a70-f4ae222c8900",
+  "player1": {
+    "id": "ea287b6a-15d1-424c-986f-612d68f9da02",
+    "name": "Arthur Herbert"
+  },
+  "created": "2020-07-21 12:15:25",
+  "player2": null,
+  "gameStep": "WAITING_FOR_OPPONENT"
+}

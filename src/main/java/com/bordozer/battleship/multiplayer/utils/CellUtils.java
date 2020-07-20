@@ -4,7 +4,6 @@ import com.bordozer.battleship.multiplayer.converter.CellConverter;
 import com.bordozer.battleship.multiplayer.converter.ShipConverter;
 import com.bordozer.battleship.multiplayer.dto.battle.CellDto;
 import com.bordozer.battleship.multiplayer.model.BattlefieldCell;
-import com.bordozer.battleship.multiplayer.model.Cell;
 import com.bordozer.battleship.multiplayer.model.PlayerMove;
 import com.bordozer.battleship.multiplayer.model.Ship;
 import lombok.AccessLevel;
@@ -16,7 +15,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import static com.bordozer.battleship.multiplayer.utils.BattleUtils.BATTLEFIELD_SIZE;
 import static com.bordozer.battleship.multiplayer.utils.ShipUtils.getShipCells;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -65,14 +63,14 @@ public final class CellUtils {
         return cells.get(y).get(x);
     }
 
-    public static List<BattlefieldCell> getShipNeighbourCells(final String shipId, final List<List<BattlefieldCell>> cells) {
+    public static List<BattlefieldCell> getShipNeighbourCells(final String shipId, final List<List<BattlefieldCell>> cells, final int battlefieldSize) {
         return getShipCells(shipId, cells).stream()
-                .map(cell -> getNeighbourCells(cell, cells))
+                .map(cell -> getNeighbourCells(cell, cells, battlefieldSize))
                 .flatMap(Collection::stream)
                 .collect(Collectors.toList());
     }
 
-    private static List<BattlefieldCell> getNeighbourCells(final BattlefieldCell cell, final List<List<BattlefieldCell>> cells) {
+    private static List<BattlefieldCell> getNeighbourCells(final BattlefieldCell cell, final List<List<BattlefieldCell>> cells, final int battlefieldSize) {
         final var result = new ArrayList<BattlefieldCell>();
 
         final var cellY = cell.getColumn();
@@ -82,13 +80,13 @@ public final class CellUtils {
                 if (x < 0) {
                     continue;
                 }
-                if (x > BATTLEFIELD_SIZE - 1) {
+                if (x > battlefieldSize - 1) {
                     continue;
                 }
                 if (y < 0) {
                     continue;
                 }
-                if (y > BATTLEFIELD_SIZE - 1) {
+                if (y > battlefieldSize - 1) {
                     continue;
                 }
                 final var columns = cells.get(y);
@@ -100,13 +98,5 @@ public final class CellUtils {
             }
         }
         return result;
-    }
-
-    public static String getCellAddress(final int column, final int line) {
-        return Cell.builder()
-                .line(line)
-                .column(column)
-                .build()
-                .humanize();
     }
 }

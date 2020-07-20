@@ -1,0 +1,131 @@
+[
+  [
+    {
+      "id": "A1",
+      "x": 0,
+      "y": 0,
+      "xLabel": "A",
+      "yLabel": 1,
+      "ship": {
+        "id": 33,
+        "name": "Canberra (cruiser)",
+        "size": 3,
+        "cells": [],
+        "damage": 0
+      },
+      "isHit": false,
+      "isShipNeighbor": false,
+      "isKilledShipNeighborCell": false
+    },
+    {
+      "id": "B1",
+      "x": 1,
+      "y": 0,
+      "xLabel": "B",
+      "yLabel": 1,
+      "ship": {
+        "id": 33,
+        "name": "Canberra (cruiser)",
+        "size": 3,
+        "cells": [],
+        "damage": 0
+      },
+      "isHit": false,
+      "isShipNeighbor": false,
+      "isKilledShipNeighborCell": false
+    },
+    {
+      "id": "C1",
+      "x": 2,
+      "y": 0,
+      "xLabel": "C",
+      "yLabel": 1,
+      "ship": {
+        "id": 33,
+        "name": "Canberra (cruiser)",
+        "size": 3,
+        "cells": [],
+        "damage": 0
+      },
+      "isHit": false,
+      "isShipNeighbor": false,
+      "isKilledShipNeighborCell": false
+    }
+  ],
+  [
+    {
+      "id": "A2",
+      "x": 0,
+      "y": 1,
+      "xLabel": "A",
+      "yLabel": 2,
+      "ship": null,
+      "isHit": false,
+      "isShipNeighbor": true,
+      "isKilledShipNeighborCell": false
+    },
+    {
+      "id": "B2",
+      "x": 1,
+      "y": 1,
+      "xLabel": "B",
+      "yLabel": 2,
+      "ship": null,
+      "isHit": false,
+      "isShipNeighbor": true,
+      "isKilledShipNeighborCell": false
+    },
+    {
+      "id": "C2",
+      "x": 2,
+      "y": 1,
+      "xLabel": "C",
+      "yLabel": 2,
+      "ship": null,
+      "isHit": false,
+      "isShipNeighbor": true,
+      "isKilledShipNeighborCell": false
+    }
+  ],
+  [
+    {
+      "id": "A3",
+      "x": 0,
+      "y": 2,
+      "xLabel": "A",
+      "yLabel": 3,
+      "ship": {
+        "id": 32,
+        "name": "Hobart (cruiser)",
+        "size": 3,
+        "cells": [],
+        "damage": 0
+      },
+      "isHit": false,
+      "isShipNeighbor": false,
+      "isKilledShipNeighborCell": false
+    },
+    {
+      "id": "B3",
+      "x": 1,
+      "y": 2,
+      "xLabel": "B",
+      "yLabel": 3,
+      "ship": null,
+      "isHit": false,
+      "isShipNeighbor": true,
+      "isKilledShipNeighborCell": false
+    },
+    {
+      "id": "C3",
+      "x": 2,
+      "y": 2,
+      "xLabel": "C",
+      "yLabel": 3,
+      "ship": null,
+      "isHit": false,
+      "isShipNeighbor": true,
+      "isKilledShipNeighborCell": false
+    }
+  ]
+]

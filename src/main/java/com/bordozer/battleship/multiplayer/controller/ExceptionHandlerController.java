@@ -1,7 +1,7 @@
 package com.bordozer.battleship.multiplayer.controller;
 
-import com.bordozer.battleship.multiplayer.exception.IncopatibleGameStatusException;
 import com.bordozer.battleship.multiplayer.exception.GameNotFoundException;
+import com.bordozer.battleship.multiplayer.exception.IncopatibleGameStatusException;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
