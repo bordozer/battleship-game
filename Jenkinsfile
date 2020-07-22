@@ -16,7 +16,7 @@ pipeline {
         )
     }
 	stages {
-		stage("Build") {
+		stage("Build UI") {
             agent {
                 label 'master'
             }
@@ -24,9 +24,23 @@ pipeline {
 			steps {
 				script {
 					echo "-----------------------------------------------------------------------------------------------"
-					echo "Build"
+					echo "Build UI"
 					sh "./gradlew --version"
-					sh "./gradlew clean buildUI build -x check"
+					sh "./gradlew clean buildUI -x check"
+				}
+			}
+		}
+
+		stage("Build artifact") {
+            agent {
+                label 'master'
+            }
+
+			steps {
+				script {
+					echo "-----------------------------------------------------------------------------------------------"
+					echo "Build artifact"
+					sh "./gradlew build -x check"
 				}
 			}
 		}

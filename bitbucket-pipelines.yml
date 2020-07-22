@@ -3,7 +3,22 @@ image: openjdk:11
 pipelines:
   default:
     - step:
+        name: Build UI
         caches:
           - gradle
         script:
-          - bash ./gradlew clean buildUI build
+          - bash ./gradlew clean buildUI -x check
+
+    - step:
+        name: Build artifact
+        caches:
+          - gradle
+        script:
+          - bash ./gradlew build -x check
+
+    - step:
+        name: Unit tests
+        caches:
+          - gradle
+        script:
+          - bash ./gradlew test
