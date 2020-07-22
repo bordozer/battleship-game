@@ -1,39 +1,24 @@
 image: openjdk:11
 
-upload-badge: &upload-badge
-  step:
-    name: Upload the coverage upload-badge
-    script:
-      - pipe: docker://bitbucketpipelines/bitbucket-upload-file:0.1.0
-        variables:
-          BITBUCKET_USERNAME: $BITBUCKET_USERNAME
-          BITBUCKET_APP_PASSWORD: $BITBUCKET_APP_PASSWORD
-          FILENAME: 'coverage.svg'
-
 pipelines:
   default:
-
     - step:
         name: Build UI
         caches:
           - gradle
         script:
           - bash ./gradlew clean buildUI -x check
-
     - step:
         name: Build artifact
         caches:
           - gradle
         script:
           - bash ./gradlew build -x check
-
+        artifacts:
+          - build/libs/**
     - step:
         name: Unit tests
         caches:
           - gradle
         script:
           - bash ./gradlew test
-
-  branches:
-    master:
-      - <<: *upload-badge

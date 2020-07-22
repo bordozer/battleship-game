@@ -1,7 +1,5 @@
 # Battleship game multiplayer [WIP]
 
-![Coverage](https://bitbucket.org/bordozer/battleship-game/downloads/status.svg)
-
 ## How to run locally
 ```console
 $ ./deploy.sh
