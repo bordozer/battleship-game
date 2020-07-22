@@ -5,9 +5,9 @@ pipeline {
     }
     parameters {
         booleanParam(
-            name: 'AWS_DEPLOY_TO_STAGING',
+            name: 'AWS_DEPLOY_TO_DEV',
             defaultValue: false,
-            description: 'Deploy to AWS STAGING?'
+            description: 'Deploy to AWS DEV?'
         )
         booleanParam(
             name: 'AWS_DEPLOY_TO_PROD',
@@ -52,31 +52,16 @@ pipeline {
             }
         }
 
- 		/* stage('Getting Terraform') {
-            agent {
-                label 'master'
-            }
-            steps {
-                sh "rm -f terraform_0.12.20_linux_amd64.zip"
-                sh "rm -R -f terraform"
-                sh "rm -R -f terra"
-                sh "wget https://releases.hashicorp.com/terraform/0.12.20/terraform_0.12.20_linux_amd64.zip"
-                sh "unzip terraform_0.12.20_linux_amd64.zip"
-                sh "chmod +x terraform"
-                sh "cp -f terraform /usr/local/bin"
-            }
-		} */
-
-        stage('Deploying to AWS STAGING') {
+        stage('Deploying to AWS DEV') {
             agent {
                 label 'master'
             }
             when {
-                expression { AWS_DEPLOY_TO_STAGING == "true" }
+                expression { AWS_DEPLOY_TO_DEV == "true" }
             }
 
             steps {
-                sh "echo Deploying to AWS STAGING"
+                sh "echo Deploying to AWS DEV"
                 withCredentials([
                         string(credentialsId: 'AWS_STAGE_ACCESS_KEY_ID', variable: 'AWS_ACCESS_KEY_ID'),
                         string(credentialsId: 'AWS_STAGE_SECRET_ACCESS_KEY', variable: 'AWS_SECRET_ACCESS_KEY'),
@@ -84,7 +69,7 @@ pipeline {
                 ]) {
                     dir('terraform/webservice') {
                         sh "chmod +x tf_apply.sh"
-                        sh './tf_apply.sh staging'
+                        sh './tf_apply.sh dev'
                     }
                 }
             }
@@ -101,7 +86,16 @@ pipeline {
 
             steps {
                 sh "echo Deploying to AWS PROD"
-                // TODO: deploy to PROD
+                withCredentials([
+                        string(credentialsId: 'AWS_STAGE_ACCESS_KEY_ID', variable: 'AWS_ACCESS_KEY_ID'),
+                        string(credentialsId: 'AWS_STAGE_SECRET_ACCESS_KEY', variable: 'AWS_SECRET_ACCESS_KEY'),
+                        string(credentialsId: 'AWS_STAGE_DEFAULT_REGION', variable: 'AWS_DEFAULT_REGION')
+                ]) {
+                    dir('terraform/webservice') {
+                        sh "chmod +x tf_apply.sh"
+                        sh './tf_apply.sh prod'
+                    }
+                }
             }
         }
 	}
