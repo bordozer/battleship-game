@@ -33,3 +33,7 @@ pipelines:
           - gradle
         script:
           - bash ./gradlew test
+
+  branches:
+    master:
+      - <<: *upload-badge
