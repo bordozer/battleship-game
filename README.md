@@ -8,7 +8,7 @@ $ ./deploy.sh
 ```
 
 ## Production (down because of WIP)
-![battleship-game.visual-guitar.org](https://battleship-game.visual-guitar.org/)
+![https://battleship-game.visual-guitar.org](https://battleship-game.visual-guitar.org/)
 
 
  
