@@ -34,6 +34,7 @@ pipelines:
       - step: *step-tests
       - step:
           name: "Deploy to AWS - prod"
+          image: hashicorp/terraform:full
           deployment: production
           trigger: automatic
           script:
@@ -45,6 +46,7 @@ pipelines:
       - step: *step-tests
       - step:
           name: "Deploy to AWS - dev (optional)"
+          image: hashicorp/terraform:full
           deployment: test
           trigger: manual
           script:
