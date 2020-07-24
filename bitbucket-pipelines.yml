@@ -7,9 +7,9 @@ pipelines:
         caches:
           - gradle
         script:
-          - bash ./gradlew clean buildUI -x check
+          - bash ./gradlew buildUI -x check
     - step:
-        name: Build artifact
+        name: Build application artifact
         caches:
           - gradle
         script:
