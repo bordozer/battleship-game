@@ -34,6 +34,8 @@ variable "ami_id" {
 variable "ec2_instance_root_volume_type" { default = "gp2" }
 variable "ec2_instance_root_volume_size" { default = "8" }
 
+variable "sns_topic_name" { default = "battle-ship-notifications" }
+
 /* Application parameters */
 variable "app_port" { default = 8036 }
 variable "app_health_port" { default = 8036 }

@@ -53,7 +53,7 @@ resource "aws_autoscaling_notification" "asg_notifications" {
     "autoscaling:EC2_INSTANCE_TERMINATE_ERROR",
   ]
 
-  topic_arn = aws_sns_topic.asg_notifications.arn
+  topic_arn = data.aws_sns_topic.notification.arn
 }
 
 resource "aws_placement_group" "pgroup" {

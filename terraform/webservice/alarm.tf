@@ -13,10 +13,10 @@ resource "aws_cloudwatch_metric_alarm" "cpu_usage_is_very_high" {
   alarm_description = "Add an instance if CPU Utilization is too high"
   alarm_actions = [
     aws_autoscaling_policy.scale_out_policy.arn,
-    aws_sns_topic.asg_notifications.arn
+    data.aws_sns_topic.notification.arn
   ]
   ok_actions = [
-    aws_sns_topic.asg_notifications.arn
+    data.aws_sns_topic.notification.arn
   ]
 }
 
@@ -49,8 +49,8 @@ resource "aws_cloudwatch_metric_alarm" "no_healthy_hosts" {
   threshold           = 1
   alarm_description   = "Number of instance healthy in Target Group"
   actions_enabled     = "true"
-  alarm_actions       = [aws_sns_topic.asg_notifications.arn]
-  ok_actions          = [aws_sns_topic.asg_notifications.arn]
+  alarm_actions       = [data.aws_sns_topic.notification.arn]
+  ok_actions          = [data.aws_sns_topic.notification.arn]
   dimensions = {
     TargetGroup  = aws_lb_target_group.lb_tg.arn_suffix
     LoadBalancer = aws_lb.front_end.arn_suffix
