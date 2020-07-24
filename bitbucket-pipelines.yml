@@ -2,18 +2,12 @@ image: openjdk:11
 
 definitions:
   steps:
-    - step: &step-build-ui
-        name: "Build UI"
-        caches:
-          - gradle
-        script:
-          - bash ./gradlew buildUI -x check
     - step: &step-build-artifact
         name: "Build application artifact"
         caches:
           - gradle
         script:
-          - bash ./gradlew build -x check
+          - bash ./gradlew buildUI build -x check
         artifacts:
           - build/libs/battleship-game.jar
     - step: &step-tests
@@ -24,12 +18,10 @@ definitions:
           - bash ./gradlew test
 pipelines:
   default:
-    - step: *step-build-ui
     - step: *step-build-artifact
     - step: *step-tests
   branches:
     master:
-      - step: *step-build-ui
       - step: *step-build-artifact
       - step: *step-tests
       - step:
@@ -41,7 +33,6 @@ pipelines:
             - cd terraform/webservice
             - ./tf_apply.sh prod
     develop:
-      - step: *step-build-ui
       - step: *step-build-artifact
       - step: *step-tests
       - step:
