@@ -1,7 +1,7 @@
 image: openjdk:11
 
 definitions:
-  default:
+  steps:
     - step: &step-build-ui
         name: "Build UI"
         caches:
