@@ -1,15 +1,15 @@
 image: openjdk:11
 
-pipelines:
+definitions:
   default:
     - step: &step-build-ui
-        name: Build UI
+        name: "Build UI"
         caches:
           - gradle
         script:
           - bash ./gradlew buildUI -x check
     - step: &step-build-artifact
-        name: Build application artifact
+        name: "Build application artifact"
         caches:
           - gradle
         script:
@@ -17,19 +17,23 @@ pipelines:
         artifacts:
           - build/libs/battleship-game.jar
     - step: &step-tests
-        name: Unit tests
+        name: "Unit tests"
         caches:
           - gradle
         script:
           - bash ./gradlew test
-
+pipelines:
+  default:
+    - step: *step-build-ui
+    - step: *step-build-artifact
+    - step: *step-tests
   branches:
     master:
       - step: *step-build-ui
       - step: *step-build-artifact
       - step: *step-tests
       - step:
-          name: Deploy to AWS - prod
+          name: "Deploy to AWS - prod"
           deployment: production
           trigger: automatic
           script:
@@ -40,7 +44,7 @@ pipelines:
       - step: *step-build-artifact
       - step: *step-tests
       - step:
-          name: Deploy to AWS - prod
+          name: "Deploy to AWS - dev (optional)"
           deployment: test
           trigger: manual
           script:
