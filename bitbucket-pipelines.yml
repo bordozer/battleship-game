@@ -52,3 +52,4 @@ pipelines:
           script:
             - cd terraform/webservice
             - ./tf_apply.sh dev
+
