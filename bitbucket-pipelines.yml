@@ -8,7 +8,7 @@ pipelines:
           - gradle
         script:
           - bash ./gradlew buildUI -x check
-    - step:
+    - step: &step-build-artifact
         name: Build application artifact
         caches:
           - gradle
@@ -16,29 +16,33 @@ pipelines:
           - bash ./gradlew build -x check
         artifacts:
           - build/libs/battleship-game.jar
-    - step:
+    - step: &step-tests
         name: Unit tests
         caches:
           - gradle
         script:
           - bash ./gradlew test
-    - step:
-        name: Deploy to AWS prod
-        deployment: production
-        trigger: manual
-        script:
-          - bash cd terraform/webservice
-          - bash ./tf_apply.sh prod
 
-#  branches:
-#    master:
-#      - step:
-#          name: Deploy to AWS - prod
-#          deployment: production
-#          trigger: manual
-#          script:
-#            - bash wget "https://releases.hashicorp.com/terraform/0.12.28/terraform_0.12.28_linux_amd64.zip"
-#            - bash unzip -o "terraform_0.12.28_linux_amd64.zip" -d ~/bin
-#            - bash terraform -version
-#            - bash cd terraform/webservice
-#            - bash ./tf_apply.sh prod
+  branches:
+    master:
+      - step: *step-build-ui
+      - step: *step-build-artifact
+      - step: *step-tests
+      - step:
+          name: Deploy to AWS - prod
+          deployment: production
+          trigger: automatic
+          script:
+            - bash cd terraform/webservice
+            - bash ./tf_apply.sh prod
+    develop:
+      - step: *step-build-ui
+      - step: *step-build-artifact
+      - step: *step-tests
+      - step:
+          name: Deploy to AWS - prod
+          deployment: test
+          trigger: manual
+          script:
+            - bash cd terraform/webservice
+            - bash ./tf_apply.sh dev
