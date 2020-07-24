@@ -37,8 +37,8 @@ pipelines:
           deployment: production
           trigger: automatic
           script:
-            - bash cd terraform/webservice
-            - bash ./tf_apply.sh prod
+            - cd terraform/webservice
+            - ./tf_apply.sh prod
     develop:
       - step: *step-build-ui
       - step: *step-build-artifact
@@ -48,5 +48,5 @@ pipelines:
           deployment: test
           trigger: manual
           script:
-            - bash cd terraform/webservice
-            - bash ./tf_apply.sh dev
+            - cd terraform/webservice
+            - ./tf_apply.sh dev
