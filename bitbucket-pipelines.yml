@@ -2,7 +2,7 @@ image: openjdk:11
 
 pipelines:
   default:
-    - step:
+    - step: &step-build-ui
         name: Build UI
         caches:
           - gradle
@@ -27,7 +27,6 @@ pipelines:
         deployment: production
         trigger: manual
         script:
-          - bash terraform -version
           - bash cd terraform/webservice
           - bash ./tf_apply.sh prod
 
