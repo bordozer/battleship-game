@@ -18,7 +18,6 @@ import com.bordozer.battleship.multiplayer.service.BattlefieldService;
 import com.bordozer.battleship.multiplayer.service.GameService;
 import com.bordozer.battleship.multiplayer.service.PlayerService;
 import com.bordozer.battleship.multiplayer.utils.CellUtils;
-import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;

@@ -16,6 +16,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class PlayerServiceImpl implements PlayerService {
 
     private static final Map<String, GamePlayerDto> PLAYERS = new ConcurrentHashMap<>();
+
     static {
         PLAYERS.put("ea287b6a-15d1-424c-986f-612d68f9da02", GamePlayerDto.builder()
                 .id("ea287b6a-15d1-424c-986f-612d68f9da02")

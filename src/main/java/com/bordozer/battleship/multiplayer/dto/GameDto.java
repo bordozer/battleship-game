@@ -7,7 +7,6 @@ import lombok.ToString;
 import org.immutables.value.Value;
 
 import javax.annotation.CheckForNull;
-import java.time.LocalDateTime;
 
 @JsonDeserialize(
         builder = ImmutableGameDto.Builder.class
