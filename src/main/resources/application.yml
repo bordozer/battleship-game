@@ -50,11 +50,7 @@ server:
 
 ---
 spring:
-  profiles: aws-dev
-
----
-spring:
-  profiles: aws-staging
+  profiles: aws-test
 
 ---
 spring:
