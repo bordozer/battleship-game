@@ -27,15 +27,22 @@ pipelines:
         deployment: production
         trigger: manual
         script:
-          - bash wget "https://releases.hashicorp.com/terraform/0.12.28/terraform_0.12.28_linux_arm.zip"
-          - bash unzip -o "terraform_0.12.28_linux_arm.zip" -d ~/bin
+          - bash wget "https://releases.hashicorp.com/terraform/0.12.28/terraform_0.12.28_linux_386.zip"
+          - bash unzip -o "terraform_0.12.28_linux_386.zip" -d ~/bin
           - bash terraform -version
           - bash cd terraform/webservice
           - bash ./tf_apply.sh prod
+
+#  custom:
+#    - variables:
+#        terraform: "terraform_0.12.28_linux_386.zip"
+
 #  branches:
 #    master:
 #      - step:
 #          name: Deploy to AWS - prod
+#          deployment: production
+#          trigger: manual
 #          script:
 #            - bash wget "https://releases.hashicorp.com/terraform/0.12.28/terraform_0.12.28_linux_amd64.zip"
 #            - bash unzip -o "terraform_0.12.28_linux_amd64.zip" -d ~/bin
