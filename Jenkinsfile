@@ -5,9 +5,9 @@ pipeline {
     }
     parameters {
         booleanParam(
-            name: 'AWS_DEPLOY_TO_DEV',
+            name: 'AWS_DEPLOY_TO_TEST',
             defaultValue: false,
-            description: 'Deploy to AWS DEV?'
+            description: 'Deploy to AWS test?'
         )
         booleanParam(
             name: 'AWS_DEPLOY_TO_PROD',
@@ -66,16 +66,16 @@ pipeline {
             }
         }
 
-        stage('Deploying to AWS DEV') {
+        stage('Deploying to AWS test') {
             agent {
                 label 'master'
             }
             when {
-                expression { AWS_DEPLOY_TO_DEV == "true" }
+                expression { AWS_DEPLOY_TO_TEST == "true" }
             }
 
             steps {
-                sh "echo Deploying to AWS DEV"
+                sh "echo Deploying to AWS test"
                 withCredentials([
                         string(credentialsId: 'AWS_STAGE_ACCESS_KEY_ID', variable: 'AWS_ACCESS_KEY_ID'),
                         string(credentialsId: 'AWS_STAGE_SECRET_ACCESS_KEY', variable: 'AWS_SECRET_ACCESS_KEY'),
@@ -83,7 +83,7 @@ pipeline {
                 ]) {
                     dir('terraform/webservice') {
                         sh "chmod +x tf_apply.sh"
-                        sh './tf_apply.sh dev'
+                        sh './tf_apply.sh test'
                     }
                 }
             }

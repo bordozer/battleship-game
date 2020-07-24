@@ -36,11 +36,11 @@ pipelines:
       - step: *step-build-artifact
       - step: *step-tests
       - step:
-          name: "Deploy to AWS - dev (optional)"
+          name: "Deploy to AWS - test (optional)"
           image: hashicorp/terraform:full
           deployment: test
           trigger: manual
           script:
             - cd terraform/webservice
-            - ./tf_apply.sh dev
+            - ./tf_apply.sh test
 

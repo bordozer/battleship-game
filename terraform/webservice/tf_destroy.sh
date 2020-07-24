@@ -5,7 +5,7 @@ SERVICE_NAME="battleship-game"
 ENV=$1
 if [ -z "$ENV" ]
 then
-      echo "ENV is empty. Provide 'dev' or 'prod'"
+      echo "ENV is empty. Provide 'test' or 'prod'"
       exit 1;
 fi
 
