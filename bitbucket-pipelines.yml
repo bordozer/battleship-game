@@ -15,7 +15,7 @@ pipelines:
         script:
           - bash ./gradlew build -x check
         artifacts:
-          - build/libs/**
+          - build/libs/battleship-game.jar
     - step:
         name: Unit tests
         caches:
