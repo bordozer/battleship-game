@@ -22,3 +22,22 @@ pipelines:
           - gradle
         script:
           - bash ./gradlew test
+    - step:
+        name: Deploy to AWS - prod
+        trigger: manual
+        script:
+          - bash wget "https://releases.hashicorp.com/terraform/0.12.28/terraform_0.12.28_linux_amd64.zip"
+          - bash unzip -o "terraform_0.12.28_linux_amd64.zip" -d ~/bin
+          - bash terraform -version
+          - bash cd terraform/webservice
+          - bash ./tf_apply.sh prod
+#  branches:
+#    master:
+#      - step:
+#          name: Deploy to AWS - prod
+#          script:
+#            - bash wget "https://releases.hashicorp.com/terraform/0.12.28/terraform_0.12.28_linux_amd64.zip"
+#            - bash unzip -o "terraform_0.12.28_linux_amd64.zip" -d ~/bin
+#            - bash terraform -version
+#            - bash cd terraform/webservice
+#            - bash ./tf_apply.sh prod
