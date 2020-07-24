@@ -23,7 +23,8 @@ pipelines:
         script:
           - bash ./gradlew test
     - step:
-        name: Deploy to AWS - prod
+        name: Deploy to AWS prod
+        deployment: production
         trigger: manual
         script:
           - bash wget "https://releases.hashicorp.com/terraform/0.12.28/terraform_0.12.28_linux_amd64.zip"
