@@ -38,6 +38,8 @@ resource "aws_iam_role_policy" "service_s3_access_policy" {
     ]
 }
 EOF
+
+  tags = local.common_tags
 }
 
 resource "aws_iam_role_policy" "cloud_watch_logs_policy" {
@@ -57,4 +59,28 @@ resource "aws_iam_role_policy" "cloud_watch_logs_policy" {
     ]
 }
 EOF
+
+  tags = local.common_tags
+}
+
+resource "aws_iam_role_policy" "send_email_policy" {
+  name = "tf-${var.service_instance_name}-send-email-policy"
+  role = aws_iam_role.service_iam_role.id
+  policy = <<EOF
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": [
+                "ses:SendEmail",
+                "ses:SendRawEmail"
+            ],
+            "Resource": "*"
+        }
+    ]
+}
+EOF
+
+  tags = local.common_tags
 }
