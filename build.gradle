@@ -114,13 +114,12 @@ compileJava.dependsOn clean
 
 task stage(dependsOn: ['build', 'src:main:webapp:buildUI', 'clean'])
 build.mustRunAfter clean
-//build.mustRunAfter 'src:main:webapp:buildUI'
 
-/*task copyToLib(type: Copy) {
+task copyToLib(type: Copy) {
 	into "$buildDir/libs"
 	from(configurations.compile)
 }
-stage.dependsOn(copyToLib)*/
+stage.dependsOn(copyToLib)
 
 gradle.taskGraph.whenReady {
 	taskGraph ->
