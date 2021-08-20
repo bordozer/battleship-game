@@ -30,6 +30,37 @@ bootJar {
 	launchScript()
 }
 
+/*jar {
+	manifest {
+		attributes "Main-Class": "com.bordozer.battleship.multiplayer.BattleshipApplication"
+	}
+
+	from {
+		configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+	}
+}*/
+
+/*task customFatJar(type: Jar) {
+	manifest {
+		attributes 'Main-Class': 'com.bordozer.battleship.multiplayer.BattleshipApplication'
+	}
+	archiveClassifier = "all"
+	from {
+		configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+		configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+	}
+	with jar
+}*/
+
+/*task customFatJar(type: Jar) {
+	manifest {
+		attributes 'Main-Class': 'com.bordozer.battleship.multiplayer.BattleshipApplication'
+	}
+	baseName = 'battleship-game'
+	from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+	with jar
+}*/
+
 configurations {
 	compileOnly {
 		extendsFrom annotationProcessor
@@ -54,7 +85,6 @@ dependencies {
 	compile group: 'org.springframework.boot', name: 'spring-boot-starter-actuator'
 	compile group: 'org.springframework.boot', name: 'spring-boot-starter-web'
 	compile group: 'org.springframework.boot', name: 'spring-boot-starter-validation'
-//	compile group: 'org.springframework.boot', name: 'spring-boot-starter-security'
 	compile 'org.springframework.boot:spring-boot-starter-websocket'
 	compile group: 'org.springframework', name: 'spring-messaging'
 
@@ -100,7 +130,6 @@ test {
 	testLogging {
 		events "failed"
 		exceptionFormat "full"
-//		showStandardStreams = true
 	}
 }
 
@@ -112,7 +141,7 @@ sourceSets {
 
 compileJava.dependsOn clean
 
-task stage(dependsOn: ['build', 'src:main:webapp:buildUI', 'clean'])
+task stage(dependsOn: ['bootJar', 'src:main:webapp:buildUI', 'clean'])
 build.mustRunAfter clean
 
 /*task copyToLib(type: Copy) {
