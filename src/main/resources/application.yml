@@ -29,15 +29,18 @@ application:
 
 ---
 spring:
-  profiles: dev
-
+  config:
+    activate:
+      on-profile: dev
 ---
 spring:
-  profiles: dev-https
   security:
     user:
       name: admin
       password: admin
+  config:
+    activate:
+      on-profile: dev-https
 
 server:
   ssl:
@@ -50,8 +53,11 @@ server:
 
 ---
 spring:
-  profiles: aws-test
-
+  config:
+    activate:
+      on-profile: aws-test
 ---
 spring:
-  profiles: aws-prod
+  config:
+    activate:
+      on-profile: aws-prod
