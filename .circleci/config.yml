@@ -1,0 +1,132 @@
+version: 2.1
+
+orbs:
+  heroku: circleci/heroku@1.2.6
+
+jobs:
+  job_build:
+    description: "Build"
+    environment:
+      _JAVA_OPTIONS: "-Xmx3g"
+      GRADLE_OPTS: "-Dorg.gradle.daemon=false -Dorg.gradle.workers.max=2"
+    docker:
+      - image: cimg/openjdk:11.0.6
+    steps:
+      - checkout
+      - run:
+          name: "Removing .git dir"
+          command: rm -rf .git
+      - restore_cache:
+          key: v1-gradle-wrapper-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}
+      - restore_cache:
+          key: v1-gradle-cache-{{ checksum "build.gradle" }}
+      - run:
+          name: "Building UI"
+          command: ./gradlew clean buildUI -x check
+      - run:
+          name: "Building app artifact"
+          command: |
+            # Skip this for other nodes
+            if [ "$CIRCLE_NODE_INDEX" == 0 ]; then
+              ./gradlew assemble
+            fi
+      - store_artifacts:
+          path: build/libs
+          destination: ~/artifacts
+      - save_cache:
+          paths:
+            - ~/.gradle/wrapper
+          key: v1-gradle-wrapper-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}
+      - save_cache:
+          paths:
+            - ~/.gradle/caches
+          key: v1-gradle-cache-{{ checksum "build.gradle" }}
+      - persist_to_workspace:
+          root: .
+          paths:
+            - .
+  job_sca_tests:
+    parallelism: 1
+    description: "Static code analysis (SCA) && Tests"
+    # Do not replace the machine with Docker image. Testcontainers works incorrectly being run inside Docker
+    machine:
+      image: ubuntu-2004:202008-01
+    resource_class: large
+    environment:
+      _JAVA_OPTIONS: "-Xmx3g"
+      GRADLE_OPTS: "-Dorg.gradle.daemon=false -Dorg.gradle.workers.max=2"
+    steps:
+      - attach_workspace:
+          at: .
+      - restore_cache:
+          key: v1-gradle-wrapper-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}
+      - restore_cache:
+          key: v1-gradle-cache-{{ checksum "build.gradle" }}
+      - run:
+          name: "SCA: checkstyle"
+          command: ./gradlew checkstyleMain checkstyleTest
+      - run:
+          name: "SCA: PMD"
+          command: ./gradlew pmdMain pmdTest
+      #      - run:
+      #          name: "SCA: Spotbugs"
+      #          command: ./gradlew spotbugsMain
+      - run:
+          name: "Tests"
+          command: |
+            cd src/test/java
+            CLASSNAMES=$(circleci tests glob "**/*.java" \
+              | cut -c 1- | sed 's@/@.@g' \
+              | sed 's/.\{5\}$//' \
+              | circleci tests split --split-by=timings --timings-type=classname)
+            cd ../../..
+            GRADLE_ARGS=$(echo $CLASSNAMES | awk '{for (i=1; i<=NF; i++) print "--tests",$i}')
+            echo "Prepared arguments for Gradle: $GRADLE_ARGS"
+            ./gradlew test $GRADLE_ARGS
+      - store_test_results:
+          path: ./build/test-results/test
+          when: always
+      - persist_to_workspace:
+          root: .
+          paths:
+            - .
+  job_deploy:
+    executor: heroku/default
+    parameters:
+      env_name:
+        description: "Heroku application name"
+        type: string
+    steps:
+      - checkout
+      - heroku/install
+      - heroku/deploy-via-git:
+          app-name: << parameters.env_name >>
+          force: true
+
+workflows:
+  version: 2
+  sca-build-tests:
+    jobs:
+      - job_build:
+          name: "Build"
+      - job_sca_tests:
+          name: "SCA && Tests"
+          requires:
+            - "Build"
+      - hold:
+          name: "Deploy to prod env?"
+          type: approval
+          requires:
+            - "SCA && Tests"
+          filters:
+            branches:
+              only: master
+      - job_deploy:
+          name: "Deploying to prod env"
+          context: heroku-context
+          requires:
+            - "Deploy to prod env?"
+          env_name: $HEROKU_APP_NAME_PROD
+          filters:
+            branches:
+              only: master
