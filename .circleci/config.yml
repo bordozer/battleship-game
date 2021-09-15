@@ -45,9 +45,9 @@ jobs:
           root: .
           paths:
             - .
-  job_sca_tests:
+  job_tests:
     parallelism: 1
-    description: "Static code analysis (SCA) && Tests"
+    description: "Tests"
     # Do not replace the machine with Docker image. Testcontainers works incorrectly being run inside Docker
     machine:
       image: ubuntu-2004:202008-01
@@ -62,15 +62,6 @@ jobs:
           key: v1-gradle-wrapper-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}
       - restore_cache:
           key: v1-gradle-cache-{{ checksum "build.gradle" }}
-      - run:
-          name: "SCA: checkstyle"
-          command: ./gradlew checkstyleMain checkstyleTest
-      - run:
-          name: "SCA: PMD"
-          command: ./gradlew pmdMain pmdTest
-      #      - run:
-      #          name: "SCA: Spotbugs"
-      #          command: ./gradlew spotbugsMain
       - run:
           name: "Tests"
           command: |
@@ -109,15 +100,15 @@ workflows:
     jobs:
       - job_build:
           name: "Build"
-      - job_sca_tests:
-          name: "SCA && Tests"
+      - job_tests:
+          name: "Tests"
           requires:
             - "Build"
       - hold:
           name: "Deploy to prod env?"
           type: approval
           requires:
-            - "SCA && Tests"
+            - "Tests"
           filters:
             branches:
               only: master
